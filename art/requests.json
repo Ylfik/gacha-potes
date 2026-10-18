@@ -9,6 +9,10 @@
  },
  "sprites": [
   {
+   "id": "echo",
+   "description": "slender adult cat, warm brown tabby fur with dark mackerel stripes all over, striped tail with dark rings, light cream chin and chest, amber eyes, pink nose, alert friendly posture, standing on four legs"
+  },
+  {
    "id": "traffy",
    "description": "big chubby calm adult cat, golden brown mackerel tabby fur with dark brown stripes all over the body, striped tail with dark rings, round heavy body, relaxed half-closed sleepy eyes, unhurried posture, standing on four legs"
   },
@@ -114,7 +118,7 @@
   }
  ],
  "only": [
-  "__aucun__"
+  "echo"
  ],
  "max_per_run": 10
 }
