@@ -133,9 +133,7 @@
   }
  ],
  "only": [
-  "test-jenlain-a",
-  "test-jenlain-b",
-  "test-jenlain-c"
+  "__aucun__"
  ],
  "max_per_run": 10
 }
