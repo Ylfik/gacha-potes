@@ -173,8 +173,7 @@
   }
  ],
  "only": [
-  "test-zoya-a",
-  "test-zoya-b"
+  "__aucun__"
  ],
  "max_per_run": 10
 }
