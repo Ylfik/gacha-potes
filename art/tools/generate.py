@@ -37,7 +37,7 @@ for s in cfg["sprites"]:
         body["init_image_strength"] = s.get("init_strength", 300)
     req = urllib.request.Request("https://api.pixellab.ai/v1/generate-image-pixflux", data=json.dumps(body).encode(),
                                  headers={"Authorization": "Bearer " + KEY, "Content-Type": "application/json"})
-    for attempt in range(3):
+    for attempt in range(8):
         try:
             res = json.load(urllib.request.urlopen(req, timeout=180))
             b64 = res["image"]["base64"].split(",", 1)[-1]
@@ -47,6 +47,8 @@ for s in cfg["sprites"]:
         except urllib.error.HTTPError as e:
             msg = e.read().decode(errors="replace")[:300]
             print(f"::error::PixelLab {s['id']} HTTP {e.code} : {msg}")
+            if e.code == 429:
+                time.sleep(20); continue
             if e.code in (401, 402, 403):
                 sys.exit(f"PixelLab refuse la clé ou manque de crédits ({e.code}) : {msg}")
             time.sleep(5)
