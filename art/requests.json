@@ -160,10 +160,21 @@
    "id": "test-geoffrey-b",
    "description": "tall slim young adult man, short messy bright copper red hair, round thin-framed glasses, black lace patterned long-sleeve shirt, dark charcoal trousers, white sneakers, laughing out loud with mouth wide open, playful clownish pose",
    "seed": 41
+  },
+  {
+   "id": "test-zoya-a",
+   "description": "small african helmeted side-necked turtle (pelomedusa subrufa), flat oval dark olive brown shell with black seams between the scutes, long olive grey neck and head, small dark eyes, slight smile, webbed clawed feet, walking on four legs, calm happy expression",
+   "seed": 29
+  },
+  {
+   "id": "test-zoya-b",
+   "description": "small african helmeted side-necked turtle (pelomedusa subrufa), flat oval dark olive brown shell with black seams between the scutes, long olive grey neck and head, small dark eyes, slight smile, webbed clawed feet, walking on four legs, head raised and neck stretched out proudly",
+   "seed": 41
   }
  ],
  "only": [
-  "__aucun__"
+  "test-zoya-a",
+  "test-zoya-b"
  ],
  "max_per_run": 10
 }
