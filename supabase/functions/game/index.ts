@@ -7,7 +7,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 const EL={coeur:{n:'Cœur',b:'raison'},raison:{n:'Raison',b:'delire'},delire:{n:'Délire',b:'prudence'},prudence:{n:'Prudence',b:'coeur'},ordre:{n:'Ordre',b:'chaos'},chaos:{n:'Chaos',b:'ordre'}};
 const RAR={C:{n:'Commune',w:60},R:{n:'Rare',w:28},E:{n:'Épique',w:9},L:{n:'Légendaire',w:3}};
 const FAM={soirees:'Les Soirées jeu',lol:'League of Legends',dbd:'Dead by Daylight',isaac:'The Binding of Isaac',destiny:'Destiny 2',krosmoz:'Le Krosmoz',potes:'Les Potes',foyer:'Le Foyer',chezk:'Chez Kylian',jl:'Jenlain & Lila',lignee:'Lignée de Yuumi',bruyants:'Les Bruyants',lents:'Les Lents',paperasse:'La Paperasse',argent:"L'Argent",sante:'La Santé',poste:'La Poste',boulot:'Le Boulot',matin:'Le Matin',numerique:'Le Numérique',relous:'Les Relous',nuisibles:'Les Nuisibles',corvee:'La Corvée',quotidien:'Le Quotidien'};
-const SYN={soirees:[[3,'+15 % VIT']],lol:[[2,'+10 % ATK'],[3,'+10 % ATK et Bouclier au début']],dbd:[[2,'Angoisse sur un ennemi au début'],[3,'Angoisse sur tous les ennemis au début']],isaac:[[2,'+10 % ATK'],[3,'+15 % ATK et +15 % PV']],destiny:[[2,'Bouclier au début']],krosmoz:[[2,'+15 % VIT']],potes:[[3,'+10 % ATK'],[5,'+25 % ATK']],foyer:[[2,'Quand un membre tombe, les autres gagnent 2 Colère']],chezk:[[2,"+15 % d'or"],[3,"+30 % d'or"]],jl:[[2,'Entrée fracassante +50 %']],lignee:[[2,"Câlin sur toute l'équipe au début"]],bruyants:[[2,'Malaise plus long']],lents:[[2,'+20 % PV'],[3,'+40 % PV']],paperasse:[[2,'États négatifs plus longs']],argent:[[2,"+15 % d'or"]],sante:[[2,'Soins +30 %']],poste:[[2,'+20 % VIT']],boulot:[[2,'Stress plus douloureux']],matin:[[2,'Flemme sur les ennemis au début']],numerique:[[2,'En attente plus long']],relous:[[2,'Stress sur un ennemi au début']],nuisibles:[[2,'+10 % esquive']],corvee:[[2,'+15 % PV'],[4,'+30 % PV']],quotidien:[[3,'+10 % ATK'],[5,'+20 % ATK']]};
+const SYN={soirees:[[3,'+15 % VIT']],lol:[[2,'+10 % ATK'],[3,'+10 % ATK et Bouclier au début']],dbd:[[2,'Angoisse sur un ennemi au début'],[3,'Angoisse sur tous les ennemis au début']],isaac:[[2,'+10 % ATK'],[3,'+15 % ATK et +15 % PV']],destiny:[[2,'Bouclier au début']],krosmoz:[[2,'+15 % VIT'],[3,'+15 % VIT et +15 % PV']],potes:[[3,'+10 % ATK'],[5,'+25 % ATK']],foyer:[[2,'Quand un membre tombe, les autres gagnent 2 Colère']],chezk:[[2,"+15 % d'or"],[3,"+30 % d'or"]],jl:[[2,'Entrée fracassante +50 %']],lignee:[[2,"Câlin sur toute l'équipe au début"]],bruyants:[[2,'Malaise plus long']],lents:[[2,'+20 % PV'],[3,'+40 % PV']],paperasse:[[2,'États négatifs plus longs']],argent:[[2,"+15 % d'or"]],sante:[[2,'Soins +30 %']],poste:[[2,'+20 % VIT']],boulot:[[2,'Stress plus douloureux']],matin:[[2,'Flemme sur les ennemis au début']],numerique:[[2,'En attente plus long']],relous:[[2,'Stress sur un ennemi au début']],nuisibles:[[2,'+10 % esquive']],corvee:[[2,'+15 % PV'],[4,'+30 % PV']],quotidien:[[3,'+10 % ATK'],[5,'+20 % ATK']]};
 
 const CARDS=[
 {id:'jenlain',name:'Jenlain',r:'L',el:'delire',fam:['potes','jl'],hp:110,atk:120,spd:70,kit:[['Attaque','Punchline','Frappe une cible.'],['Passif','Retardataire','Arrive après 3 actions alliées, avec une entrée fracassante.'],['Compétence','Freestyle','Frappe tous les ennemis, plus fort à chaque utilisation.'],['Ulti','Concert',"À charger. Frappe tous les ennemis et donne Hype à toute l'équipe."]]},
@@ -57,6 +57,7 @@ const CARDS=[
 {id:'arcaniste',name:"L'Arcaniste",r:'E',el:'coeur',fam:['soirees','destiny'],hp:110,atk:85,spd:90,kit:[['Attaque','Nova','Frappe une cible.'],['Passif','Puits de lumière',"Au début du combat, Hype sur toute l'équipe."],['Compétence','Faille de soin',"Soigne toute l'équipe et lui donne Câlin."]]},
 {id:'steamer',name:'Le Steamer',r:'E',el:'prudence',fam:['soirees','krosmoz'],hp:130,atk:85,spd:70,kit:[['Attaque','Coup de clé','Frappe une cible.'],['Passif','Harponneuse','Après chacune de ses actions, sa tourelle tire sur un ennemi au hasard.'],['Compétence','Gardienne',"Bouclier sur toute l'équipe."]]},
 {id:'yugo',name:'Yugo',r:'E',el:'raison',fam:['soirees','krosmoz'],hp:110,atk:105,spd:100,kit:[['Attaque','Portail','Frappe un ennemi au hasard, en passant à travers Provocation et Discrétion.'],['Passif','Téléportation','La première fois que ses PV passent sous 30 %, il disparaît dans un portail (Caché).'],['Compétence','Wakmeha','Frappe tous les ennemis et gagne Hype.']]},
+{id:'bouftou',name:'Le Bouftou Royal',r:'E',el:'delire',fam:['soirees','krosmoz'],hp:220,atk:75,spd:50,kit:[['Attaque','Coup de corne','Frappe une cible.'],['Passif','Majesté laineuse','Au début du combat, Provocation : les ennemis le visent en priorité.'],['Compétence','Charge royale','Fonce sur une cible, la met en Malaise et gagne un Bouclier.']]},
 {id:'colis',name:'Le Colis introuvable',r:'C',el:'delire',fam:['quotidien','poste'],hp:80,atk:100,spd:80,kit:[['Attaque','Livré chez le voisin','Gros dégâts sur une cible au hasard.']]}
 ];
 const CARD={}; CARDS.forEach((c,i)=>{c.no=i+1;CARD[c.id]=c;});
@@ -64,7 +65,7 @@ const BYR={C:[],R:[],E:[],L:[]}; CARDS.forEach(c=>BYR[c.r].push(c));
 const RETARD=new Set(['jenlain','lila']);
 const ANIMALS=new Set(['ryuk','yuumi','traffy','echo','zoya']);
 const CHARGE=new Set(['jenlain','lea','kylian','geoffrey']);
-const SKILL_CD={udyr:3,ekko:3,thresh:3,chasseuse:3,harpie:3,legion:3,lost:3,azazel:3,magdalene:3,chasseur:3,arcaniste:3,steamer:3,yugo:3,jenlain:3,yoann:3,lea:3,kylian:3,geoffrey:3,lila:3,ryuk:3,yuumi:2,traffy:4,echo:3,zoya:3};
+const SKILL_CD={udyr:3,ekko:3,thresh:3,chasseuse:3,harpie:3,legion:3,lost:3,azazel:3,magdalene:3,chasseur:3,arcaniste:3,steamer:3,yugo:3,bouftou:3,jenlain:3,yoann:3,lea:3,kylian:3,geoffrey:3,lila:3,ryuk:3,yuumi:2,traffy:4,echo:3,zoya:3};
 const NEG=new Set(['angoisse','malaise','flemme','stress','deprime','attente','piece']);
 const ST_LABEL={angoisse:'Angoisse',malaise:'Malaise',flemme:'Flemme',stress:'Stress',deprime:'Déprime',attente:'En attente',piece:'Pièce manq.',hype:'Hype',zen:'Zen',calin:'Câlin',provoc:'Provoc.',cachee:'Cachée',double:'×2'};
 const rnd=n=>Math.floor(Math.random()*n);
@@ -117,7 +118,8 @@ const KIT={
  chasseur:{atk:B1(1),skill(b,u){b.say(`${b.nm(u)} dégaine le Pistolet d'or.`);for(let i=0;i<3;i++){const f=b.visible(u);if(!f.length)break;const t=f.reduce((a,c)=>a.hp<c.hp?a:c);b.hit(u,t,0.8);}}},
  arcaniste:{atk:B1(1),skill(b,u){b.say(`${b.nm(u)} ouvre une Faille de soin.`);b.allies(u).forEach(a=>{b.heal(a,a.maxhp*0.08);b.apply(u,a,'calin',40);});}},
  steamer:{atk:B1(1),skill(b,u){b.say(`${b.nm(u)} déploie la Gardienne.`);b.allies(u).forEach(a=>{const v=Math.round(a.maxhp*0.12);a.shield+=v;b.ev(a,'+'+v+' bouclier','pos');});}},
- yugo:{atk(b,u){if(u.confused){B1(1)(b,u);return;}const f=b.foes(u);if(f.length)b.hit(u,f[b.rnd(f.length)],1);},skill(b,u){b.say(`${b.nm(u)} lance un Wakmeha.`);b.foes(u).forEach(t=>b.hit(u,t,0.7));b.apply(u,u,'hype',30);}}
+ yugo:{atk(b,u){if(u.confused){B1(1)(b,u);return;}const f=b.foes(u);if(f.length)b.hit(u,f[b.rnd(f.length)],1);},skill(b,u){b.say(`${b.nm(u)} lance un Wakmeha.`);b.foes(u).forEach(t=>b.hit(u,t,0.7));b.apply(u,u,'hype',30);}},
+ bouftou:{atk:B1(1),skill(b,u){const t=b.pick(u);if(!t)return;b.say(`${b.nm(u)} charge, couronne en avant.`);b.hit(u,t,1.2);b.apply(u,t,'malaise',20);const v=Math.round(u.maxhp*0.12);u.shield+=v;b.ev(u,'+'+v+' bouclier','pos');}}
 };
 const AFTER={
  traffy(b,u){u.stacks=Math.min(15,u.stacks+1);},
@@ -151,6 +153,7 @@ class Battle{
    if((y.lol||0)>=2)atk*=1.10;
    if((y.isaac||0)>=3){atk*=1.15;hp*=1.15;}else if((y.isaac||0)>=2)atk*=1.10;
    if((y.krosmoz||0)>=2)spd*=1.15;
+   if((y.krosmoz||0)>=3)hp*=1.15;
    us.forEach(u=>{u.atkMul*=atk;u.maxhp=Math.round(u.maxhp*hp);u.hp=u.maxhp;u.spdMul*=spd;u.dodge+=dodge;u.alone=u.id==='chaussette'&&us.filter(x=>x.d.fam.includes('quotidien')).length===1;});
   });
   [0,1].forEach(s=>{
@@ -168,6 +171,7 @@ class Battle{
    if((y.dbd||0)>=3)foes.forEach(t=>this.apply(src,t,'angoisse',50));else if((y.dbd||0)>=2&&foes.length)this.apply(src,foes[this.rnd(foes.length)],'angoisse',50);
    us.forEach(u=>{
     if(u.id==='chasseuse'&&foes.length){const t=foes[this.rnd(foes.length)];this.say(`${this.nm(u)} fredonne sa berceuse.`);this.apply(u,t,'angoisse',50);}
+    if(u.id==='bouftou'&&u.present)this.apply(u,u,'provoc',60);
     if(u.id==='harpie'){u.st.cachee={t:40};this.ev(u,'Cachée','pos');}
     if(u.id==='arcaniste'&&u.present)us.filter(a=>a.present).forEach(a=>this.apply(u,a,'hype',30));
    });
