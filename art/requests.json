@@ -118,7 +118,7 @@
   }
  ],
  "only": [
-  "echo"
+  "__aucun__"
  ],
  "max_per_run": 10
 }
