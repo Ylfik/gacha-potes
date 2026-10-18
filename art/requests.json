@@ -153,10 +153,7 @@
   }
  ],
  "only": [
-  "test-yoann-a",
-  "test-yoann-b",
-  "test-lea-a",
-  "test-lea-b"
+  "__aucun__"
  ],
  "max_per_run": 10
 }
