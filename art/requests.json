@@ -163,8 +163,7 @@
   }
  ],
  "only": [
-  "test-geoffrey-a",
-  "test-geoffrey-b"
+  "__aucun__"
  ],
  "max_per_run": 10
 }
