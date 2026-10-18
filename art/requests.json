@@ -9,6 +9,10 @@
  },
  "sprites": [
   {
+   "id": "traffy",
+   "description": "big chubby calm adult cat, golden brown mackerel tabby fur with dark brown stripes all over the body, striped tail with dark rings, round heavy body, relaxed half-closed sleepy eyes, unhurried posture, standing on four legs"
+  },
+  {
    "id": "yuumi",
    "description": "small slender petite cat with a thin delicate body, long thin legs and a small head, white fur with large grey tabby patches covered in dark grey stripes on its back and on the top of its head, thin grey tail with dark grey rings all the way to the tip, white chest, white muzzle and white paws, yellow-green eyes, pink nose, shy elegant posture, standing on four legs"
   },
@@ -110,7 +114,7 @@
   }
  ],
  "only": [
-  "__aucun__"
+  "traffy"
  ],
  "max_per_run": 10
 }
