@@ -3,7 +3,7 @@ import base64, json, os, sys, time, urllib.request, urllib.error
 
 KEY = os.environ.get("PIXELLAB_KEY", "").strip()
 if not KEY:
-    sys.exit("Secret PIXELLAB_KEY manquant : ajoute-le dans Settings > Secrets and variables > Actions.")
+    print("::error::Secret PIXELLAB_KEY manquant");sys.exit("Secret PIXELLAB_KEY manquant : ajoute-le dans Settings > Secrets and variables > Actions.")
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 cfg = json.load(open(os.path.join(root, "requests.json"), encoding="utf-8"))
 d = cfg["defaults"]
@@ -46,12 +46,12 @@ for s in cfg["sprites"]:
             break
         except urllib.error.HTTPError as e:
             msg = e.read().decode(errors="replace")[:300]
-            print("erreur", s["id"], e.code, msg)
+            print(f"::error::PixelLab {s['id']} HTTP {e.code} : {msg}")
             if e.code in (401, 402, 403):
                 sys.exit(f"PixelLab refuse la clé ou manque de crédits ({e.code}) : {msg}")
             time.sleep(5)
         except Exception as e:
-            print("erreur", s["id"], e); time.sleep(5)
+            print(f"::error::PixelLab {s['id']} : {e}"); time.sleep(5)
     else:
         failed.append(s["id"])
 print("générés :", made, "· échecs :", failed)
