@@ -24,7 +24,10 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - uses: android-actions/setup-android@v4
+      - name: Kit Android déjà présent sur la machine
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          ls "$ANDROID_HOME/build-tools" "$ANDROID_HOME/platforms"
 
       - name: Vérifier la clé de signature
         env:
