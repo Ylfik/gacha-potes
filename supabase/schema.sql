@@ -22,6 +22,7 @@ create table if not exists public.profiles (
   collection_score integer not null default 0,
   collection_count integer not null default 0,
   version integer not null default 0,
+  is_admin boolean not null default false,
   created_at timestamptz not null default now()
 );
 create unique index if not exists profiles_pseudo_unique on public.profiles (lower(pseudo));
@@ -58,3 +59,6 @@ drop policy if exists "lecture pvp" on public.pvp_log;
 create policy "lecture pvp" on public.pvp_log for select to authenticated using (true);
 
 revoke insert, update, delete on public.profiles, public.cards, public.pvp_log from anon, authenticated;
+
+-- Mise à jour : colonne admin (sans effet si elle existe déjà)
+alter table public.profiles add column if not exists is_admin boolean not null default false;

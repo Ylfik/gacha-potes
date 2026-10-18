@@ -301,6 +301,13 @@ body.logged-out header.top,body.logged-out main{display:none}
 .apk-banner{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 8px);transform:translateX(-50%);z-index:95;width:min(94vw,460px);display:flex;align-items:center;gap:8px;background:#2a1709;border:2px solid var(--gold);border-radius:12px;padding:8px 10px;color:var(--parch);font-size:13px;font-weight:600;box-shadow:0 6px 18px rgba(0,0,0,.45)}
 .apk-banner span{flex:1}
 .apk-banner a{text-decoration:none}
+.adm{background:var(--accent);color:#fff;font-weight:800;font-size:10px;padding:0 6px;border-radius:4px;letter-spacing:.06em}
+.adm-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.adm-box{display:grid;gap:6px;align-content:start;background:var(--parch-2);border:2px solid var(--parch-3);border-radius:12px;padding:12px}
+.adm-box label{font-weight:800;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--pmuted)}
+.adm-box input,.adm-box select{font:inherit;padding:8px 10px;border-radius:8px;border:2px solid var(--parch-3);background:#fffaf0;color:var(--pink);width:100%}
+.adm-box .btn{justify-content:center;margin-top:4px}
+.adm-box.danger{border-color:#c98a7a}
 /* Arène */
 .pvp{display:grid;gap:14px}
 .rating{display:grid;justify-items:center;background:var(--parch-2);border:2px solid var(--parch-3);border-radius:10px;padding:4px 14px}
@@ -356,6 +363,7 @@ body.logged-out header.top,body.logged-out main{display:none}
       <button role="tab" data-tab="invoc" aria-selected="false">Invocation</button>
       <button role="tab" data-tab="pvp" aria-selected="false">Arène</button>
       <button role="tab" data-tab="rank" aria-selected="false">Classements</button>
+      <button role="tab" data-tab="admin" aria-selected="false" id="tab-btn-admin" hidden>Admin</button>
     </nav>
   </div>
 </header>
@@ -367,6 +375,7 @@ body.logged-out header.top,body.logged-out main{display:none}
   <section id="tab-invoc" hidden></section>
   <section id="tab-pvp" hidden></section>
   <section id="tab-rank" hidden></section>
+  <section id="tab-admin" hidden></section>
 </main>
 <div id="overlay-root"></div>
 <div id="stage-root"></div>
@@ -788,11 +797,12 @@ function renderHeader(){
  if(!ME)return;
  $('#w-gold').textContent=fmt(S.gold);$('#w-tix').textContent=fmt(S.tickets);$('#w-floor').textContent=S.maxFloor;
  const b=idleBank();$('#b-gold').textContent=fmt(b.gold);$('#b-tix').textContent=fmt(b.tickets);$('#collect').disabled=b.gold<1&&b.tickets<1;
- $('#me-chip').innerHTML=`<span class="av el-${CARD[ME.legend].el}">${faceImg(ME.legend)}</span><span><b>${esc(ME.pseudo)}</b><small>${ME.pvp_rating} PvP</small></span>`;
+ $('#me-chip').innerHTML=`<span class="av el-${CARD[ME.legend].el}">${faceImg(ME.legend)}</span><span><b>${esc(ME.pseudo)}</b><small>${ME.is_admin?'<span class="adm">ADMIN</span>':ME.pvp_rating+' PvP'}</small></span>`;
+ $('#tab-btn-admin').hidden=!ME.is_admin;
 }
 $('#collect').onclick=async()=>{try{const j=await api('collect');toast(`+${fmt(j.collected.gold)} or · +${j.collected.tickets} ticket${j.collected.tickets>1?'s':''}`,'good');if(tab==='invoc')renderInvoc();}catch(e){toast(errMsg(e),'bad');}};
 document.querySelectorAll('nav.tabs button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
-const TABS={combat:()=>renderCombat(),equipe:()=>renderTeam(),album:()=>renderAlbum(),invoc:()=>renderInvoc(),pvp:()=>renderPvp(),rank:()=>renderRank()};
+const TABS={admin:()=>renderAdmin(),combat:()=>renderCombat(),equipe:()=>renderTeam(),album:()=>renderAlbum(),invoc:()=>renderInvoc(),pvp:()=>renderPvp(),rank:()=>renderRank()};
 function showTab(t){tab=t;document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t));Object.keys(TABS).forEach(x=>$('#tab-'+x).hidden=x!==t);TABS[t]();}
 
 /* ===== Composants ===== */
@@ -1067,16 +1077,18 @@ function renderInvoc(){
 
 /* ===== Données des autres joueurs ===== */
 async function loadPlayers(withCards){
- const {data,error}=await sb.from('profiles').select('id,pseudo,legend,max_floor,collection_score,collection_count,pvp_rating,pvp_wins,pvp_losses,team,defense');
+ const {data,error}=await sb.from('profiles').select('id,pseudo,legend,max_floor,collection_score,collection_count,pvp_rating,pvp_wins,pvp_losses,team,defense,is_admin');
  if(error)throw {message:'Impossible de charger les joueurs.'};
+ const players=(data||[]).filter(p=>!p.is_admin);
  if(withCards){const {data:cs}=await sb.from('cards').select('user_id,card_id,lvl,stars');CARDS_OF={};(cs||[]).forEach(c=>{(CARDS_OF[c.user_id]=CARDS_OF[c.user_id]||{})[c.card_id]={lvl:c.lvl,stars:c.stars};});}
- return data||[];
+ return players;
 }
 
 /* ===== Onglet PvP ===== */
 const parisDay=ms=>new Intl.DateTimeFormat('fr-CA',{timeZone:'Europe/Paris',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(ms));
 async function renderPvp(){
  const root=$('#tab-pvp');
+ if(ME.is_admin){root.innerHTML='<div class="parch empty"><h2>Arène</h2><p class="muted">Le compte admin ne participe pas à l\'arène, pour ne pas fausser les cotes des joueurs.</p></div>';return;}
  const left=Math.max(0,5-(ME.pvp_day===parisDay(nowMs())?ME.pvp_used:0));
  const def=(ME.defense||[]).filter(id=>S.owned[id]);
  root.innerHTML=`<div class="pvp"><div class="parch pvp-me"><div class="row" style="justify-content:space-between"><div><h2>Arène</h2><p class="muted" style="margin:2px 0 0">Attaque la défense des autres. Victoire : +150 or, défaite : +30 or.</p></div>
@@ -1108,6 +1120,26 @@ async function attack(target){
   $('#pvp-res').innerHTML=`<div class="result ${bt.win?'win':'lose'}"><div><b>${bt.win?'Victoire':'Défaite'} contre ${esc(bt.targetPseudo)}</b><div class="muted">Cote ${bt.delta>=0?'+':''}${bt.delta} · +${bt.gold} or</div></div><button class="btn primary" id="pvp-close">Fermer</button></div>`;
   $('#pvp-close').onclick=()=>{closeSheet();B=null;RUN=null;renderPvp();};
  });
+}
+
+/* ===== Onglet Admin ===== */
+let resetArm=false;
+function renderAdmin(){
+ const root=$('#tab-admin');if(!ME||!ME.is_admin){root.innerHTML='';return;}
+ root.innerHTML=`<div class="parch admin"><h2>Outils admin</h2><p class="muted" style="margin:4px 0 14px">Ces outils n'agissent que sur ce compte. Il est caché des classements et de l'arène, et n'a pas de délai entre les combats.</p>
+ <div class="adm-grid">
+  <form class="adm-box" id="ad-grant"><h3>Ressources</h3><label for="ad-gold">Or</label><input id="ad-gold" type="number" min="0" value="10000"><label for="ad-tix">Tickets</label><input id="ad-tix" type="number" min="0" value="50"><button class="btn primary" type="submit">Ajouter</button></form>
+  <form class="adm-box" id="ad-floor"><h3>Progression</h3><label for="ad-fl">Étage max débloqué</label><input id="ad-fl" type="number" min="0" max="500" value="${S.maxFloor}"><button class="btn primary" type="submit">Appliquer</button></form>
+  <form class="adm-box" id="ad-card"><h3>Héros</h3><label for="ad-c">Héros</label><select id="ad-c">${CARDS.map(c=>`<option value="${c.id}">${esc(c.name)} · ${RAR[c.r].n}</option>`).join('')}</select><div class="row" style="gap:8px"><div style="flex:1"><label for="ad-l">Niveau</label><input id="ad-l" type="number" min="1" max="300" value="10"></div><div style="flex:1"><label for="ad-s">Étoiles</label><input id="ad-s" type="number" min="0" max="5" value="0"></div></div><button class="btn primary" type="submit">Donner ou modifier</button></form>
+  <form class="adm-box" id="ad-all"><h3>Collection complète</h3><label for="ad-al">Niveau de tous les héros</label><input id="ad-al" type="number" min="1" max="300" value="1"><button class="btn primary" type="submit">Débloquer les ${CARDS.length} héros</button></form>
+ </div>
+ <div class="adm-box danger" style="margin-top:14px"><h3>Remise à zéro</h3><p class="muted" style="margin:0 0 8px">Remet ce compte à son état de départ : légendaire seule, ${500} or, 10 tickets, étage 0.</p><button class="btn" id="ad-reset">${resetArm?'Confirmer : tout remettre à zéro':'Remettre à zéro'}</button></div></div>`;
+ const run=async(action,body,ok)=>{try{await api(action,body);toast(ok,'good');renderAdmin();}catch(e){toast(errMsg(e),'bad');}};
+ $('#ad-grant').onsubmit=e=>{e.preventDefault();run('admin_grant',{gold:$('#ad-gold').value,tickets:$('#ad-tix').value},'Ressources ajoutées.');};
+ $('#ad-floor').onsubmit=e=>{e.preventDefault();sel=null;run('admin_floor',{floor:$('#ad-fl').value},'Étage mis à jour.');};
+ $('#ad-card').onsubmit=e=>{e.preventDefault();run('admin_card',{card:$('#ad-c').value,lvl:$('#ad-l').value,stars:$('#ad-s').value},'Héros mis à jour.');};
+ $('#ad-all').onsubmit=e=>{e.preventDefault();run('admin_all',{lvl:$('#ad-al').value},'Collection complète débloquée.');};
+ $('#ad-reset').onclick=()=>{if(!resetArm){resetArm=true;renderAdmin();setTimeout(()=>{resetArm=false;if(tab==='admin')renderAdmin();},4000);return;}resetArm=false;sel=null;lastPull=null;run('admin_reset',{},'Compte remis à zéro.');};
 }
 
 /* ===== Onglet Classements ===== */

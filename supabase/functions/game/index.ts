@@ -376,7 +376,7 @@ function makeGame(db,now=()=>Date.now()){
  A.fight=async(uid,{floor})=>withProfile(uid,async p=>{
   floor=Math.floor(Number(floor));
   if(!(floor>=1&&floor<=p.max_floor+1))fail('floor','Étage non débloqué.');
-  const wait=Date.parse(p.next_fight_at)-now();if(wait>300)fail('cooldown','Combat précédent encore en cours.',{wait});
+  const wait=Date.parse(p.next_fight_at)-now();if(wait>300&&!p.is_admin)fail('cooldown','Combat précédent encore en cours.',{wait});
   const cards=await getCards(uid),team=unitsOf(p.team,cards);if(!team.length)fail('team','Ton équipe est vide.');
   const enemies=genEnemies(floor),seed=Math.floor(Math.random()*2147483647);
   const b=new Battle(team,enemies,seed);while(!b.over)b.step();
@@ -390,7 +390,9 @@ function makeGame(db,now=()=>Date.now()){
  A.pvp=async(uid,{target})=>{
   if(!target||target===uid)fail('target','Adversaire invalide.');
   const t=await getProfile(target);if(!t)fail('target','Adversaire introuvable.');
+  if(t.is_admin)fail('target','Le compte admin ne participe pas à l\'arène.');
   return withProfile(uid,async p=>{
+   if(p.is_admin)fail('admin','Le compte admin ne participe pas à l\'arène, pour ne pas fausser les cotes.');
    const day=parisDay(now()),used=p.pvp_day===day?p.pvp_used:0;
    if(used>=PVP_PER_DAY)fail('pvp','Plus de combats PvP aujourd\'hui. Reviens demain.');
    const [mine,theirs]=await Promise.all([getCards(uid),getCards(target)]);
@@ -405,6 +407,13 @@ function makeGame(db,now=()=>Date.now()){
    return full(uid,{battle:{seed,team:att,enemies:def,win,delta,gold,targetPseudo:t.pseudo}});
   });
  };
+ /* Outils réservés au compte admin, qui n'agissent que sur lui-même */
+ const admin=f=>async(uid,body)=>withProfile(uid,async p=>{if(!p.is_admin)fail('admin','Réservé au compte admin.');return f(uid,p,body||{});});
+ A.admin_grant=admin(async(uid,p,{gold,tickets})=>{gold=Math.max(0,Math.min(1e7,Math.floor(+gold||0)));tickets=Math.max(0,Math.min(1000,Math.floor(+tickets||0)));await commit(p,{gold:p.gold+gold,tickets:p.tickets+tickets});return full(uid);});
+ A.admin_floor=admin(async(uid,p,{floor})=>{floor=Math.max(0,Math.min(500,Math.floor(+floor||0)));await commit(p,{max_floor:floor});return full(uid);});
+ A.admin_card=admin(async(uid,p,{card,lvl,stars})=>{if(!CARD[card])fail('card','Héros inconnu.');const cards=await getCards(uid);cards[card]={lvl:Math.max(1,Math.min(300,Math.floor(+lvl||1))),stars:Math.max(0,Math.min(5,Math.floor(+stars||0)))};const cs=collectionStats(cards);await commit(p,{collection_score:cs.score,collection_count:cs.count});await upsertCards(uid,[{id:card,...cards[card]}]);return full(uid);});
+ A.admin_all=admin(async(uid,p,{lvl})=>{lvl=Math.max(1,Math.min(300,Math.floor(+lvl||1)));const cards={};CARDS.forEach(c=>cards[c.id]={lvl,stars:0});const cs=collectionStats(cards);await commit(p,{collection_score:cs.score,collection_count:cs.count});await upsertCards(uid,CARDS.map(c=>({id:c.id,lvl,stars:0})));return full(uid);});
+ A.admin_reset=admin(async(uid,p)=>{const {error}=await db.from('cards').delete().eq('user_id',uid).neq('card_id',p.legend);if(error)throw error;await db.from('cards').update({lvl:1,stars:0}).eq('user_id',uid).eq('card_id',p.legend);const cs=collectionStats({[p.legend]:{lvl:1,stars:0}});await commit(p,{gold:START_GOLD,tickets:START_TICKETS,max_floor:0,pity:0,pulls:0,team:[p.legend],defense:[p.legend],collection_score:cs.score,collection_count:cs.count,last_collect:new Date(now()).toISOString()});return full(uid);});
  return A;
 }
 
