@@ -1175,7 +1175,7 @@ function showAuth(modeA='login',msg=''){
    if(modeA==='signup'){const {error}=await sb.auth.signUp({email:emailOf(pseudo),password:pass});if(error)throw error;pendingPseudo=pseudo;}
    else{const {error}=await sb.auth.signInWithPassword({email:emailOf(pseudo),password:pass});if(error)throw error;}
    await boot();
-  }catch(err){go.disabled=false;const m=String(err.message||'');$('#a-msg').textContent=/registered|exists/i.test(m)?'Ce pseudo est déjà pris.':/invalid login|credentials/i.test(m)?'Pseudo ou mot de passe incorrect.':/confirm/i.test(m)?'La confirmation par e-mail est encore activée dans Supabase.':m||'Connexion impossible.';}
+  }catch(err){go.disabled=false;const m=String(err.message||'');$('#a-msg').textContent=/registered|exists/i.test(m)?'Ce pseudo est déjà pris.':/invalid login|credentials/i.test(m)?'Pseudo ou mot de passe incorrect.':/confirm|email address .* is invalid/i.test(m)?'Inscription bloquée : la confirmation par e-mail est encore activée dans Supabase.':m||'Connexion impossible.';}
  };
 }
 let pendingPseudo='',pickLegend=null;
