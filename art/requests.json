@@ -150,10 +150,21 @@
    "id": "test-lea-b",
    "description": "young adult woman, long straight honey light brown hair falling past her shoulders, dark brown thick-framed glasses, black short-sleeve t-shirt, blue jeans, white sneakers, warm smile but fierce eyes, standing confidently",
    "seed": 29
+  },
+  {
+   "id": "test-geoffrey-a",
+   "description": "tall slim young adult man, short messy bright copper red hair, round thin-framed glasses, black lace patterned long-sleeve shirt, dark charcoal trousers, white sneakers, big goofy grin, one hand on his hip, standing confidently",
+   "seed": 29
+  },
+  {
+   "id": "test-geoffrey-b",
+   "description": "tall slim young adult man, short messy bright copper red hair, round thin-framed glasses, black lace patterned long-sleeve shirt, dark charcoal trousers, white sneakers, laughing out loud with mouth wide open, playful clownish pose",
+   "seed": 41
   }
  ],
  "only": [
-  "__aucun__"
+  "test-geoffrey-a",
+  "test-geoffrey-b"
  ],
  "max_per_run": 10
 }
