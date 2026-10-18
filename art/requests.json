@@ -9,16 +9,6 @@
  },
  "sprites": [
   {
-   "id": "test-ryuk-texte",
-   "description": "brown tabby cat with dark stripes, white chest, white muzzle and white paws, fluffy tail with dark rings held up, yellow-green eyes, pink inner ears, standing on four legs"
-  },
-  {
-   "id": "test-ryuk-guide",
-   "description": "brown tabby cat with dark stripes, white chest, white muzzle and white paws, fluffy tail with dark rings held up, yellow-green eyes, pink inner ears, standing on four legs",
-   "init": "refs/ryuk_side_64.png",
-   "init_strength": 350
-  },
-  {
    "id": "impots",
    "description": "living tax form paper monster with angry eyes and tiny legs, holding a red rubber stamp"
   },
@@ -114,9 +104,5 @@
    "id": "colis",
    "description": "confused cardboard delivery package creature with a shipping label and tape"
   }
- ],
- "only": [
-  "test-ryuk-texte",
-  "test-ryuk-guide"
  ]
 }
