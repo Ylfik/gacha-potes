@@ -1,6 +1,6 @@
 {
   "name": "gacha-potes-android",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Application Android de Gacha entre potes (ouvre le jeu en ligne, toujours à jour)",
   "dependencies": {
