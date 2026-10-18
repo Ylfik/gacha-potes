@@ -10,7 +10,8 @@
  "sprites": [
   {
    "id": "yuumi",
-   "description": "white cat with large dark grey tabby patches on its back and the top of its head, grey tabby ringed tail, white legs, white chest and white muzzle, yellow-green eyes, pink nose, slightly shy posture, standing on four legs"
+   "description": "small slender petite cat with a thin delicate body, long thin legs and a small head, white fur with large grey tabby patches covered in dark grey stripes on its back and on the top of its head, thin grey tail with dark grey rings all the way to the tip, white chest, white muzzle and white paws, yellow-green eyes, pink nose, shy elegant posture, standing on four legs",
+   "force": true
   },
   {
    "id": "impots",
