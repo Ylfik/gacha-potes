@@ -6,8 +6,8 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 
 const EL={coeur:{n:'Cœur',b:'raison'},raison:{n:'Raison',b:'delire'},delire:{n:'Délire',b:'prudence'},prudence:{n:'Prudence',b:'coeur'},ordre:{n:'Ordre',b:'chaos'},chaos:{n:'Chaos',b:'ordre'}};
 const RAR={C:{n:'Commune',w:60},R:{n:'Rare',w:28},E:{n:'Épique',w:9},L:{n:'Légendaire',w:3}};
-const FAM={potes:'Les Potes',foyer:'Le Foyer',chezk:'Chez Kylian',jl:'Jenlain & Lila',lignee:'Lignée de Yuumi',bruyants:'Les Bruyants',lents:'Les Lents',paperasse:'La Paperasse',argent:"L'Argent",sante:'La Santé',poste:'La Poste',boulot:'Le Boulot',matin:'Le Matin',numerique:'Le Numérique',relous:'Les Relous',nuisibles:'Les Nuisibles',corvee:'La Corvée',quotidien:'Le Quotidien'};
-const SYN={potes:[[3,'+10 % ATK'],[5,'+25 % ATK']],foyer:[[2,'Quand un membre tombe, les autres gagnent 2 Colère']],chezk:[[2,"+15 % d'or"],[3,"+30 % d'or"]],jl:[[2,'Entrée fracassante +50 %']],lignee:[[2,"Câlin sur toute l'équipe au début"]],bruyants:[[2,'Malaise plus long']],lents:[[2,'+20 % PV'],[3,'+40 % PV']],paperasse:[[2,'États négatifs plus longs']],argent:[[2,"+15 % d'or"]],sante:[[2,'Soins +30 %']],poste:[[2,'+20 % VIT']],boulot:[[2,'Stress plus douloureux']],matin:[[2,'Flemme sur les ennemis au début']],numerique:[[2,'En attente plus long']],relous:[[2,'Stress sur un ennemi au début']],nuisibles:[[2,'+10 % esquive']],corvee:[[2,'+15 % PV'],[4,'+30 % PV']],quotidien:[[3,'+10 % ATK'],[5,'+20 % ATK']]};
+const FAM={soirees:'Les Soirées jeu',lol:'League of Legends',potes:'Les Potes',foyer:'Le Foyer',chezk:'Chez Kylian',jl:'Jenlain & Lila',lignee:'Lignée de Yuumi',bruyants:'Les Bruyants',lents:'Les Lents',paperasse:'La Paperasse',argent:"L'Argent",sante:'La Santé',poste:'La Poste',boulot:'Le Boulot',matin:'Le Matin',numerique:'Le Numérique',relous:'Les Relous',nuisibles:'Les Nuisibles',corvee:'La Corvée',quotidien:'Le Quotidien'};
+const SYN={soirees:[[3,'+15 % VIT']],lol:[[2,'+10 % ATK'],[3,'+10 % ATK et Bouclier au début']],potes:[[3,'+10 % ATK'],[5,'+25 % ATK']],foyer:[[2,'Quand un membre tombe, les autres gagnent 2 Colère']],chezk:[[2,"+15 % d'or"],[3,"+30 % d'or"]],jl:[[2,'Entrée fracassante +50 %']],lignee:[[2,"Câlin sur toute l'équipe au début"]],bruyants:[[2,'Malaise plus long']],lents:[[2,'+20 % PV'],[3,'+40 % PV']],paperasse:[[2,'États négatifs plus longs']],argent:[[2,"+15 % d'or"]],sante:[[2,'Soins +30 %']],poste:[[2,'+20 % VIT']],boulot:[[2,'Stress plus douloureux']],matin:[[2,'Flemme sur les ennemis au début']],numerique:[[2,'En attente plus long']],relous:[[2,'Stress sur un ennemi au début']],nuisibles:[[2,'+10 % esquive']],corvee:[[2,'+15 % PV'],[4,'+30 % PV']],quotidien:[[3,'+10 % ATK'],[5,'+20 % ATK']]};
 
 const CARDS=[
 {id:'jenlain',name:'Jenlain',r:'L',el:'delire',fam:['potes','jl'],hp:110,atk:120,spd:70,kit:[['Attaque','Punchline','Frappe une cible.'],['Passif','Retardataire','Arrive après 3 actions alliées, avec une entrée fracassante.'],['Compétence','Freestyle','Frappe tous les ennemis, plus fort à chaque utilisation.'],['Ulti','Concert',"À charger. Frappe tous les ennemis et donne Hype à toute l'équipe."]]},
@@ -44,6 +44,9 @@ const CARDS=[
 {id:'wifi',name:'La Coupure de wifi',r:'C',el:'delire',fam:['quotidien','numerique'],hp:80,atk:70,spd:110,kit:[['Attaque','Déconnexion','Frappe et met En attente.']]},
 {id:'messagevu',name:'Le Message vu sans réponse',r:'C',el:'coeur',fam:['quotidien','numerique'],hp:80,atk:80,spd:90,kit:[['Attaque','Vu à 23 h 42','Frappe et applique Angoisse.']]},
 {id:'facture',name:'La Facture',r:'C',el:'raison',fam:['quotidien','argent'],hp:90,atk:90,spd:70,kit:[['Attaque','Échéance','Frappe et applique Déprime.']]},
+{id:'udyr',name:'Udyr',r:'E',el:'delire',fam:['soirees','lol'],hp:150,atk:110,spd:90,kit:[['Attaque','Coup de griffe','Frappe une cible.'],['Passif','Postures','Alterne à chaque action : posture offensive (gagne Colère) puis défensive (gagne un Bouclier).'],['Compétence',"Charge de l'ours",'Frappe fort et met la cible en Malaise.']]},
+{id:'ekko',name:'Ekko',r:'E',el:'raison',fam:['soirees','lol'],hp:100,atk:105,spd:110,kit:[['Attaque','Batte temporelle','Frappe une cible ; une attaque sur trois frappe deux fois et donne Hype.'],['Passif','Résonance','Se souvient de ses PV des dernières actions.'],['Compétence','Retour en arrière',"Récupère les PV qu'il avait trois actions plus tôt et frappe tous les ennemis."]]},
+{id:'thresh',name:'Thresh',r:'E',el:'chaos',fam:['soirees','lol'],hp:160,atk:80,spd:70,kit:[['Attaque','Fléau','Frappe une cible.'],['Passif','Damnation',"Chaque ennemi K.O. lui donne +6 % d'ATK et +5 % de PV max."],['Compétence','Lanterne',"Bouclier sur l'allié le plus blessé et Malaise sur un ennemi."]]},
 {id:'colis',name:'Le Colis introuvable',r:'C',el:'delire',fam:['quotidien','poste'],hp:80,atk:100,spd:80,kit:[['Attaque','Livré chez le voisin','Gros dégâts sur une cible au hasard.']]}
 ];
 const CARD={}; CARDS.forEach((c,i)=>{c.no=i+1;CARD[c.id]=c;});
@@ -51,7 +54,7 @@ const BYR={C:[],R:[],E:[],L:[]}; CARDS.forEach(c=>BYR[c.r].push(c));
 const RETARD=new Set(['jenlain','lila']);
 const ANIMALS=new Set(['ryuk','yuumi','traffy','echo','zoya']);
 const CHARGE=new Set(['jenlain','lea','kylian','geoffrey']);
-const SKILL_CD={jenlain:3,yoann:3,lea:3,kylian:3,geoffrey:3,lila:3,ryuk:3,yuumi:2,traffy:4,echo:3,zoya:3};
+const SKILL_CD={udyr:3,ekko:3,thresh:3,jenlain:3,yoann:3,lea:3,kylian:3,geoffrey:3,lila:3,ryuk:3,yuumi:2,traffy:4,echo:3,zoya:3};
 const NEG=new Set(['angoisse','malaise','flemme','stress','deprime','attente','piece']);
 const ST_LABEL={angoisse:'Angoisse',malaise:'Malaise',flemme:'Flemme',stress:'Stress',deprime:'Déprime',attente:'En attente',piece:'Pièce manq.',hype:'Hype',zen:'Zen',calin:'Câlin',provoc:'Provoc.',cachee:'Cachée',double:'×2'};
 const rnd=n=>Math.floor(Math.random()*n);
@@ -91,7 +94,10 @@ const KIT={
  wifi:{atk(b,u){const t=b.pick(u);if(!t)return;b.hit(u,t,0.8);b.apply(u,t,'attente',20);}},
  messagevu:{atk(b,u){const t=b.pick(u);if(!t)return;b.hit(u,t,0.8);b.apply(u,t,'angoisse',40);}},
  facture:{atk(b,u){const t=b.pick(u);if(!t)return;b.hit(u,t,0.9);b.apply(u,t,'deprime',50);}},
- colis:{atk:B1(1.6)}
+ colis:{atk:B1(1.6)},
+ udyr:{atk:B1(1),skill(b,u){const t=b.pick(u);if(!t)return;b.say(`${b.nm(u)} charge comme un ours.`);b.hit(u,t,1.4);b.apply(u,t,'malaise',20);}},
+ ekko:{atk(b,u){const t=b.pick(u);if(!t)return;u.uses++;b.hit(u,t,1);if(u.uses%3===0&&t.alive){b.hit(u,t,0.6);b.apply(u,u,'hype',30);}},skill(b,u){const back=(u.hist&&u.hist.length)?u.hist[0]:u.hp;b.say(`${b.nm(u)} remonte le temps.`);if(back>u.hp){const g=Math.round(back-u.hp);u.hp=Math.min(u.maxhp,back);b.ev(u,'+'+g,'heal');}b.foes(u).forEach(t=>b.hit(u,t,0.5));}},
+ thresh:{atk:B1(1),skill(b,u){const a=b.mostHurt(u),v=Math.round(u.maxhp*0.2);a.shield+=v;b.ev(a,'+'+v+' bouclier','pos');const t=b.pick(u);b.say(`${b.nm(u)} tend sa lanterne.`);if(t)b.apply(u,t,'malaise',15);}}
 };
 const AFTER={
  traffy(b,u){u.stacks=Math.min(15,u.stacks+1);},
@@ -99,6 +105,8 @@ const AFTER={
  proprio(b,u){if(u.acts%3===0){b.say(`${b.nm(u)} réclame le loyer.`);b.foes(u).filter(t=>t.id!=='kylian').forEach(t=>b.hit(u,t,0.5));}},
  caf(b,u){const as=b.allies(u);if(!as.length)return;if(b.rand()<0.2){const w=as.filter(a=>a.st.hype||a.st.zen||a.st.calin||a.colere>0||a.shield>0);if(!w.length)return;const a=w[b.rnd(w.length)];if(a.st.hype)delete a.st.hype;else if(a.st.zen)delete a.st.zen;else if(a.st.calin)delete a.st.calin;else if(a.colere>0)a.colere--;else a.shield=0;b.say(`${b.nm(u)} réclame un trop-perçu à ${b.nm(a)}.`);b.ev(a,'Trop-perçu','neg');return;}const a=as[b.rnd(as.length)];const r=b.rnd(5);if(r===0)b.apply(u,a,'hype',40);else if(r===1)b.apply(u,a,'zen',30);else if(r===2)b.apply(u,a,'calin',40);else if(r===3){a.colere=Math.min(10,a.colere+1);b.ev(a,'Colère','pos');}else{const v=Math.round(a.maxhp*0.1);a.shield+=v;b.ev(a,'+'+v+' bouclier','pos');}},
  chef(b,u){if(u.acts%3===0){const as=b.allies(u).filter(x=>x!==u);if(!as.length)return;const a=as[b.rnd(as.length)];a.gauge=1000;a.confused=true;b.say(`${b.nm(u)} donne un ordre absurde à ${b.nm(a)}.`);}},
+ udyr(b,u){if(u.acts%2){u.colere=Math.min(10,u.colere+1);b.ev(u,'Posture offensive','pos');}else{const v=Math.round(u.maxhp*0.08);u.shield+=v;b.ev(u,'Posture défensive','pos');}},
+ ekko(b,u){u.hist=(u.hist||[]).concat([u.hp]).slice(-3);},
  bug(b,u){const r=b.rand();if(r<0.25){const t=b.pick(u);if(t){b.say(`${b.nm(u)} fait planter ${b.nm(t)}.`);b.apply(u,t,'malaise',15);}}else if(r<0.5){b.apply(u,u,'hype',30);}else if(r<0.65){const as=b.allies(u).filter(x=>x!==u);if(as.length){const a=as[b.rnd(as.length)];b.say(`${b.nm(u)} touche sa propre équipe.`);b.hit(u,a,0.5);}}}
 };
 
@@ -117,6 +125,8 @@ class Battle{
    if((y.corvee||0)>=4)hp*=1.3;else if((y.corvee||0)>=2)hp*=1.15;
    if((y.poste||0)>=2)spd*=1.2;
    if((y.nuisibles||0)>=2)dodge+=0.1;
+   if((y.soirees||0)>=3)spd*=1.15;
+   if((y.lol||0)>=2)atk*=1.10;
    us.forEach(u=>{u.atkMul*=atk;u.maxhp=Math.round(u.maxhp*hp);u.hp=u.maxhp;u.spdMul*=spd;u.dodge+=dodge;u.alone=u.id==='chaussette'&&us.filter(x=>x.d.fam.includes('quotidien')).length===1;});
   });
   [0,1].forEach(s=>{
@@ -129,6 +139,7 @@ class Battle{
    if((y.matin||0)>=2)foes.forEach(t=>this.apply(src,t,'flemme',40));
    if((y.relous||0)>=2&&foes.length)this.apply(src,foes[this.rnd(foes.length)],'stress',50);
    if((y.lignee||0)>=2)us.filter(u=>u.present).forEach(a=>this.apply(src,a,'calin',50));
+   if((y.lol||0)>=3)us.forEach(a=>{a.shield+=Math.round(a.maxhp*0.1);});
   });
  }
  add(c,side){
@@ -175,6 +186,7 @@ class Battle{
  }
  kill(t){
   t.alive=false;t.hp=0;this.say(`${this.nm(t)} est K.O.`);
+  this.units.filter(x=>x.id==='thresh'&&x.alive&&x.side!==t.side).forEach(th=>{th.atkMul*=1.06;const g=Math.round(th.maxhp*0.05);th.maxhp+=g;th.hp+=g;this.ev(th,'Âme','pos');});
   if(t.id==='collegue'&&t.colle&&t.colle.st.flemme&&t.colle.st.flemme.src===t)delete t.colle.st.flemme;
   this.units.filter(x=>x.side===t.side&&x.alive).forEach(x=>{
    if(x.id==='lila'&&!x.once){x.once=true;x.discreet=false;x.atkMul*=1.6;this.say(`${this.nm(x)} n'est plus du tout timide.`,'ult');}
