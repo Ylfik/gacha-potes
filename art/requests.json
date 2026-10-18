@@ -115,10 +115,27 @@
   {
    "id": "colis",
    "description": "confused cardboard delivery package creature with a shipping label and tape"
+  },
+  {
+   "id": "test-jenlain-a",
+   "description": "young adult man, short brown hair under an orange baseball cap worn backwards, full brown beard and mustache, light blue polo shirt, dark blue jeans, white sneakers, holding a smoking wooden pipe in one hand, relaxed confident pose",
+   "seed": 11
+  },
+  {
+   "id": "test-jenlain-b",
+   "description": "young adult man, short brown hair under an orange baseball cap worn backwards, full brown beard and mustache, light blue polo shirt, dark blue jeans, white sneakers, black headphones around his neck, holding a smoking wooden pipe, relaxed confident pose",
+   "seed": 23
+  },
+  {
+   "id": "test-jenlain-c",
+   "description": "young adult man, short brown hair under an orange baseball cap worn backwards, full brown beard and mustache, light blue polo shirt, dark blue jeans, white sneakers, holding a smoking wooden pipe in one hand, laid-back cool pose",
+   "seed": 37
   }
  ],
  "only": [
-  "__aucun__"
+  "test-jenlain-a",
+  "test-jenlain-b",
+  "test-jenlain-c"
  ],
  "max_per_run": 10
 }
