@@ -1,0 +1,33 @@
+name: Sprites PixelLab
+
+on:
+  push:
+    branches: [main]
+    paths: ['art/requests.json', 'art/tools/**', '.github/workflows/sprites.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sprites
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Générer les sprites manquants
+        env:
+          PIXELLAB_KEY: ${{ secrets.PIXELLAB_KEY }}
+        run: python3 art/tools/generate.py
+      - name: Enregistrer les images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898729+github-actions[bot]@users.noreply.github.com"
+          git add art/generated
+          if git diff --cached --quiet; then echo "Rien de nouveau"; exit 0; fi
+          git commit -m "Sprites générés par PixelLab"
+          git pull --rebase origin main
+          git push
