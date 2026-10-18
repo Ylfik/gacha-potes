@@ -9,6 +9,10 @@
  },
  "sprites": [
   {
+   "id": "yuumi",
+   "description": "white cat with large dark grey tabby patches on its back and the top of its head, grey tabby ringed tail, white legs, white chest and white muzzle, yellow-green eyes, pink nose, slightly shy posture, standing on four legs"
+  },
+  {
    "id": "impots",
    "description": "living tax form paper monster with angry eyes and tiny legs, holding a red rubber stamp"
   },
