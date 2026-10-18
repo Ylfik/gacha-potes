@@ -1,0 +1,12 @@
+{
+  "name": "gacha-potes-android",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Application Android de Gacha entre potes (ouvre le jeu en ligne, toujours à jour)",
+  "dependencies": {
+    "@capacitor/android": "6.2.1",
+    "@capacitor/app": "6.0.3",
+    "@capacitor/cli": "6.2.1",
+    "@capacitor/core": "6.2.1"
+  }
+}

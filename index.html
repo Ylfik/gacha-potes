@@ -298,6 +298,9 @@ body.logged-out header.top,body.logged-out main{display:none}
 .mface{position:relative;width:40px;height:40px;border-radius:6px;overflow:hidden;border:2px solid var(--rar);background:linear-gradient(160deg,color-mix(in srgb,var(--el) 45%,#2b2440),#15111d);display:inline-grid;place-items:center}
 .mface img.full{width:100%;height:100%;object-fit:cover}.mface img.px{width:70%}
 .mface b{position:absolute;right:1px;bottom:0;font-size:10px;color:#fff;text-shadow:0 1px 0 #000,0 0 3px #000;font-family:var(--font-display)}
+.apk-banner{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 8px);transform:translateX(-50%);z-index:95;width:min(94vw,460px);display:flex;align-items:center;gap:8px;background:#2a1709;border:2px solid var(--gold);border-radius:12px;padding:8px 10px;color:var(--parch);font-size:13px;font-weight:600;box-shadow:0 6px 18px rgba(0,0,0,.45)}
+.apk-banner span{flex:1}
+.apk-banner a{text-decoration:none}
 /* Arène */
 .pvp{display:grid;gap:14px}
 .rating{display:grid;justify-items:center;background:var(--parch-2);border:2px solid var(--parch-3);border-radius:10px;padding:4px 14px}
@@ -1164,6 +1167,24 @@ async function boot(){
 }
 if(!CONFIGURED){document.body.classList.add('logged-out');$('#auth-root').innerHTML='<div class="auth"><div class="parch auth-card"><h2>Serveur non configuré</h2><p class="muted">Il manque l\'adresse du serveur Supabase dans cette page.</p></div></div>';}
 else{boot();setInterval(renderHeader,1000);document.addEventListener('visibilitychange',()=>{if(!document.hidden&&ME&&!timer&&!busy&&!nextTimer)api('state').then(()=>{if(tab!=='combat')refresh();}).catch(()=>{});});}
+
+/* ===== Application Android ===== */
+(async()=>{
+ const C=window.Capacitor;if(!C||!C.isNativePlatform||!C.isNativePlatform())return;
+ document.body.classList.add('native');const App=C.Plugins&&C.Plugins.App;if(!App)return;
+ App.addListener('backButton',()=>{
+  const l=document.querySelector('.lightbox');if(l){l.remove();return;}
+  if(document.querySelector('#stage-root .stage'))return;
+  if($('#overlay-root').innerHTML){if(RUN&&RUN.root==='#pvp-arena'&&timer)return;closeSheet();return;}
+  if(!document.body.classList.contains('logged-out')&&tab!=='combat'){showTab('combat');return;}
+  App.exitApp();
+ });
+ try{
+  const info=await App.getInfo(),j=await (await fetch('apk.json',{cache:'no-store'})).json();
+  const newer=(a,b)=>{const x=a.split('.').map(Number),y=b.split('.').map(Number);for(let i=0;i<3;i++){if((x[i]||0)!==(y[i]||0))return (x[i]||0)>(y[i]||0);}return false;};
+  if(newer(j.version,info.version)){const d=document.createElement('div');d.className='apk-banner';d.innerHTML=`<span>Une nouvelle version de l'application est disponible.</span><a class="btn small gold" href="${j.url}" target="_blank" rel="noopener">Télécharger</a><button class="btn small" aria-label="Fermer">×</button>`;d.querySelector('button').onclick=()=>d.remove();document.body.appendChild(d);}
+ }catch(e){}
+})();
 
 </script>
 </body></html>

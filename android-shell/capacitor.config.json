@@ -1,0 +1,13 @@
+{
+  "appId": "fr.ylfik.gachapotes",
+  "appName": "Gacha entre potes",
+  "webDir": "www",
+  "server": {
+    "url": "https://ylfik.github.io/gacha-potes/",
+    "errorPath": "offline.html",
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#1A1310"
+  }
+}
