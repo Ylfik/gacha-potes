@@ -10,7 +10,10 @@ d = cfg["defaults"]
 out_dir = os.path.join(root, "generated")
 os.makedirs(out_dir, exist_ok=True)
 made, failed = [], []
+only = set(cfg.get("only") or [])
 for s in cfg["sprites"]:
+    if only and s["id"] not in only:
+        continue
     path = os.path.join(out_dir, s["id"] + ".png")
     if os.path.exists(path) and not s.get("force"):
         continue
@@ -28,6 +31,10 @@ for s in cfg["sprites"]:
         "text_guidance_scale": 8,
         "seed": s.get("seed", 0),
     }
+    if s.get("init"):
+        raw = open(os.path.join(root, s["init"]), "rb").read()
+        body["init_image"] = {"type": "base64", "base64": base64.b64encode(raw).decode()}
+        body["init_image_strength"] = s.get("init_strength", 300)
     req = urllib.request.Request("https://api.pixellab.ai/v1/generate-image-pixflux", data=json.dumps(body).encode(),
                                  headers={"Authorization": "Bearer " + KEY, "Content-Type": "application/json"})
     for attempt in range(3):

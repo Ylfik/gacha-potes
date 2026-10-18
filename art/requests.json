@@ -1,36 +1,122 @@
 {
-  "defaults": {
-    "size": 64,
-    "suffix": "cute chibi pixel art game character, full body, side view, facing right, simple shapes, bold readable silhouette",
-    "negative": "background, scenery, text, letters, watermark, frame, border, multiple characters",
-    "outline": "single color black outline",
-    "shading": "basic shading",
-    "detail": "medium detail"
+ "defaults": {
+  "size": 64,
+  "suffix": "cute chibi pixel art game character, full body, side view, facing right, simple shapes, bold readable silhouette",
+  "negative": "background, scenery, text, letters, watermark, frame, border, multiple characters",
+  "outline": "single color black outline",
+  "shading": "basic shading",
+  "detail": "medium detail"
+ },
+ "sprites": [
+  {
+   "id": "test-ryuk-texte",
+   "description": "brown tabby cat with dark stripes, white chest, white muzzle and white paws, fluffy tail with dark rings held up, yellow-green eyes, pink inner ears, standing on four legs"
   },
-  "sprites": [
-    {"id": "impots", "description": "living tax form paper monster with angry eyes and tiny legs, holding a red rubber stamp"},
-    {"id": "assurance", "description": "living health insurance paper document with a blue cross logo, tired eyes, carrying a stack of forms"},
-    {"id": "proprio", "description": "smug middle-aged landlord in a grey suit with glasses, holding a ring of keys and a rent invoice"},
-    {"id": "caf", "description": "living envelope creature with a mischievous grin, gold coins spilling out of it"},
-    {"id": "file", "description": "grumpy queue ticket dispenser machine on little legs, a numbered paper ticket sticking out like a tongue"},
-    {"id": "recommande", "description": "registered mail envelope creature with a yellow sticker, determined eyes, running"},
-    {"id": "facture", "description": "living invoice paper with a big red total amount, menacing grin, little arms"},
-    {"id": "lundi", "description": "sleepy grumpy calendar page monster labelled monday, dark circles under its eyes, holding a coffee mug"},
-    {"id": "service", "description": "call center headset robot creature with a fake smile, music notes floating from its phone"},
-    {"id": "bug", "description": "glitchy computer bug insect with a small screen on its back showing an error, pixel glitches around it"},
-    {"id": "collegue", "description": "annoying office coworker man in a light blue shirt and blue tie, holding a coffee mug, talking with a smug smile"},
-    {"id": "chef", "description": "incompetent bald office boss in a dark suit with a yellow tie, pointing confidently forward"},
-    {"id": "souris", "description": "small cute grey mouse with pink ears and a long pink tail"},
-    {"id": "moustique", "description": "annoying mosquito with a long needle nose, big red eyes and transparent wings"},
-    {"id": "linge", "description": "pile of dirty laundry monster with a sock on top and stinky green fumes"},
-    {"id": "vaisselle", "description": "wobbly tower of dirty plates and bowls monster with a face"},
-    {"id": "aspirateur", "description": "angry red vacuum cleaner robot with a long hose and wheels"},
-    {"id": "chaussette", "description": "lonely striped sock creature with big sad eyes"},
-    {"id": "veto", "description": "friendly veterinarian woman in a white coat with a stethoscope, holding a syringe"},
-    {"id": "reveil", "description": "angry red alarm clock with two ringing bells and little legs"},
-    {"id": "embouteillages", "description": "small red car with angry headlight eyes, honking, little smoke clouds"},
-    {"id": "wifi", "description": "sad internet router box with antennas and a broken wifi symbol, unplugged cable"},
-    {"id": "messagevu", "description": "anxious smartphone creature, its screen shows a chat bubble left on read"},
-    {"id": "colis", "description": "confused cardboard delivery package creature with a shipping label and tape"}
-  ]
+  {
+   "id": "test-ryuk-guide",
+   "description": "brown tabby cat with dark stripes, white chest, white muzzle and white paws, fluffy tail with dark rings held up, yellow-green eyes, pink inner ears, standing on four legs",
+   "init": "refs/ryuk_side_64.png",
+   "init_strength": 350
+  },
+  {
+   "id": "impots",
+   "description": "living tax form paper monster with angry eyes and tiny legs, holding a red rubber stamp"
+  },
+  {
+   "id": "assurance",
+   "description": "living health insurance paper document with a blue cross logo, tired eyes, carrying a stack of forms"
+  },
+  {
+   "id": "proprio",
+   "description": "smug middle-aged landlord in a grey suit with glasses, holding a ring of keys and a rent invoice"
+  },
+  {
+   "id": "caf",
+   "description": "living envelope creature with a mischievous grin, gold coins spilling out of it"
+  },
+  {
+   "id": "file",
+   "description": "grumpy queue ticket dispenser machine on little legs, a numbered paper ticket sticking out like a tongue"
+  },
+  {
+   "id": "recommande",
+   "description": "registered mail envelope creature with a yellow sticker, determined eyes, running"
+  },
+  {
+   "id": "facture",
+   "description": "living invoice paper with a big red total amount, menacing grin, little arms"
+  },
+  {
+   "id": "lundi",
+   "description": "sleepy grumpy calendar page monster labelled monday, dark circles under its eyes, holding a coffee mug"
+  },
+  {
+   "id": "service",
+   "description": "call center headset robot creature with a fake smile, music notes floating from its phone"
+  },
+  {
+   "id": "bug",
+   "description": "glitchy computer bug insect with a small screen on its back showing an error, pixel glitches around it"
+  },
+  {
+   "id": "collegue",
+   "description": "annoying office coworker man in a light blue shirt and blue tie, holding a coffee mug, talking with a smug smile"
+  },
+  {
+   "id": "chef",
+   "description": "incompetent bald office boss in a dark suit with a yellow tie, pointing confidently forward"
+  },
+  {
+   "id": "souris",
+   "description": "small cute grey mouse with pink ears and a long pink tail"
+  },
+  {
+   "id": "moustique",
+   "description": "annoying mosquito with a long needle nose, big red eyes and transparent wings"
+  },
+  {
+   "id": "linge",
+   "description": "pile of dirty laundry monster with a sock on top and stinky green fumes"
+  },
+  {
+   "id": "vaisselle",
+   "description": "wobbly tower of dirty plates and bowls monster with a face"
+  },
+  {
+   "id": "aspirateur",
+   "description": "angry red vacuum cleaner robot with a long hose and wheels"
+  },
+  {
+   "id": "chaussette",
+   "description": "lonely striped sock creature with big sad eyes"
+  },
+  {
+   "id": "veto",
+   "description": "friendly veterinarian woman in a white coat with a stethoscope, holding a syringe"
+  },
+  {
+   "id": "reveil",
+   "description": "angry red alarm clock with two ringing bells and little legs"
+  },
+  {
+   "id": "embouteillages",
+   "description": "small red car with angry headlight eyes, honking, little smoke clouds"
+  },
+  {
+   "id": "wifi",
+   "description": "sad internet router box with antennas and a broken wifi symbol, unplugged cable"
+  },
+  {
+   "id": "messagevu",
+   "description": "anxious smartphone creature, its screen shows a chat bubble left on read"
+  },
+  {
+   "id": "colis",
+   "description": "confused cardboard delivery package creature with a shipping label and tape"
+  }
+ ],
+ "only": [
+  "test-ryuk-texte",
+  "test-ryuk-guide"
+ ]
 }
