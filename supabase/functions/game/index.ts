@@ -48,7 +48,7 @@ const CARDS=[
 {id:'ekko',name:'Ekko',r:'E',el:'raison',fam:['soirees','lol'],hp:100,atk:105,spd:110,kit:[['Attaque','Batte temporelle','Frappe une cible ; une attaque sur trois frappe deux fois et donne Hype.'],['Passif','Résonance','Se souvient de ses PV des dernières actions.'],['Compétence','Retour en arrière',"Récupère les PV qu'il avait trois actions plus tôt et frappe tous les ennemis."]]},
 {id:'thresh',name:'Thresh',r:'E',el:'chaos',fam:['soirees','lol'],hp:160,atk:80,spd:70,kit:[['Attaque','Fléau','Frappe une cible.'],['Passif','Damnation',"Chaque ennemi K.O. lui donne +6 % d'ATK et +5 % de PV max."],['Compétence','Lanterne',"Bouclier sur l'allié le plus blessé et Malaise sur un ennemi."]]},
 {id:'chasseuse',name:'La Chasseuse',r:'E',el:'raison',fam:['soirees','dbd'],hp:130,atk:110,spd:80,kit:[['Attaque','Hachette','Frappe une cible, même cachée.'],['Passif','Berceuse','Au début du combat, Angoisse sur un ennemi au hasard.'],['Compétence','Salve de hachettes','Lance trois hachettes sur des ennemis au hasard.']]},
-{id:'harpie',name:'La Harpie',r:'E',el:'chaos',fam:['soirees','dbd'],hp:120,atk:100,spd:70,kit:[['Attaque','Griffes','Frappe une cible.'],['Passif','Piège fantôme','Au début du combat, piège un ennemi au hasard : à sa prochaine action, il prend des dégâts et tombe en Malaise.'],['Compétence','Marécage','Piège deux ennemis.']]},
+{id:'harpie',name:"L'Esprit",r:'E',el:'chaos',fam:['soirees','dbd'],hp:110,atk:115,spd:95,kit:[['Attaque','Katana','Frappe une cible.'],['Passif','Entre deux mondes','Au début du combat, elle est Cachée un moment.'],['Compétence','Marche des phases',"Disparaît (Cachée), puis frappe fort l'ennemi le plus faible et lui applique Angoisse."]]},
 {id:'legion',name:'La Légion',r:'E',el:'delire',fam:['soirees','dbd'],hp:110,atk:95,spd:120,kit:[['Attaque','Coup de couteau','Frappe une cible différente à chaque fois et applique Stress.'],['Passif','Saignement','Son Stress dure plus longtemps.'],['Compétence','Frénésie',"Frappe tous les ennemis à la suite et applique Stress, puis s'essouffle (Flemme)."]]},
 {id:'lost',name:'The Lost',r:'E',el:'ordre',fam:['soirees','isaac'],hp:45,atk:115,spd:110,kit:[['Attaque','Larmes','Frappe une cible.'],['Passif','Manteau sacré','Très fragile, mais esquive souvent et annule le premier coup reçu.'],['Compétence','Larmes spectrales','Frappe deux ennemis en traversant Bouclier et Discrétion, et récupère son Manteau sacré.']]},
 {id:'azazel',name:'Azazel',r:'E',el:'chaos',fam:['soirees','isaac'],hp:110,atk:108,spd:90,kit:[['Attaque','Souffle court','Frappe une cible et un deuxième ennemi.'],['Passif','Ailes','Esquive parfois les coups.'],['Compétence','Brimstone','Rayon sur tous les ennemis.']]},
@@ -109,7 +109,7 @@ const KIT={
  ekko:{atk(b,u){const t=b.pick(u);if(!t)return;u.uses++;b.hit(u,t,1);if(u.uses%3===0&&t.alive){b.hit(u,t,0.6);b.apply(u,u,'hype',30);}},skill(b,u){const back=(u.hist&&u.hist.length)?u.hist[0]:u.hp;b.say(`${b.nm(u)} remonte le temps.`);if(back>u.hp){const g=Math.round(back-u.hp);u.hp=Math.min(u.maxhp,back);b.ev(u,'+'+g,'heal');}b.foes(u).forEach(t=>b.hit(u,t,0.5));}},
  thresh:{atk:B1(1),skill(b,u){const a=b.mostHurt(u),v=Math.round(u.maxhp*0.2);a.shield+=v;b.ev(a,'+'+v+' bouclier','pos');const t=b.pick(u);b.say(`${b.nm(u)} tend sa lanterne.`);if(t)b.apply(u,t,'malaise',15);}},
  chasseuse:{atk(b,u){const t=b.pick(u,{pierce:true});if(t)b.hit(u,t,1);},skill(b,u){b.say(`${b.nm(u)} lance une salve de hachettes.`);for(let i=0;i<3;i++){const f=b.foes(u);if(!f.length)break;b.hit(u,f[b.rnd(f.length)],0.7);}}},
- harpie:{atk:B1(1),skill(b,u){b.say(`${b.nm(u)} pose des pièges.`);const f=b.foes(u).filter(t=>!t.trap);for(let i=0;i<2&&f.length;i++){const t=f.splice(b.rnd(f.length),1)[0];t.trap=u;b.ev(t,'Piégé','neg');}}},
+ harpie:{atk:B1(1),skill(b,u){u.st.cachee={t:25};b.ev(u,'Cachée','pos');const f=b.visible(u);if(!f.length)return;const t=f.reduce((a,c)=>a.hp<c.hp?a:c);b.say(`${b.nm(u)} traverse les phases et surgit sur ${b.nm(t)}.`);b.hit(u,t,1.5);b.apply(u,t,'angoisse',40);}},
  legion:{atk(b,u){let f=b.visible(u);const prov=b.foes(u).filter(x=>x.st.provoc);if(prov.length)f=prov;else if(f.length>1&&u.colle)f=f.filter(x=>x!==u.colle);if(u.confused){B1(1)(b,u);return;}if(!f.length)return;const t=f[b.rnd(f.length)];u.colle=t;b.hit(u,t,0.9);b.apply(u,t,'stress',60);},skill(b,u){b.say(`${b.nm(u)} entre en Frénésie.`);b.foes(u).forEach(t=>{b.hit(u,t,0.6);b.apply(u,t,'stress',60);});u.st.flemme={t:25};b.ev(u,'Essoufflé','neg');}},
  lost:{atk:B1(1),skill(b,u){b.say(`${b.nm(u)} tire des larmes spectrales.`);const f=b.foes(u);for(let i=0;i<2&&f.length;i++){const t=f.splice(b.rnd(f.length),1)[0];b.hit(u,t,1,{pierce:true});}if(!u.mantle){u.mantle=true;b.ev(u,'Manteau sacré','pos');}}},
  azazel:{atk(b,u){const t=b.pick(u);if(!t)return;b.hit(u,t,1);const o=b.foes(u).filter(x=>x!==t);if(o.length)b.hit(u,o[b.rnd(o.length)],0.5);},skill(b,u){b.say(`${b.nm(u)} crache un Brimstone.`);b.foes(u).forEach(t=>b.hit(u,t,0.9));}},
@@ -168,14 +168,14 @@ class Battle{
    if((y.dbd||0)>=3)foes.forEach(t=>this.apply(src,t,'angoisse',50));else if((y.dbd||0)>=2&&foes.length)this.apply(src,foes[this.rnd(foes.length)],'angoisse',50);
    us.forEach(u=>{
     if(u.id==='chasseuse'&&foes.length){const t=foes[this.rnd(foes.length)];this.say(`${this.nm(u)} fredonne sa berceuse.`);this.apply(u,t,'angoisse',50);}
-    if(u.id==='harpie'&&foes.length){const f=foes.filter(t=>!t.trap);if(f.length){const t=f[this.rnd(f.length)];t.trap=u;this.ev(t,'Piégé','neg');}}
+    if(u.id==='harpie'){u.st.cachee={t:40};this.ev(u,'Cachée','pos');}
     if(u.id==='arcaniste'&&u.present)us.filter(a=>a.present).forEach(a=>this.apply(u,a,'hype',30));
    });
   });
  }
  add(c,side){
   const d=CARD[c.id],m=statMult(c.lvl||1,c.stars||0);
-  const u={uid:this.units.length,id:c.id,d,side,lvl:c.lvl||1,stars:c.stars||0,maxhp:Math.round(d.hp*8*m),atk0:d.atk*m,spd0:d.spd,hp:0,gauge:RETARD.has(c.id)?0:100+this.rand()*450,alive:true,present:!RETARD.has(c.id),st:{},colere:0,shield:0,cd:2,charge:0,uses:0,acts:0,atkMul:1,spdMul:1,dodge:c.id==='souris'?0.25:c.id==='lost'?0.2:(c.id==='azazel'||c.id==='chasseur')?0.15:0,mantle:c.id==='lost',trap:null,immune:new Set(c.id==='yoann'?['angoisse','malaise','stress']:c.id==='geoffrey'?['malaise','angoisse']:[]),once:false,discreet:c.id==='lila',cagnotte:0,stacks:0,confused:false,colle:null,alone:false};
+  const u={uid:this.units.length,id:c.id,d,side,lvl:c.lvl||1,stars:c.stars||0,maxhp:Math.round(d.hp*8*m),atk0:d.atk*m,spd0:d.spd,hp:0,gauge:RETARD.has(c.id)?0:100+this.rand()*450,alive:true,present:!RETARD.has(c.id),st:{},colere:0,shield:0,cd:2,charge:0,uses:0,acts:0,atkMul:1,spdMul:1,dodge:c.id==='souris'?0.25:c.id==='lost'?0.2:(c.id==='azazel'||c.id==='chasseur')?0.15:0,mantle:c.id==='lost',immune:new Set(c.id==='yoann'?['angoisse','malaise','stress']:c.id==='geoffrey'?['malaise','angoisse']:[]),once:false,discreet:c.id==='lila',cagnotte:0,stacks:0,confused:false,colle:null,alone:false};
   u.hp=u.maxhp;this.units.push(u);
  }
  nm(u){return u?`<b class="s${u.side}">${u.d.name}</b>`:'?';}
@@ -264,7 +264,6 @@ class Battle{
  act(u,depth=0){
   if(!u.alive||!u.present||this.over)return;
   this.sides[u.side].actions++;
-  if(u.trap){const h=u.trap;u.trap=null;this.say(`${this.nm(u)} marche dans un piège de ${this.nm(h)}.`);this.hit(h,u,1.2,{pierce:true});this.apply(h,u,'malaise',15);if(!u.alive){this.checkEnd();return;}}
   const k=KIT[u.id]||{atk:B1(1)};let kind='atk';
   if(CHARGE.has(u.id)&&u.charge>=100){kind='ult';u.charge=0;}
   else if(SKILL_CD[u.id]&&u.cd<=0){kind='skill';u.cd=SKILL_CD[u.id];}
