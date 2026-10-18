@@ -130,10 +130,33 @@
    "id": "test-jenlain-c",
    "description": "young adult man, short brown hair under an orange baseball cap worn backwards, full brown beard and mustache, light blue polo shirt, dark blue jeans, white sneakers, holding a smoking wooden pipe in one hand, laid-back cool pose",
    "seed": 37
+  },
+  {
+   "id": "test-yoann-a",
+   "description": "young adult man, short brown hair neatly styled up, light brown stubble beard, clear transparent rectangular glasses, pale pink polo shirt, beige chino trousers, brown shoes, calm neutral expressionless face, standing still, arms at his sides",
+   "seed": 11
+  },
+  {
+   "id": "test-yoann-b",
+   "description": "young adult man, short brown hair neatly styled up, light brown stubble beard, clear transparent rectangular glasses, pale pink polo shirt, beige chino trousers, brown shoes, calm stoic expression, hands in pockets, standing still",
+   "seed": 29
+  },
+  {
+   "id": "test-lea-a",
+   "description": "young adult woman, long straight honey light brown hair falling past her shoulders, dark brown thick-framed glasses, black short-sleeve t-shirt, blue jeans, white sneakers, confident determined expression, hands on hips",
+   "seed": 11
+  },
+  {
+   "id": "test-lea-b",
+   "description": "young adult woman, long straight honey light brown hair falling past her shoulders, dark brown thick-framed glasses, black short-sleeve t-shirt, blue jeans, white sneakers, warm smile but fierce eyes, standing confidently",
+   "seed": 29
   }
  ],
  "only": [
-  "__aucun__"
+  "test-yoann-a",
+  "test-yoann-b",
+  "test-lea-a",
+  "test-lea-b"
  ],
  "max_per_run": 10
 }
