@@ -716,10 +716,12 @@ function spr(id){
  return SPR_CACHE[id];
 }
 // Les différentes vues d'un personnage
-const faceImg=id=>ART[id]&&ART[id].icon?`<img class="full" src="${ART[id].icon}" alt="">`:`<img class="px" src="${spr(id)}" alt="">`;
-const bannerImg=id=>ART[id]&&ART[id].banner?`<img class="full" src="${ART[id].banner}" alt="">`:`<img class="px" src="${spr(id)}" alt="">`;
-function battleImg(id){if(ART[id]&&ART[id].px)return `<img class="px spr" src="${ART[id].px}" style="height:${ART[id].pxh*3}px" alt="">`;spr(id);return `<img class="px spr" src="${spr(id)}" style="height:${SPR_H[id]*4}px" alt="">`;}
-function figImg(id){if(ART[id]&&ART[id].px)return `<img class="px" src="${ART[id].px}" style="height:${ART[id].pxh*5}px" alt="">`;spr(id);return `<img class="px" src="${spr(id)}" style="height:${Math.min(140,SPR_H[id]*7)}px" alt="">`;}
+const pxSrc=id=>ART[id]&&ART[id].px?ART[id].px:spr(id);
+const pxScale=(id,target)=>{const h=ART[id]&&ART[id].px?ART[id].pxh:(spr(id),SPR_H[id]);return Math.max(1,Math.round(target/h))*h;};
+const faceImg=id=>ART[id]&&ART[id].icon?`<img class="full" src="${ART[id].icon}" alt="">`:`<img class="px" src="${pxSrc(id)}" alt="">`;
+const bannerImg=id=>ART[id]&&ART[id].banner?`<img class="full" src="${ART[id].banner}" alt="">`:`<img class="px" src="${pxSrc(id)}" alt="">`;
+function battleImg(id){return `<img class="px spr" src="${pxSrc(id)}" style="height:${pxScale(id,76)}px" alt="">`;}
+function figImg(id){return `<img class="px" src="${pxSrc(id)}" style="height:${Math.min(140,pxScale(id,120))}px" alt="">`;}
 
 /* ===== Décor de combat ===== */
 function makeBG(){
