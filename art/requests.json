@@ -108,5 +108,9 @@
    "id": "colis",
    "description": "confused cardboard delivery package creature with a shipping label and tape"
   }
- ]
+ ],
+ "only": [
+  "yuumi"
+ ],
+ "max_per_run": 10
 }

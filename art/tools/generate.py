@@ -10,10 +10,14 @@ d = cfg["defaults"]
 out_dir = os.path.join(root, "generated")
 os.makedirs(out_dir, exist_ok=True)
 made, failed = [], []
+limit = int(cfg.get("max_per_run", 10))
 only = set(cfg.get("only") or [])
 for s in cfg["sprites"]:
     if only and s["id"] not in only:
         continue
+    if len(made) + len(failed) >= limit:
+        print(f"::warning::Limite de {limit} générations par lancement atteinte, le reste attendra le prochain lancement.")
+        break
     path = os.path.join(out_dir, s["id"] + ".png")
     if os.path.exists(path) and not s.get("force"):
         continue
