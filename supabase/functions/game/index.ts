@@ -75,6 +75,63 @@ function famCounts(ids){const c={};[...new Set(ids)].forEach(id=>CARD[id].fam.fo
 function synTier(f,n){let t=-1;(SYN[f]||[]).forEach((s,i)=>{if(n>=s[0])t=i;});return t;}
 function goldBonus(ids){const c=famCounts(ids);let b=1;if((c.chezk||0)>=3)b+=0.30;else if((c.chezk||0)>=2)b+=0.15;if((c.argent||0)>=2)b+=0.15;return b;}
 
+/* ===== Équipement ===== */
+const SLOTS_EQ=['arme','torse','chapeau','acc'];
+const SLOTN={arme:'Arme',torse:'Torse',chapeau:'Chapeau',acc:'Accessoire'};
+const IRAR={C:1,R:1.6,E:2.4,L:3.5};
+const SELL={C:40,R:120,E:400,L:1200};
+// st : bonus en % (rareté Commune) ; own : héros, familles (f:) ou animaux qui doublent le bonus ; fx : effet spécial
+const ITEMS=[
+ {id:'micro',name:'Le Micro',slot:'arme',st:{atk:6},own:['f:bruyants','jenlain'],d:'Pour les freestyles qui durent trop longtemps.'},
+ {id:'manette',name:'La Manette',slot:'arme',st:{atk:3,spd:3},own:['f:soirees'],d:'Celle avec le joystick qui dérive.'},
+ {id:'calculatrice',name:'La Calculatrice',slot:'arme',st:{atk:6},own:['kylian'],d:'Pour vérifier le rendement locatif à table.'},
+ {id:'pipe',name:'La Pipe',slot:'arme',st:{atk:5,hp:2},own:['jenlain'],d:'Fumée garantie, conversation philosophique offerte.'},
+ {id:'trousseau',name:'Le Trousseau de clés',slot:'arme',st:{atk:4,hp:3},own:['f:chezk','f:paperasse'],d:'Une clé par appartement. Il y en a beaucoup.'},
+ {id:'polo',name:'Le Polo rose',slot:'torse',st:{hp:8},own:['yoann'],d:'Inébranlable, comme celui qui le porte.'},
+ {id:'dentelle',name:'La Chemise en dentelle',slot:'torse',st:{hp:6,atk:2},own:['geoffrey'],d:'Élégance et malaise, en une seule pièce.'},
+ {id:'teeshirt',name:'Le Tee-shirt noir',slot:'torse',st:{hp:6,atk:2},own:['lea'],d:'Sobre. Ne pas confondre avec de la douceur.'},
+ {id:'pull',name:'Le Pull moche de Noël',slot:'torse',st:{hp:7},own:['f:foyer'],fx:'calin',d:'Câlin au début du combat.'},
+ {id:'plaid',name:'Le Plaid',slot:'torse',st:{hp:10},own:['f:lents','f:lignee'],d:'Personne ne se lève tant qu\'il est sur le canapé.'},
+ {id:'casquette',name:'La Casquette à l\'envers',slot:'chapeau',st:{spd:5},own:['jenlain'],d:'Visière derrière, comme il se doit.'},
+ {id:'casque',name:'Le Casque audio',slot:'chapeau',st:{spd:3},own:['f:soirees'],fx:'hype',d:'Hype au début du combat.'},
+ {id:'couronne',name:'La Couronne du Bouftou',slot:'chapeau',st:{hp:6,atk:2},own:['bouftou','f:krosmoz'],d:'Arrachée de haute lutte.'},
+ {id:'solaires',name:'Les Lunettes de soleil',slot:'chapeau',st:{spd:3,atk:2},own:['f:potes'],d:'Souvenir de la Dune du Pilat.'},
+ {id:'capuche',name:'La Capuche',slot:'chapeau',st:{hp:3},own:['f:dbd','f:destiny'],fx:'esquive',d:'+5 % d\'esquive.'},
+ {id:'bague',name:'La Bague de fiançailles',slot:'acc',st:{hp:6},own:['yoann','lea'],fx:'calin',d:'Câlin au début du combat.'},
+ {id:'montre',name:'La Montre',slot:'acc',st:{spd:4},own:['jenlain','lila'],fx:'montre',d:'Un retardataire qui la porte arrive dès la première action alliée.'},
+ {id:'portefeuille',name:'Le Portefeuille',slot:'acc',st:{hp:4,atk:2},own:['kylian','f:argent'],d:'Bien rempli, rarement ouvert.'},
+ {id:'croquettes',name:'Les Croquettes',slot:'acc',st:{hp:6},own:['animaux'],d:'Bonus doublé pour les animaux.'},
+ {id:'de20',name:'Le Dé à 20 faces',slot:'acc',st:{atk:4,spd:2},own:['f:soirees','f:lol'],d:'Toujours un 1 au mauvais moment.'}
+];
+const ITEM={};ITEMS.forEach(i=>ITEM[i.id]=i);
+function itemOwns(it,cid){const c=CARD[cid];return it.own.some(o=>o===cid||(o==='animaux'&&ANIMALS.has(cid))||(o.startsWith('f:')&&c.fam.includes(o.slice(2))));}
+function itemStats(id,r,cid){const it=ITEM[id],m=IRAR[r]*(cid&&itemOwns(it,cid)?2:1),o={};for(const k in it.st)o[k]=Math.round(it.st[k]*m*10)/10;return o;}
+/* ===== Lieux ===== */
+const PLACES=[
+ {id:'appart',name:"L'appart de Yoann et Léa",who:['f:foyer'],st:{atk:10,hp:10},d:'Foyer : +10 % ATK et PV.'},
+ {id:'chezkylian',name:'Chez Kylian',who:['f:chezk'],st:{hp:15,atk:5},d:'Chez Kylian : +15 % PV et +5 % ATK.'},
+ {id:'chezjl',name:'Chez Jenlain et Lila',who:['f:jl','f:bruyants'],st:{atk:15},d:'Jenlain & Lila et Bruyants : +15 % ATK.'},
+ {id:'soiree',name:'La Soirée jeux',who:['f:soirees'],st:{atk:8,spd:8},d:'Soirées jeu : +8 % ATK et VIT.'},
+ {id:'bureau',name:'Le Bureau',who:['f:boulot','f:paperasse'],st:{hp:15,atk:8},d:'Boulot et Paperasse : +15 % PV et +8 % ATK.'},
+ {id:'canape',name:'Le Canapé',who:['animaux'],st:{hp:15},start:'calin',d:'Animaux : +15 % PV et Câlin au début.'},
+ {id:'dune',name:'La Dune du Pilat',who:['tous'],st:{spd:6},d:'Toute l\'équipe : +6 % VIT.'},
+ {id:'concert',name:'Le Concert de rap',who:['tous'],st:{atk:4},start:'hype',d:'Toute l\'équipe : +4 % ATK et Hype au début.'}
+];
+const PLACE={};PLACES.forEach(p=>PLACE[p.id]=p);
+const placeMult=stars=>1+0.2*(stars||0);
+function placeFor(pl,cid){const c=CARD[cid];return pl.who.some(o=>o==='tous'||(o==='animaux'&&ANIMALS.has(cid))||(o.startsWith('f:')&&c.fam.includes(o.slice(2))));}
+/* ===== Donjons ===== */
+const DUNGEONS={gold:{n:"Donjon de l'or",seed:7151},equip:{n:"Donjon de l'équipement",seed:9343}};
+function genDungeon(kind,f){
+ const r=mulberry(f*104729+DUNGEONS[kind].seed),lvl=10*f,stars=Math.min(5,Math.floor((f-1)/2));
+ const w={C:Math.max(10,50-8*f),R:30+2*f,E:Math.min(35,8+5*f),L:Math.min(20,2+3*f)};
+ const ids=[];let g=0;while(ids.length<5&&g++<300){const rr=rollW(w,r);const list=BYR[rr].filter(c=>!ids.includes(c.id));if(!list.length)continue;ids.push(list[Math.floor(r()*list.length)].id);}
+ return ids.map(id=>({id,lvl,stars}));
+}
+const equipRates=f=>({C:Math.max(10,60-10*f),R:30+2*f,E:Math.min(35,6+5*f),L:Math.min(20,Math.max(0,3*(f-1)))});
+const farmGoldPerHour=(kind,f)=>kind==='gold'?Math.round(3600*(1+6*f)):Math.round(3600*(1+6*f)*0.25);
+const FARM_ITEM_EVERY_S=1800,FARM_TICKET_EVERY_S=1800,FARM_CAP_S=24*3600;
+
 const B1=m=>(b,u)=>{const t=b.pick(u);if(t)b.hit(u,t,m);return t;};
 const KIT={
  jenlain:{atk:B1(1),skill(b,u){u.uses++;b.say(`${b.nm(u)} lance un Freestyle.`);b.foes(u).forEach(t=>b.hit(u,t,0.5+0.1*u.uses));},ult(b,u){b.say(`${b.nm(u)} donne un Concert !`,'ult');b.foes(u).forEach(t=>b.hit(u,t,1));b.allies(u).forEach(a=>b.apply(u,a,'hype',50));}},
@@ -135,7 +192,8 @@ const AFTER={
 };
 
 class Battle{
- constructor(teamA,teamB,seed){
+ constructor(teamA,teamB,seed,opt){
+  opt=opt||{};
   this.seed=(seed==null?Math.floor(Math.random()*2147483647):seed)>>>0;this.rand=mulberry(this.seed);this.rnd=n=>Math.floor(this.rand()*n);
   this.t=0;this.log=[];this.events=[];this.fx=[];this.queue=[];this.over=false;this.winner=null;this.units=[];
   this.sides=[{actions:0,syn:{},lastAttacker:null},{actions:0,syn:{},lastAttacker:null}];
@@ -154,7 +212,13 @@ class Battle{
    if((y.isaac||0)>=3){atk*=1.15;hp*=1.15;}else if((y.isaac||0)>=2)atk*=1.10;
    if((y.krosmoz||0)>=2)spd*=1.15;
    if((y.krosmoz||0)>=3)hp*=1.15;
-   us.forEach(u=>{u.atkMul*=atk;u.maxhp=Math.round(u.maxhp*hp);u.hp=u.maxhp;u.spdMul*=spd;u.dodge+=dodge;u.alone=u.id==='chaussette'&&us.filter(x=>x.d.fam.includes('quotidien')).length===1;});
+   const pl=s===0?opt.placeA:opt.placeB,P=pl&&PLACE[pl.id];
+   us.forEach(u=>{
+    let a=atk,h=hp,v=spd;
+    (u.gear||[]).forEach(g=>{const it=ITEM[g.id];if(!it)return;const o=itemStats(g.id,g.r,u.id);a*=1+(o.atk||0)/100;h*=1+(o.hp||0)/100;v*=1+(o.spd||0)/100;if(it.fx==='esquive')u.dodge+=0.05;if(it.fx==='montre')u.arriveAt=1;});
+    if(P&&placeFor(P,u.id)){const m=placeMult(pl.stars);a*=1+(P.st.atk||0)*m/100;h*=1+(P.st.hp||0)*m/100;v*=1+(P.st.spd||0)*m/100;}
+    u.atkMul*=a;u.maxhp=Math.round(u.maxhp*h);u.hp=u.maxhp;u.spdMul*=v;u.dodge+=dodge;u.alone=u.id==='chaussette'&&us.filter(x=>x.d.fam.includes('quotidien')).length===1;
+   });
   });
   [0,1].forEach(s=>{
    const y=this.sides[s].syn,us=this.units.filter(u=>u.side===s),foes=this.units.filter(u=>u.side!==s&&u.present);
@@ -169,7 +233,10 @@ class Battle{
    if((y.lol||0)>=3)us.forEach(a=>{a.shield+=Math.round(a.maxhp*0.1);});
    if((y.destiny||0)>=2)us.forEach(a=>{a.shield+=Math.round(a.maxhp*0.15);});
    if((y.dbd||0)>=3)foes.forEach(t=>this.apply(src,t,'angoisse',50));else if((y.dbd||0)>=2&&foes.length)this.apply(src,foes[this.rnd(foes.length)],'angoisse',50);
+   const pl=s===0?opt.placeA:opt.placeB,P=pl&&PLACE[pl.id];
    us.forEach(u=>{
+    (u.gear||[]).forEach(g=>{const it=ITEM[g.id];if(it&&(it.fx==='calin'||it.fx==='hype'))this.apply(u,u,it.fx,it.fx==='calin'?50:30);});
+    if(P&&P.start&&placeFor(P,u.id))this.apply(u,u,P.start,P.start==='calin'?50:30);
     if(u.id==='chasseuse'&&foes.length){const t=foes[this.rnd(foes.length)];this.say(`${this.nm(u)} fredonne sa berceuse.`);this.apply(u,t,'angoisse',50);}
     if(u.id==='bouftou'&&u.present)this.apply(u,u,'provoc',60);
     if(u.id==='harpie'){u.st.cachee={t:40};this.ev(u,'Cachée','pos');}
@@ -179,7 +246,7 @@ class Battle{
  }
  add(c,side){
   const d=CARD[c.id],m=statMult(c.lvl||1,c.stars||0);
-  const u={uid:this.units.length,id:c.id,d,side,lvl:c.lvl||1,stars:c.stars||0,maxhp:Math.round(d.hp*8*m),atk0:d.atk*m,spd0:d.spd,hp:0,gauge:RETARD.has(c.id)?0:100+this.rand()*450,alive:true,present:!RETARD.has(c.id),st:{},colere:0,shield:0,cd:2,charge:0,uses:0,acts:0,atkMul:1,spdMul:1,dodge:c.id==='souris'?0.25:c.id==='lost'?0.2:(c.id==='azazel'||c.id==='chasseur')?0.15:0,mantle:c.id==='lost',immune:new Set(c.id==='yoann'?['angoisse','malaise','stress']:c.id==='geoffrey'?['malaise','angoisse']:[]),once:false,discreet:c.id==='lila',cagnotte:0,stacks:0,confused:false,colle:null,alone:false};
+  const u={uid:this.units.length,id:c.id,d,side,lvl:c.lvl||1,stars:c.stars||0,maxhp:Math.round(d.hp*8*m),atk0:d.atk*m,spd0:d.spd,hp:0,gauge:RETARD.has(c.id)?0:100+this.rand()*450,alive:true,present:!RETARD.has(c.id),st:{},colere:0,shield:0,cd:2,charge:0,uses:0,acts:0,atkMul:1,spdMul:1,dodge:c.id==='souris'?0.25:c.id==='lost'?0.2:(c.id==='azazel'||c.id==='chasseur')?0.15:0,mantle:c.id==='lost',gear:(c.gear||[]).filter(g=>ITEM[g.id]&&IRAR[g.r]).slice(0,4),arriveAt:3,immune:new Set(c.id==='yoann'?['angoisse','malaise','stress']:c.id==='geoffrey'?['malaise','angoisse']:[]),once:false,discreet:c.id==='lila',cagnotte:0,stacks:0,confused:false,colle:null,alone:false};
   u.hp=u.maxhp;this.units.push(u);
  }
  nm(u){return u?`<b class="s${u.side}">${u.d.name}</b>`:'?';}
@@ -259,9 +326,10 @@ class Battle{
   [0,1].forEach(s=>{
    const side=this.sides[s],abs=this.units.filter(u=>u.side===s&&u.alive&&!u.present);if(!abs.length)return;
    const none=!this.units.some(u=>u.side===s&&u.alive&&u.present);
-   if(side.actions>=3||none){
+   const ready=abs.filter(u=>none||side.actions>=u.arriveAt);
+   if(ready.length){
     const jl=(side.syn.jl||0)>=2;
-    abs.forEach(u=>{u.present=true;u.gauge=0;this.say(`${this.nm(u)} arrive enfin${jl?' avec sa moitié':''}.`);const t=this.pick(u);if(t)this.hit(u,t,1.2*(jl?1.5:1));});
+    ready.forEach(u=>{u.present=true;u.gauge=0;this.say(`${this.nm(u)} arrive enfin${jl?' avec sa moitié':''}.`);const t=this.pick(u);if(t)this.hit(u,t,1.2*(jl?1.5:1));});
    }
   });
  }
@@ -320,7 +388,7 @@ function genEnemies(n){
 
 
 /* ===== Règles du jeu côté serveur (seule source de vérité) ===== */
-const START_GOLD=500,START_TICKETS=10,PITY=60,PVP_PER_DAY=5,IDLE_CAP_S=12*3600,TICKET_EVERY_S=900;
+const START_GOLD=500,START_TICKETS=10,PITY=60,PVP_PER_DAY=5,PLACE_CHANCE=0.06,MAX_ITEMS=300,MAX_TEAMS=5;
 const RATES={C:60,R:28,E:9,L:3};
 const RWEIGHT={C:1,R:2,E:4,L:8};
 const levelCost=l=>Math.round(40*Math.pow(l,1.6));
@@ -332,14 +400,40 @@ function collectionStats(cards){
  for(const id in cards){const c=CARD[id];if(!c)continue;count++;score+=RWEIGHT[c.r]*(2+cards[id].stars);}
  return {score,count};
 }
-function idleBank(p,nowMs){
- if(!p.max_floor)return {gold:0,tickets:0};
- const dt=Math.min(IDLE_CAP_S,Math.max(0,(nowMs-Date.parse(p.last_collect))/1000));
- const rate=(1+p.max_floor*0.5)*goldBonus(p.team||[]);
- return {gold:Math.floor(rate*dt),tickets:Math.floor(dt/TICKET_EVERY_S)};
+/* Récolte du farm hors-ligne : par tranches de 30 min, 24 h max */
+function farmBank(p,nowMs,rnd){
+ const f=p.farm,dt=Math.max(0,(nowMs-Date.parse(p.last_collect))/1000),capped=dt>FARM_CAP_S;
+ const units=Math.floor(Math.min(dt,FARM_CAP_S)/FARM_ITEM_EVERY_S);
+ const out={units,seconds:units*FARM_ITEM_EVERY_S,gold:0,tickets:0,items:[],farm:f||null};
+ if(f&&f.kind&&f.floor>=1&&units>0){
+  out.gold=Math.floor(farmGoldPerHour(f.kind,f.floor)*units/2*goldBonus(p.team||[]));
+  out.tickets=units;
+  if(f.kind==='equip'&&rnd)for(let i=0;i<units;i++)out.items.push(rollItem(f.floor,rnd));
+ }
+ out.next=capped?new Date(nowMs).toISOString():new Date(Date.parse(p.last_collect)+units*FARM_ITEM_EVERY_S*1000).toISOString();
+ if(!f||!f.kind)out.next=new Date(nowMs).toISOString();
+ return out;
 }
+function rollItem(floor,rnd,minR){
+ let r=rollW(equipRates(floor),rnd);if(minR&&RORDS[r]<RORDS[minR])r=minR;
+ return {id:ITEMS[Math.floor(rnd()*ITEMS.length)].id,r};
+}
+const RORDS={C:0,R:1,E:2,L:3};
+/* Ajoute des objets à l'inventaire ; au-delà de la limite, ils sont revendus */
+function addItems(p,list){
+ const items=[...(p.items||[])];let seq=p.item_seq||0,gold=0;
+ for(const it of list){if(items.length>=MAX_ITEMS){gold+=SELL[it.r];continue;}items.push({u:++seq,id:it.id,r:it.r,on:null});}
+ return {items,item_seq:seq,gold};
+}
+function teamsOf(p){
+ const t=Array.isArray(p.teams)?p.teams.slice(0,MAX_TEAMS):[];
+ while(t.length<MAX_TEAMS)t.push({n:'Équipe '+(t.length+1),ids:[],place:null});
+ if(!t.some(x=>x.ids&&x.ids.length)&&(p.team||[]).length)t[0]={...t[0],ids:[...p.team]};
+ return t.map((x,i)=>({n:String(x.n||('Équipe '+(i+1))).slice(0,20),ids:Array.isArray(x.ids)?x.ids:[],place:x.place||null}));
+}
+const placeOf=(p,id)=>id&&(p.places||{})[id]!=null?{id,stars:p.places[id]}:null;
 function parisDay(ms){return new Intl.DateTimeFormat('fr-CA',{timeZone:'Europe/Paris',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(ms));}
-const unitsOf=(ids,cards)=>(ids||[]).filter(id=>cards[id]).map(id=>({id,lvl:cards[id].lvl,stars:cards[id].stars}));
+const unitsOf=(ids,cards,items)=>(ids||[]).filter(id=>cards[id]).map(id=>({id,lvl:cards[id].lvl,stars:cards[id].stars,gear:(items||[]).filter(i=>i.on===id).map(i=>({id:i.id,r:i.r}))}));
 
 function makeGame(db,now=()=>Date.now()){
  async function getProfile(uid){const {data,error}=await db.from('profiles').select('*').eq('id',uid).maybeSingle();if(error)throw error;return data;}
@@ -373,7 +467,7 @@ function makeGame(db,now=()=>Date.now()){
   if(!CARD[legend]||CARD[legend].r!=='L')fail('legend','Choisis une des six légendaires.');
   if(await getProfile(uid))fail('exists','Ce compte a déjà un profil.');
   const cards={[legend]:{lvl:1,stars:0}},cs=collectionStats(cards);
-  const {error}=await db.from('profiles').insert({id:uid,pseudo,legend,gold:START_GOLD,tickets:START_TICKETS,team:[legend],defense:[legend],collection_score:cs.score,collection_count:cs.count,last_collect:new Date(now()).toISOString(),next_fight_at:new Date(now()).toISOString()});
+  const {error}=await db.from('profiles').insert({id:uid,pseudo,legend,gold:START_GOLD,tickets:START_TICKETS,team:[legend],defense:[legend],teams:teamsOf({team:[legend]}),team_idx:0,items:[],item_seq:0,places:{},dungeons:{gold:0,equip:0},farm:null,collection_score:cs.score,collection_count:cs.count,last_collect:new Date(now()).toISOString(),next_fight_at:new Date(now()).toISOString()});
   if(error){if(String(error.code)==='23505')fail('pseudo','Ce pseudo est déjà pris.');throw error;}
   await upsertCards(uid,[{id:legend,lvl:1,stars:0}]);
   return full(uid);
@@ -384,10 +478,16 @@ function makeGame(db,now=()=>Date.now()){
   return withProfile(uid,async p=>{
    if(p.tickets<n)fail('tickets','Pas assez de tickets.');
    const cards=await getCards(uid);
-   let pity=p.pity,gold=p.gold;const ids=[];
-   for(let i=0;i<n;i++){pity++;const r=pity>=PITY?'L':rollW(RATES,Math.random);if(r==='L')pity=0;ids.push(BYR[r][Math.floor(Math.random()*BYR[r].length)].id);}
-   if(n===10&&ids.every(id=>CARD[id].r==='C'))ids[9]=BYR.R[Math.floor(Math.random()*BYR.R.length)].id;
-   const work=JSON.parse(JSON.stringify(cards)),changed={},results=[],team=[...(p.team||[])];
+   let pity=p.pity,gold=p.gold;const ids=[],places={...(p.places||{})},placeRes=[];
+   for(let i=0;i<n;i++){
+    pity++;
+    if(pity<PITY&&Math.random()<PLACE_CHANCE){const pl=PLACES[Math.floor(Math.random()*PLACES.length)];
+     if(places[pl.id]==null){places[pl.id]=0;placeRes.push({place:pl.id,kind:'new'});}else if(places[pl.id]<5){places[pl.id]++;placeRes.push({place:pl.id,kind:'star',stars:places[pl.id]});}else{gold+=300;placeRes.push({place:pl.id,kind:'gold',gold:300});}
+     continue;}
+    const r=pity>=PITY?'L':rollW(RATES,Math.random);if(r==='L')pity=0;ids.push(BYR[r][Math.floor(Math.random()*BYR[r].length)].id);
+   }
+   if(n===10&&ids.length&&ids.every(id=>CARD[id].r==='C'))ids[ids.length-1]=BYR.R[Math.floor(Math.random()*BYR.R.length)].id;
+   const work=JSON.parse(JSON.stringify(cards)),changed={},results=[...placeRes],team=[...(p.team||[])];
    for(const id of ids){
     const o=work[id];
     if(!o){work[id]={lvl:1,stars:0};changed[id]=1;results.push({id,kind:'new'});if(team.length<5)team.push(id);}
@@ -395,7 +495,8 @@ function makeGame(db,now=()=>Date.now()){
     else{gold+=300;results.push({id,kind:'gold',gold:300});}
    }
    const cs=collectionStats(work);
-   await commit(p,{tickets:p.tickets-n,pity,pulls:p.pulls+n,gold,team,collection_score:cs.score,collection_count:cs.count});
+   const teams=teamsOf(p),ti=p.team_idx||0;teams[ti]={...teams[ti],ids:team};
+   await commit(p,{tickets:p.tickets-n,pity,pulls:p.pulls+n,gold,team,teams,places,collection_score:cs.score,collection_count:cs.count});
    await upsertCards(uid,Object.keys(changed).map(id=>({id,...work[id]})));
    return full(uid,{results});
   });
@@ -409,32 +510,99 @@ function makeGame(db,now=()=>Date.now()){
   return full(uid);
  });
 
- A.team=async(uid,{ids,kind})=>withProfile(uid,async p=>{
+ A.team=async(uid,{ids,kind,place,idx})=>withProfile(uid,async p=>{
   const cards=await getCards(uid);
   if(!Array.isArray(ids)||ids.length>5||new Set(ids).size!==ids.length||ids.some(id=>!cards[id]))fail('team','Équipe invalide.');
-  if(kind==='defense'&&!ids.length)fail('team','La défense doit compter au moins un héros.');
-  await commit(p,kind==='defense'?{defense:ids}:{team:ids});
+  if(kind==='defense'){
+   if(!ids.length)fail('team','La défense doit compter au moins un héros.');
+   if(place&&(p.places||{})[place]==null)fail('place','Tu n\'as pas ce lieu.');
+   await commit(p,{defense:ids,defense_place:place||null});return full(uid);
+  }
+  const teams=teamsOf(p),ti=p.team_idx||0,k=idx==null?ti:Math.floor(+idx);
+  if(!(k>=0&&k<MAX_TEAMS))fail('team','Équipe invalide.');
+  teams[k]={...teams[k],ids};
+  await commit(p,k===ti?{teams,team:ids}:{teams});
   return full(uid);
  });
-
+ A.team_select=async(uid,{idx})=>withProfile(uid,async p=>{
+  const teams=teamsOf(p),k=Math.floor(+idx);if(!(k>=0&&k<MAX_TEAMS))fail('team','Équipe invalide.');
+  const cards=await getCards(uid);
+  await commit(p,{teams,team_idx:k,team:teams[k].ids.filter(id=>cards[id])});
+  return full(uid);
+ });
+ A.team_meta=async(uid,{idx,name,place})=>withProfile(uid,async p=>{
+  const teams=teamsOf(p),k=Math.floor(+idx);if(!(k>=0&&k<MAX_TEAMS))fail('team','Équipe invalide.');
+  if(name!=null){name=String(name).trim().slice(0,20);if(!name)fail('team','Nom vide.');teams[k].n=name;}
+  if(place!==undefined){if(place&&(p.places||{})[place]==null)fail('place','Tu n\'as pas ce lieu.');teams[k].place=place||null;}
+  await commit(p,{teams});
+  return full(uid);
+ });
+ /* Équipement */
+ A.equip=async(uid,{item,card})=>withProfile(uid,async p=>{
+  const cards=await getCards(uid);if(!cards[card])fail('card','Tu n\'as pas ce héros.');
+  const items=(p.items||[]).map(x=>({...x})),it=items.find(x=>x.u===item);if(!it)fail('item','Objet introuvable.');
+  const slot=ITEM[it.id].slot;items.forEach(x=>{if(x.on===card&&x!==it&&ITEM[x.id].slot===slot)x.on=null;});it.on=card;
+  await commit(p,{items});return full(uid);
+ });
+ A.unequip=async(uid,{item})=>withProfile(uid,async p=>{
+  const items=(p.items||[]).map(x=>({...x})),it=items.find(x=>x.u===item);if(!it)fail('item','Objet introuvable.');
+  it.on=null;await commit(p,{items});return full(uid);
+ });
+ A.sell=async(uid,{items:list})=>withProfile(uid,async p=>{
+  if(!Array.isArray(list)||!list.length)fail('item','Rien à revendre.');
+  const set=new Set(list);let gold=0;
+  const items=(p.items||[]).filter(x=>{if(set.has(x.u)&&!x.on){gold+=SELL[x.r];return false;}return true;});
+  await commit(p,{items,gold:p.gold+gold});return full(uid,{sold:gold});
+ });
+ /* Donjons et farm hors-ligne */
+ A.dungeon=async(uid,{kind,floor})=>withProfile(uid,async p=>{
+  if(!DUNGEONS[kind])fail('dungeon','Donjon inconnu.');
+  const dg={gold:0,equip:0,...(p.dungeons||{})};floor=Math.floor(Number(floor));
+  if(!(floor>=1&&floor<=dg[kind]+1))fail('floor','Étage non débloqué.');
+  const wait=Date.parse(p.next_fight_at)-now();if(wait>300&&!p.is_admin)fail('cooldown','Combat précédent encore en cours.',{wait});
+  const cards=await getCards(uid),team=unitsOf(p.team,cards,p.items);if(!team.length)fail('team','Ton équipe est vide.');
+  const place=placeOf(p,teamsOf(p)[p.team_idx||0].place);
+  const enemies=genDungeon(kind,floor),seed=Math.floor(Math.random()*2147483647);
+  const b=new Battle(team,enemies,seed,{placeA:place});while(!b.over)b.step();
+  const win=b.winner===0,first=win&&floor>dg[kind];let gold=0,loot=[],patch={};
+  if(win){
+   if(kind==='gold')gold=Math.round(400*floor*(first?3:1)*goldBonus(p.team));
+   else{gold=100*floor;loot.push(rollItem(floor,Math.random,first?'R':null));}
+   if(first)dg[kind]=floor;
+  }
+  const add=addItems(p,loot);
+  patch={gold:p.gold+gold+add.gold,items:add.items,item_seq:add.item_seq,dungeons:dg,next_fight_at:new Date(now()+Math.round(b.t*40/4*0.9)).toISOString()};
+  if(first&&!p.farm){patch.farm={kind,floor};patch.last_collect=new Date(now()).toISOString();}
+  await commit(p,patch);
+  return full(uid,{battle:{seed,kind,floor,team,enemies,place,win,gold,first,loot:add.items.filter(x=>x.u>(p.item_seq||0)),sold:add.gold,ticks:b.t}});
+ });
+ A.farm_set=async(uid,{kind,floor})=>withProfile(uid,async p=>{
+  if(!DUNGEONS[kind])fail('dungeon','Donjon inconnu.');
+  const dg={gold:0,equip:0,...(p.dungeons||{})};floor=Math.floor(Number(floor));
+  if(!(floor>=1&&floor<=dg[kind]))fail('floor','Bats d\'abord cet étage pour pouvoir le farmer.');
+  const bank=farmBank(p,now(),Math.random),add=addItems(p,bank.items);
+  await commit(p,{gold:p.gold+bank.gold+add.gold,tickets:p.tickets+bank.tickets,items:add.items,item_seq:add.item_seq,farm:{kind,floor},last_collect:new Date(now()).toISOString()});
+  return full(uid,{collected:{...bank,items:add.items.filter(x=>x.u>(p.item_seq||0)),sold:add.gold}});
+ });
  A.collect=async uid=>withProfile(uid,async p=>{
-  const b=idleBank(p,now());
-  await commit(p,{gold:p.gold+b.gold,tickets:p.tickets+b.tickets,last_collect:new Date(now()).toISOString()});
-  return full(uid,{collected:b});
+  const b=farmBank(p,now(),Math.random),add=addItems(p,b.items);
+  await commit(p,{gold:p.gold+b.gold+add.gold,tickets:p.tickets+b.tickets,items:add.items,item_seq:add.item_seq,last_collect:b.next});
+  return full(uid,{collected:{...b,items:add.items.filter(x=>x.u>(p.item_seq||0)),sold:add.gold}});
  });
 
  A.fight=async(uid,{floor})=>withProfile(uid,async p=>{
   floor=Math.floor(Number(floor));
   if(!(floor>=1&&floor<=p.max_floor+1))fail('floor','Étage non débloqué.');
   const wait=Date.parse(p.next_fight_at)-now();if(wait>300&&!p.is_admin)fail('cooldown','Combat précédent encore en cours.',{wait});
-  const cards=await getCards(uid),team=unitsOf(p.team,cards);if(!team.length)fail('team','Ton équipe est vide.');
+  const cards=await getCards(uid),team=unitsOf(p.team,cards,p.items);if(!team.length)fail('team','Ton équipe est vide.');
+  const place=placeOf(p,teamsOf(p)[p.team_idx||0].place);
   const enemies=genEnemies(floor),seed=Math.floor(Math.random()*2147483647);
-  const b=new Battle(team,enemies,seed);while(!b.over)b.step();
+  const b=new Battle(team,enemies,seed,{placeA:place});while(!b.over)b.step();
   const win=b.winner===0,gb=goldBonus(p.team);let gold=0,tickets=0,first=false;
   if(win){if(floor>p.max_floor){first=true;gold=Math.round((30+12*floor)*gb);tickets=1+(floor%5===0?5:0);}else{gold=Math.round((30+12*floor)*0.5*gb);if(Math.random()<0.15)tickets=1;}}
   const cooldownMs=Math.round(b.t*40/4*0.9);
   await commit(p,{gold:p.gold+gold,tickets:p.tickets+tickets,max_floor:first?floor:p.max_floor,next_fight_at:new Date(now()+cooldownMs).toISOString()});
-  return full(uid,{battle:{seed,floor,team,enemies,win,gold,tickets,first,ticks:b.t}});
+  return full(uid,{battle:{seed,floor,team,enemies,place,win,gold,tickets,first,ticks:b.t}});
  });
 
  A.pvp=async(uid,{target})=>{
@@ -446,15 +614,16 @@ function makeGame(db,now=()=>Date.now()){
    const day=parisDay(now()),used=p.pvp_day===day?p.pvp_used:0;
    if(used>=PVP_PER_DAY)fail('pvp','Plus de combats PvP aujourd\'hui. Reviens demain.');
    const [mine,theirs]=await Promise.all([getCards(uid),getCards(target)]);
-   const att=unitsOf(p.team,mine);if(!att.length)fail('team','Ton équipe est vide.');
-   let def=unitsOf(t.defense,theirs);if(!def.length)def=unitsOf(t.team,theirs);if(!def.length)fail('target','Cet adversaire n\'a pas de défense.');
-   const seed=Math.floor(Math.random()*2147483647),b=new Battle(att,def,seed);while(!b.over)b.step();
+   const att=unitsOf(p.team,mine,p.items);if(!att.length)fail('team','Ton équipe est vide.');
+   let def=unitsOf(t.defense,theirs,t.items),dplace=placeOf(t,t.defense_place);if(!def.length){def=unitsOf(t.team,theirs,t.items);dplace=placeOf(t,teamsOf(t)[t.team_idx||0].place);}if(!def.length)fail('target','Cet adversaire n\'a pas de défense.');
+   const aplace=placeOf(p,teamsOf(p)[p.team_idx||0].place);
+   const seed=Math.floor(Math.random()*2147483647),b=new Battle(att,def,seed,{placeA:aplace,placeB:dplace});while(!b.over)b.step();
    const win=b.winner===0,exp=1/(1+Math.pow(10,(t.pvp_rating-p.pvp_rating)/400)),delta=Math.round(32*((win?1:0)-exp));
    const gold=win?150:30;
    await commit(p,{pvp_rating:p.pvp_rating+delta,pvp_wins:p.pvp_wins+(win?1:0),pvp_losses:p.pvp_losses+(win?0:1),pvp_day:day,pvp_used:used+1,gold:p.gold+gold});
    for(let i=0;i<5;i++){const d=await getProfile(target);try{await commit(d,{pvp_rating:d.pvp_rating-delta});break;}catch(e){if(e.code!=='conflict')throw e;}}
    await db.from('pvp_log').insert({attacker:uid,defender:target,win,delta,seed});
-   return full(uid,{battle:{seed,team:att,enemies:def,win,delta,gold,targetPseudo:t.pseudo}});
+   return full(uid,{battle:{seed,team:att,enemies:def,placeA:aplace,placeB:dplace,win,delta,gold,targetPseudo:t.pseudo}});
   });
  };
  /* Outils réservés au compte admin, qui n'agissent que sur lui-même */
@@ -463,7 +632,10 @@ function makeGame(db,now=()=>Date.now()){
  A.admin_floor=admin(async(uid,p,{floor})=>{floor=Math.max(0,Math.min(500,Math.floor(+floor||0)));await commit(p,{max_floor:floor});return full(uid);});
  A.admin_card=admin(async(uid,p,{card,lvl,stars})=>{if(!CARD[card])fail('card','Héros inconnu.');const cards=await getCards(uid);cards[card]={lvl:Math.max(1,Math.min(300,Math.floor(+lvl||1))),stars:Math.max(0,Math.min(5,Math.floor(+stars||0)))};const cs=collectionStats(cards);await commit(p,{collection_score:cs.score,collection_count:cs.count});await upsertCards(uid,[{id:card,...cards[card]}]);return full(uid);});
  A.admin_all=admin(async(uid,p,{lvl})=>{lvl=Math.max(1,Math.min(300,Math.floor(+lvl||1)));const cards={};CARDS.forEach(c=>cards[c.id]={lvl,stars:0});const cs=collectionStats(cards);await commit(p,{collection_score:cs.score,collection_count:cs.count});await upsertCards(uid,CARDS.map(c=>({id:c.id,lvl,stars:0})));return full(uid);});
- A.admin_reset=admin(async(uid,p)=>{const {error}=await db.from('cards').delete().eq('user_id',uid).neq('card_id',p.legend);if(error)throw error;await db.from('cards').update({lvl:1,stars:0}).eq('user_id',uid).eq('card_id',p.legend);const cs=collectionStats({[p.legend]:{lvl:1,stars:0}});await commit(p,{gold:START_GOLD,tickets:START_TICKETS,max_floor:0,pity:0,pulls:0,team:[p.legend],defense:[p.legend],collection_score:cs.score,collection_count:cs.count,last_collect:new Date(now()).toISOString()});return full(uid);});
+ A.admin_dungeon=admin(async(uid,p,{kind,floor})=>{if(!DUNGEONS[kind])fail('dungeon','Donjon inconnu.');floor=Math.max(0,Math.min(50,Math.floor(+floor||0)));const dg={gold:0,equip:0,...(p.dungeons||{})};dg[kind]=floor;await commit(p,{dungeons:dg});return full(uid);});
+ A.admin_loot=admin(async(uid,p,{r})=>{r=IRAR[r]?r:'C';const add=addItems(p,ITEMS.map(i=>({id:i.id,r})));const places={...(p.places||{})};PLACES.forEach(pl=>{if(places[pl.id]==null)places[pl.id]=0;});await commit(p,{items:add.items,item_seq:add.item_seq,places,gold:p.gold+add.gold});return full(uid);});
+ A.admin_time=admin(async(uid,p,{hours})=>{hours=Math.max(0,Math.min(48,+hours||0));await commit(p,{last_collect:new Date(Date.parse(p.last_collect)-hours*3600e3).toISOString()});return full(uid);});
+ A.admin_reset=admin(async(uid,p)=>{const {error}=await db.from('cards').delete().eq('user_id',uid).neq('card_id',p.legend);if(error)throw error;await db.from('cards').update({lvl:1,stars:0}).eq('user_id',uid).eq('card_id',p.legend);const cs=collectionStats({[p.legend]:{lvl:1,stars:0}});await commit(p,{gold:START_GOLD,tickets:START_TICKETS,max_floor:0,pity:0,pulls:0,team:[p.legend],defense:[p.legend],defense_place:null,teams:teamsOf({team:[p.legend]}),team_idx:0,items:[],item_seq:0,places:{},dungeons:{gold:0,equip:0},farm:null,collection_score:cs.score,collection_count:cs.count,last_collect:new Date(now()).toISOString()});return full(uid);});
  return A;
 }
 

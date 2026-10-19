@@ -119,7 +119,7 @@ h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.09em;margin:0 0 8px
 /* Combat */
 .battle{display:grid;gap:16px;align-items:start}
 @media (min-width:900px){.battle{grid-template-columns:minmax(0,540px) 1fr}}
-.scene{position:relative;width:100%;max-width:540px;aspect-ratio:4/5;border-radius:14px;border:3px solid #2a1709;box-shadow:0 0 0 3px var(--wood-3);overflow:hidden;background:#3b2a4f center/cover no-repeat;image-rendering:pixelated;margin-inline:auto}
+.scene{position:relative;isolation:isolate;width:100%;max-width:540px;aspect-ratio:4/5;border-radius:14px;border:3px solid #2a1709;box-shadow:0 0 0 3px var(--wood-3);overflow:hidden;background:#3b2a4f center/cover no-repeat;image-rendering:pixelated;margin-inline:auto}
 .scene .hud{position:absolute;inset:8px 8px auto;display:flex;align-items:center;justify-content:space-between;gap:6px;z-index:40}
 .scene .hud .pill{background:rgba(26,15,8,.78);border:2px solid #2a1709;border-radius:999px;padding:2px 12px;font-family:var(--font-display);font-weight:600;font-size:14px;color:var(--parch)}
 .scene .hud .rbtn{width:40px;height:40px;border-radius:50%;border:3px solid #2a1709;background:radial-gradient(circle at 40% 35%,var(--wood-hi),var(--wood-2));color:var(--parch);font-family:var(--font-display);font-weight:700;font-size:13px;box-shadow:0 2px 0 #2a1709;display:grid;place-items:center}
@@ -340,6 +340,38 @@ body.logged-out header.top,body.logged-out main{display:none}
 @media (max-width:560px){.ped .fig{height:104px}.ped .fig img.full{max-height:104px}.team-top{gap:2px}.ped .tag{font-size:11px}.u .bars{width:46px}}
 .u.dead .spr{animation:none}
 @media (prefers-reduced-motion:reduce){.u .spr{animation:none}.fl,.flip,.portal,.flip.r-L.open .front .frame{animation:none}.flip .in{transition:none}}
+
+/* ===== Équipement, lieux, donjons, équipes ===== */
+.itm{display:flex;gap:10px;align-items:center;text-align:left;width:100%;border:2px solid var(--rar,var(--parch-3));border-radius:10px;padding:6px 8px;background:var(--parch-2);color:var(--pink);font:inherit;cursor:pointer}
+.itm .g{flex:0 0 38px;height:38px;display:grid;place-items:center;font-size:22px;border-radius:8px;background:linear-gradient(160deg,color-mix(in srgb,var(--rar,#888) 35%,#fff),color-mix(in srgb,var(--rar,#888) 70%,#2a1709))}
+.itm .t{display:grid;gap:1px;min-width:0}.itm .t b{font-family:var(--font-display);font-size:14.5px;line-height:1.15}
+.itm .t small{font-size:11.5px;color:var(--pmuted)}.itm .t small.rr{color:color-mix(in srgb,var(--rar) 75%,#2a1709);font-weight:800}
+.itm.on{outline:3px solid var(--good);outline-offset:1px}.itm[disabled]{opacity:.55;cursor:default}div.itm{cursor:default}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.gear{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.gslot{display:flex;gap:8px;align-items:center;text-align:left;border:2px dashed var(--parch-3);border-radius:10px;padding:6px 8px;background:var(--parch-2);color:var(--pink);font:inherit;cursor:pointer;min-height:54px}
+.gslot.full{border-style:solid;border-color:var(--rar)}.gslot .g{font-size:22px;width:30px;text-align:center}.gslot .g.dim{color:var(--parch-3);font-weight:800}
+.gslot b{display:block;font-family:var(--font-display);font-size:13.5px;line-height:1.1}.gslot small{font-size:11px;color:var(--pmuted)}
+.teamtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.teamtabs button{border:2px solid #2a1709;border-radius:9px;background:var(--wood-2);color:var(--parch);padding:4px 10px;font-family:var(--font-display);font-weight:600;font-size:13px;cursor:pointer}
+.teamtabs button[aria-pressed="true"]{background:var(--gold);color:var(--gold-ink)}
+.teamtabs button small{opacity:.75;font-weight:500;margin-left:4px}
+.tmeta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;font-size:13px}
+.tmeta select,.tmeta input,.adm-box select{font:inherit;padding:5px 8px;border-radius:8px;border:2px solid var(--parch-3);background:var(--parch);color:var(--pink);max-width:100%}
+.plc{border:2px solid var(--parch-3);border-radius:10px;padding:8px 10px;background:var(--parch-2);color:var(--pink);display:flex;gap:10px;align-items:center}
+.plc .g{font-size:26px;width:40px;text-align:center}.plc b{font-family:var(--font-display)}.plc small{display:block;color:var(--pmuted);font-size:12px}
+.plc.locked{opacity:.5;filter:grayscale(1)}.plc .st{color:var(--gold);letter-spacing:1px}
+.places{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
+.plcard{width:100%;aspect-ratio:1/2.05;display:grid;place-items:center;align-content:center;gap:8px;text-align:center;border:4px solid var(--gold);border-radius:12px;background:linear-gradient(160deg,#5a3c22,#2a1709);color:var(--parch);padding:8px;font-family:var(--font-display)}
+.plcard .g{font-size:44px}.plcard b{font-size:14px;line-height:1.15}.plcard small{font-size:11px;opacity:.8;font-family:var(--font-body,inherit)}
+.dkinds{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.dkinds button{border:2px solid #2a1709;border-radius:12px;padding:10px;background:var(--wood-2);color:var(--parch);font-family:var(--font-display);font-weight:600;cursor:pointer;text-align:left}
+.dkinds button[aria-pressed="true"]{background:var(--gold);color:var(--gold-ink)}.dkinds button small{display:block;font-weight:500;opacity:.8;font-size:12px}
+.odds{display:flex;gap:6px;flex-wrap:wrap;font-size:12px;margin-top:6px}.odds span{border:2px solid var(--rar);border-radius:6px;padding:1px 6px;font-weight:700}
+.farmon{display:inline-block;background:var(--good);color:#fff;border-radius:6px;padding:1px 8px;font-size:12px;font-weight:800}
+.away{max-width:520px;width:100%;display:grid;gap:12px;max-height:min(90vh,760px);overflow:auto}
+.away .big{font-family:var(--font-display);font-size:22px}
+.subseg{margin-bottom:12px}
 </style>
 </head><body>
 
@@ -352,14 +384,15 @@ body.logged-out header.top,body.logged-out main{display:none}
       <div class="coin g"><i>¤</i><b id="w-gold">0</b></div>
       <div class="coin t"><i>T</i><b id="w-tix">0</b></div>
       <div class="coin f"><i>É</i><b id="w-floor">0</b><span>étage</span></div>
-      <div class="bank" title="Ce que ton équipe a gagné pendant ton absence (12 h max)"><span>En attente <b id="b-gold">0</b> or · <b id="b-tix">0</b> t.</span><button class="btn small gold" id="collect">Récolter</button></div>
+      <div class="bank" title="Ce que ton équipe farme en donjon pendant ton absence (24 h max)"><span id="b-txt">…</span><button class="btn small gold" id="collect">Récolter</button></div>
     </div>
   </div>
   <div class="wrap">
     <nav class="tabs" role="tablist">
       <button role="tab" data-tab="combat" aria-selected="true">Combat</button>
+      <button role="tab" data-tab="donjons" aria-selected="false">Donjons</button>
       <button role="tab" data-tab="equipe" aria-selected="false">Équipe</button>
-      <button role="tab" data-tab="album" aria-selected="false">Héros</button>
+      <button role="tab" data-tab="album" aria-selected="false">Collection</button>
       <button role="tab" data-tab="invoc" aria-selected="false">Invocation</button>
       <button role="tab" data-tab="pvp" aria-selected="false">Arène</button>
       <button role="tab" data-tab="rank" aria-selected="false">Classements</button>
@@ -370,6 +403,7 @@ body.logged-out header.top,body.logged-out main{display:none}
 
 <main class="wrap">
   <section id="tab-combat"></section>
+  <section id="tab-donjons" hidden></section>
   <section id="tab-equipe" hidden></section>
   <section id="tab-album" hidden></section>
   <section id="tab-invoc" hidden></section>
@@ -455,6 +489,63 @@ function famCounts(ids){const c={};[...new Set(ids)].forEach(id=>CARD[id].fam.fo
 function synTier(f,n){let t=-1;(SYN[f]||[]).forEach((s,i)=>{if(n>=s[0])t=i;});return t;}
 function goldBonus(ids){const c=famCounts(ids);let b=1;if((c.chezk||0)>=3)b+=0.30;else if((c.chezk||0)>=2)b+=0.15;if((c.argent||0)>=2)b+=0.15;return b;}
 
+/* ===== Équipement ===== */
+const SLOTS_EQ=['arme','torse','chapeau','acc'];
+const SLOTN={arme:'Arme',torse:'Torse',chapeau:'Chapeau',acc:'Accessoire'};
+const IRAR={C:1,R:1.6,E:2.4,L:3.5};
+const SELL={C:40,R:120,E:400,L:1200};
+// st : bonus en % (rareté Commune) ; own : héros, familles (f:) ou animaux qui doublent le bonus ; fx : effet spécial
+const ITEMS=[
+ {id:'micro',name:'Le Micro',slot:'arme',st:{atk:6},own:['f:bruyants','jenlain'],d:'Pour les freestyles qui durent trop longtemps.'},
+ {id:'manette',name:'La Manette',slot:'arme',st:{atk:3,spd:3},own:['f:soirees'],d:'Celle avec le joystick qui dérive.'},
+ {id:'calculatrice',name:'La Calculatrice',slot:'arme',st:{atk:6},own:['kylian'],d:'Pour vérifier le rendement locatif à table.'},
+ {id:'pipe',name:'La Pipe',slot:'arme',st:{atk:5,hp:2},own:['jenlain'],d:'Fumée garantie, conversation philosophique offerte.'},
+ {id:'trousseau',name:'Le Trousseau de clés',slot:'arme',st:{atk:4,hp:3},own:['f:chezk','f:paperasse'],d:'Une clé par appartement. Il y en a beaucoup.'},
+ {id:'polo',name:'Le Polo rose',slot:'torse',st:{hp:8},own:['yoann'],d:'Inébranlable, comme celui qui le porte.'},
+ {id:'dentelle',name:'La Chemise en dentelle',slot:'torse',st:{hp:6,atk:2},own:['geoffrey'],d:'Élégance et malaise, en une seule pièce.'},
+ {id:'teeshirt',name:'Le Tee-shirt noir',slot:'torse',st:{hp:6,atk:2},own:['lea'],d:'Sobre. Ne pas confondre avec de la douceur.'},
+ {id:'pull',name:'Le Pull moche de Noël',slot:'torse',st:{hp:7},own:['f:foyer'],fx:'calin',d:'Câlin au début du combat.'},
+ {id:'plaid',name:'Le Plaid',slot:'torse',st:{hp:10},own:['f:lents','f:lignee'],d:'Personne ne se lève tant qu\'il est sur le canapé.'},
+ {id:'casquette',name:'La Casquette à l\'envers',slot:'chapeau',st:{spd:5},own:['jenlain'],d:'Visière derrière, comme il se doit.'},
+ {id:'casque',name:'Le Casque audio',slot:'chapeau',st:{spd:3},own:['f:soirees'],fx:'hype',d:'Hype au début du combat.'},
+ {id:'couronne',name:'La Couronne du Bouftou',slot:'chapeau',st:{hp:6,atk:2},own:['bouftou','f:krosmoz'],d:'Arrachée de haute lutte.'},
+ {id:'solaires',name:'Les Lunettes de soleil',slot:'chapeau',st:{spd:3,atk:2},own:['f:potes'],d:'Souvenir de la Dune du Pilat.'},
+ {id:'capuche',name:'La Capuche',slot:'chapeau',st:{hp:3},own:['f:dbd','f:destiny'],fx:'esquive',d:'+5 % d\'esquive.'},
+ {id:'bague',name:'La Bague de fiançailles',slot:'acc',st:{hp:6},own:['yoann','lea'],fx:'calin',d:'Câlin au début du combat.'},
+ {id:'montre',name:'La Montre',slot:'acc',st:{spd:4},own:['jenlain','lila'],fx:'montre',d:'Un retardataire qui la porte arrive dès la première action alliée.'},
+ {id:'portefeuille',name:'Le Portefeuille',slot:'acc',st:{hp:4,atk:2},own:['kylian','f:argent'],d:'Bien rempli, rarement ouvert.'},
+ {id:'croquettes',name:'Les Croquettes',slot:'acc',st:{hp:6},own:['animaux'],d:'Bonus doublé pour les animaux.'},
+ {id:'de20',name:'Le Dé à 20 faces',slot:'acc',st:{atk:4,spd:2},own:['f:soirees','f:lol'],d:'Toujours un 1 au mauvais moment.'}
+];
+const ITEM={};ITEMS.forEach(i=>ITEM[i.id]=i);
+function itemOwns(it,cid){const c=CARD[cid];return it.own.some(o=>o===cid||(o==='animaux'&&ANIMALS.has(cid))||(o.startsWith('f:')&&c.fam.includes(o.slice(2))));}
+function itemStats(id,r,cid){const it=ITEM[id],m=IRAR[r]*(cid&&itemOwns(it,cid)?2:1),o={};for(const k in it.st)o[k]=Math.round(it.st[k]*m*10)/10;return o;}
+/* ===== Lieux ===== */
+const PLACES=[
+ {id:'appart',name:"L'appart de Yoann et Léa",who:['f:foyer'],st:{atk:10,hp:10},d:'Foyer : +10 % ATK et PV.'},
+ {id:'chezkylian',name:'Chez Kylian',who:['f:chezk'],st:{hp:15,atk:5},d:'Chez Kylian : +15 % PV et +5 % ATK.'},
+ {id:'chezjl',name:'Chez Jenlain et Lila',who:['f:jl','f:bruyants'],st:{atk:15},d:'Jenlain & Lila et Bruyants : +15 % ATK.'},
+ {id:'soiree',name:'La Soirée jeux',who:['f:soirees'],st:{atk:8,spd:8},d:'Soirées jeu : +8 % ATK et VIT.'},
+ {id:'bureau',name:'Le Bureau',who:['f:boulot','f:paperasse'],st:{hp:15,atk:8},d:'Boulot et Paperasse : +15 % PV et +8 % ATK.'},
+ {id:'canape',name:'Le Canapé',who:['animaux'],st:{hp:15},start:'calin',d:'Animaux : +15 % PV et Câlin au début.'},
+ {id:'dune',name:'La Dune du Pilat',who:['tous'],st:{spd:6},d:'Toute l\'équipe : +6 % VIT.'},
+ {id:'concert',name:'Le Concert de rap',who:['tous'],st:{atk:4},start:'hype',d:'Toute l\'équipe : +4 % ATK et Hype au début.'}
+];
+const PLACE={};PLACES.forEach(p=>PLACE[p.id]=p);
+const placeMult=stars=>1+0.2*(stars||0);
+function placeFor(pl,cid){const c=CARD[cid];return pl.who.some(o=>o==='tous'||(o==='animaux'&&ANIMALS.has(cid))||(o.startsWith('f:')&&c.fam.includes(o.slice(2))));}
+/* ===== Donjons ===== */
+const DUNGEONS={gold:{n:"Donjon de l'or",seed:7151},equip:{n:"Donjon de l'équipement",seed:9343}};
+function genDungeon(kind,f){
+ const r=mulberry(f*104729+DUNGEONS[kind].seed),lvl=10*f,stars=Math.min(5,Math.floor((f-1)/2));
+ const w={C:Math.max(10,50-8*f),R:30+2*f,E:Math.min(35,8+5*f),L:Math.min(20,2+3*f)};
+ const ids=[];let g=0;while(ids.length<5&&g++<300){const rr=rollW(w,r);const list=BYR[rr].filter(c=>!ids.includes(c.id));if(!list.length)continue;ids.push(list[Math.floor(r()*list.length)].id);}
+ return ids.map(id=>({id,lvl,stars}));
+}
+const equipRates=f=>({C:Math.max(10,60-10*f),R:30+2*f,E:Math.min(35,6+5*f),L:Math.min(20,Math.max(0,3*(f-1)))});
+const farmGoldPerHour=(kind,f)=>kind==='gold'?Math.round(3600*(1+6*f)):Math.round(3600*(1+6*f)*0.25);
+const FARM_ITEM_EVERY_S=1800,FARM_TICKET_EVERY_S=1800,FARM_CAP_S=24*3600;
+
 const B1=m=>(b,u)=>{const t=b.pick(u);if(t)b.hit(u,t,m);return t;};
 const KIT={
  jenlain:{atk:B1(1),skill(b,u){u.uses++;b.say(`${b.nm(u)} lance un Freestyle.`);b.foes(u).forEach(t=>b.hit(u,t,0.5+0.1*u.uses));},ult(b,u){b.say(`${b.nm(u)} donne un Concert !`,'ult');b.foes(u).forEach(t=>b.hit(u,t,1));b.allies(u).forEach(a=>b.apply(u,a,'hype',50));}},
@@ -515,7 +606,8 @@ const AFTER={
 };
 
 class Battle{
- constructor(teamA,teamB,seed){
+ constructor(teamA,teamB,seed,opt){
+  opt=opt||{};
   this.seed=(seed==null?Math.floor(Math.random()*2147483647):seed)>>>0;this.rand=mulberry(this.seed);this.rnd=n=>Math.floor(this.rand()*n);
   this.t=0;this.log=[];this.events=[];this.fx=[];this.queue=[];this.over=false;this.winner=null;this.units=[];
   this.sides=[{actions:0,syn:{},lastAttacker:null},{actions:0,syn:{},lastAttacker:null}];
@@ -534,7 +626,13 @@ class Battle{
    if((y.isaac||0)>=3){atk*=1.15;hp*=1.15;}else if((y.isaac||0)>=2)atk*=1.10;
    if((y.krosmoz||0)>=2)spd*=1.15;
    if((y.krosmoz||0)>=3)hp*=1.15;
-   us.forEach(u=>{u.atkMul*=atk;u.maxhp=Math.round(u.maxhp*hp);u.hp=u.maxhp;u.spdMul*=spd;u.dodge+=dodge;u.alone=u.id==='chaussette'&&us.filter(x=>x.d.fam.includes('quotidien')).length===1;});
+   const pl=s===0?opt.placeA:opt.placeB,P=pl&&PLACE[pl.id];
+   us.forEach(u=>{
+    let a=atk,h=hp,v=spd;
+    (u.gear||[]).forEach(g=>{const it=ITEM[g.id];if(!it)return;const o=itemStats(g.id,g.r,u.id);a*=1+(o.atk||0)/100;h*=1+(o.hp||0)/100;v*=1+(o.spd||0)/100;if(it.fx==='esquive')u.dodge+=0.05;if(it.fx==='montre')u.arriveAt=1;});
+    if(P&&placeFor(P,u.id)){const m=placeMult(pl.stars);a*=1+(P.st.atk||0)*m/100;h*=1+(P.st.hp||0)*m/100;v*=1+(P.st.spd||0)*m/100;}
+    u.atkMul*=a;u.maxhp=Math.round(u.maxhp*h);u.hp=u.maxhp;u.spdMul*=v;u.dodge+=dodge;u.alone=u.id==='chaussette'&&us.filter(x=>x.d.fam.includes('quotidien')).length===1;
+   });
   });
   [0,1].forEach(s=>{
    const y=this.sides[s].syn,us=this.units.filter(u=>u.side===s),foes=this.units.filter(u=>u.side!==s&&u.present);
@@ -549,7 +647,10 @@ class Battle{
    if((y.lol||0)>=3)us.forEach(a=>{a.shield+=Math.round(a.maxhp*0.1);});
    if((y.destiny||0)>=2)us.forEach(a=>{a.shield+=Math.round(a.maxhp*0.15);});
    if((y.dbd||0)>=3)foes.forEach(t=>this.apply(src,t,'angoisse',50));else if((y.dbd||0)>=2&&foes.length)this.apply(src,foes[this.rnd(foes.length)],'angoisse',50);
+   const pl=s===0?opt.placeA:opt.placeB,P=pl&&PLACE[pl.id];
    us.forEach(u=>{
+    (u.gear||[]).forEach(g=>{const it=ITEM[g.id];if(it&&(it.fx==='calin'||it.fx==='hype'))this.apply(u,u,it.fx,it.fx==='calin'?50:30);});
+    if(P&&P.start&&placeFor(P,u.id))this.apply(u,u,P.start,P.start==='calin'?50:30);
     if(u.id==='chasseuse'&&foes.length){const t=foes[this.rnd(foes.length)];this.say(`${this.nm(u)} fredonne sa berceuse.`);this.apply(u,t,'angoisse',50);}
     if(u.id==='bouftou'&&u.present)this.apply(u,u,'provoc',60);
     if(u.id==='harpie'){u.st.cachee={t:40};this.ev(u,'Cachée','pos');}
@@ -559,7 +660,7 @@ class Battle{
  }
  add(c,side){
   const d=CARD[c.id],m=statMult(c.lvl||1,c.stars||0);
-  const u={uid:this.units.length,id:c.id,d,side,lvl:c.lvl||1,stars:c.stars||0,maxhp:Math.round(d.hp*8*m),atk0:d.atk*m,spd0:d.spd,hp:0,gauge:RETARD.has(c.id)?0:100+this.rand()*450,alive:true,present:!RETARD.has(c.id),st:{},colere:0,shield:0,cd:2,charge:0,uses:0,acts:0,atkMul:1,spdMul:1,dodge:c.id==='souris'?0.25:c.id==='lost'?0.2:(c.id==='azazel'||c.id==='chasseur')?0.15:0,mantle:c.id==='lost',immune:new Set(c.id==='yoann'?['angoisse','malaise','stress']:c.id==='geoffrey'?['malaise','angoisse']:[]),once:false,discreet:c.id==='lila',cagnotte:0,stacks:0,confused:false,colle:null,alone:false};
+  const u={uid:this.units.length,id:c.id,d,side,lvl:c.lvl||1,stars:c.stars||0,maxhp:Math.round(d.hp*8*m),atk0:d.atk*m,spd0:d.spd,hp:0,gauge:RETARD.has(c.id)?0:100+this.rand()*450,alive:true,present:!RETARD.has(c.id),st:{},colere:0,shield:0,cd:2,charge:0,uses:0,acts:0,atkMul:1,spdMul:1,dodge:c.id==='souris'?0.25:c.id==='lost'?0.2:(c.id==='azazel'||c.id==='chasseur')?0.15:0,mantle:c.id==='lost',gear:(c.gear||[]).filter(g=>ITEM[g.id]&&IRAR[g.r]).slice(0,4),arriveAt:3,immune:new Set(c.id==='yoann'?['angoisse','malaise','stress']:c.id==='geoffrey'?['malaise','angoisse']:[]),once:false,discreet:c.id==='lila',cagnotte:0,stacks:0,confused:false,colle:null,alone:false};
   u.hp=u.maxhp;this.units.push(u);
  }
  nm(u){return u?`<b class="s${u.side}">${u.d.name}</b>`:'?';}
@@ -639,9 +740,10 @@ class Battle{
   [0,1].forEach(s=>{
    const side=this.sides[s],abs=this.units.filter(u=>u.side===s&&u.alive&&!u.present);if(!abs.length)return;
    const none=!this.units.some(u=>u.side===s&&u.alive&&u.present);
-   if(side.actions>=3||none){
+   const ready=abs.filter(u=>none||side.actions>=u.arriveAt);
+   if(ready.length){
     const jl=(side.syn.jl||0)>=2;
-    abs.forEach(u=>{u.present=true;u.gauge=0;this.say(`${this.nm(u)} arrive enfin${jl?' avec sa moitié':''}.`);const t=this.pick(u);if(t)this.hit(u,t,1.2*(jl?1.5:1));});
+    ready.forEach(u=>{u.present=true;u.gauge=0;this.say(`${this.nm(u)} arrive enfin${jl?' avec sa moitié':''}.`);const t=this.pick(u);if(t)this.hit(u,t,1.2*(jl?1.5:1));});
    }
   });
  }
@@ -810,7 +912,7 @@ const CONFIGURED=!SUPA_URL.startsWith('__')&&window.supabase;
 const sb=CONFIGURED?supabase.createClient(SUPA_URL,SUPA_KEY,{auth:{persistSession:true,autoRefreshToken:true}}):null;
 const emailOf=p=>(String(p).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'joueur')+'@joueurs.gacha-potes.fr';
 let ME=null,CARDS_OF={},clockOffset=0;
-let S={gold:0,tickets:0,owned:{},team:[],defense:[],maxFloor:0,pity:0};
+let S={gold:0,tickets:0,owned:{},team:[],defense:[],maxFloor:0,pity:0,items:[],places:{},teams:[],teamIdx:0,dg:{gold:0,equip:0},farm:null};
 async function api(action,body={},opt={}){
  const {data}=await sb.auth.getSession();const session=data&&data.session;
  if(!session)throw {error:'auth',message:'Connexion requise.'};
@@ -824,10 +926,20 @@ async function api(action,body={},opt={}){
 function applyServer(j){
  ME=j.profile;if(j.now)clockOffset=j.now-Date.now();
  if(!ME){return;}
- S={gold:ME.gold,tickets:ME.tickets,owned:j.cards||{},team:(ME.team||[]).filter(id=>(j.cards||{})[id]),defense:ME.defense||[],maxFloor:ME.max_floor,pity:ME.pity};
+ const own=j.cards||{};
+ S={gold:ME.gold,tickets:ME.tickets,owned:own,team:(ME.team||[]).filter(id=>own[id]),defense:ME.defense||[],maxFloor:ME.max_floor,pity:ME.pity,
+  items:Array.isArray(ME.items)?ME.items:[],places:ME.places||{},teams:clientTeams(ME),teamIdx:ME.team_idx||0,dg:{gold:0,equip:0,...(ME.dungeons||{})},farm:ME.farm&&ME.farm.kind?ME.farm:null};
  renderHeader();
 }
 const nowMs=()=>Date.now()+clockOffset;
+function clientTeams(p){
+ const t=Array.isArray(p.teams)?p.teams.slice(0,5):[];
+ while(t.length<5)t.push({n:'Équipe '+(t.length+1),ids:[],place:null});
+ if(!t.some(x=>x.ids&&x.ids.length)&&(p.team||[]).length)t[0]={...t[0],ids:[...p.team]};
+ return t.map((x,i)=>({n:x.n||('Équipe '+(i+1)),ids:Array.isArray(x.ids)?x.ids:[],place:x.place||null}));
+}
+const curTeam=()=>S.teams[S.teamIdx]||{n:'Équipe',ids:S.team,place:null};
+const curPlace=()=>{const id=curTeam().place;return id&&S.places[id]!=null?{id,stars:S.places[id]}:null;};
 
 /* ===== État de l'interface ===== */
 let tab='combat',sel=null,B=null,RUN=null,timer=null,speed=1,mode='manuel',lastResult=null,lastPull=null,famFilter=null,elFilter=null,farm={wins:0,gold:0,tix:0},nextTimer=null,teamMsg='',busy=false;
@@ -838,27 +950,42 @@ const FAMS={soirees:'Soirées jeu',lol:'LoL',dbd:'DbD',isaac:'Isaac',destiny:'De
 const RORD={C:0,R:1,E:2,L:3};
 const levelCost=l=>Math.round(40*Math.pow(l,1.6));
 const starStr=st=>'★'.repeat(st)+'☆'.repeat(5-st);
-const teamUnits=()=>S.team.filter(id=>S.owned[id]).map(id=>({id,lvl:S.owned[id].lvl,stars:S.owned[id].stars}));
-function power(id,o=S.owned[id]){const c=CARD[id],m=statMult(o.lvl,o.stars);return Math.round((c.hp*8+c.atk*6+c.spd*4)*m/10);}
+const gearOf=id=>S.items.filter(i=>i.on===id);
+const teamUnits=()=>S.team.filter(id=>S.owned[id]).map(id=>({id,lvl:S.owned[id].lvl,stars:S.owned[id].stars,gear:gearOf(id).map(i=>({id:i.id,r:i.r}))}));
+function gearMult(id,gear){const m={atk:1,hp:1,spd:1};(gear||gearOf(id)).forEach(g=>{const o=itemStats(g.id,g.r,id);for(const k in o)m[k]*=1+o[k]/100;});return m;}
+function power(id,o=S.owned[id],gear){const c=CARD[id],m=statMult(o.lvl,o.stars),g=gearMult(id,gear||(o===S.owned[id]?undefined:[]));return Math.round((c.hp*8*g.hp+c.atk*6*g.atk+c.spd*4*g.spd)*m/10);}
 const reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
 function toast(msg,kind=''){const t=document.createElement('div');t.className='toast '+kind;t.textContent=msg;$('#toasts').appendChild(t);setTimeout(()=>t.remove(),3800);}
 const errMsg=e=>(e&&e.message)||'Une erreur est survenue.';
 
-function idleBank(){
- if(!ME||!ME.max_floor)return {gold:0,tickets:0};
- const dt=Math.min(12*3600,Math.max(0,(nowMs()-Date.parse(ME.last_collect))/1000));
- return {gold:Math.floor((1+ME.max_floor*0.5)*goldBonus(ME.team||[])*dt),tickets:Math.floor(dt/900)};
+/* ===== Farm hors-ligne (estimation ; le serveur fait foi) ===== */
+const IGL={micro:'🎤',manette:'🎮',calculatrice:'🧮',pipe:'💨',trousseau:'🔑',polo:'👕',dentelle:'👔',teeshirt:'👚',pull:'🎄',plaid:'🛋️',casquette:'🧢',casque:'🎧',couronne:'👑',solaires:'🕶️',capuche:'🥷',bague:'💍',montre:'⌚',portefeuille:'👛',croquettes:'🦴',de20:'🎲'};
+const PGL={appart:'🏠',chezkylian:'🏢',chezjl:'🏡',soiree:'🎲',bureau:'💼',canape:'🛋️',dune:'🏖️',concert:'🎶'};
+const DKN={gold:'Or',equip:'Équipement'};
+function farmEst(){
+ if(!ME)return null;const f=S.farm,dtr=Math.max(0,(nowMs()-Date.parse(ME.last_collect))/1000),dt=Math.min(dtr,FARM_CAP_S),units=Math.floor(dt/FARM_ITEM_EVERY_S);
+ if(!f)return {f:null,units:0,gold:0,tickets:0,items:0,dt};
+ return {f,units,dt,gold:Math.floor(farmGoldPerHour(f.kind,f.floor)*units/2*goldBonus(ME.team||[])),tickets:units,items:f.kind==='equip'?units:0};
 }
+const hm=s=>{s=Math.floor(s/60);return `${Math.floor(s/60)} h ${String(s%60).padStart(2,'0')}`;};
+const statTxt=o=>Object.keys(o).map(k=>`+${String(o[k]).replace('.',',')} % ${k==='atk'?'ATK':k==='hp'?'PV':'VIT'}`).join(' · ');
+function itemHTML(it,o={}){
+ const d=ITEM[it.id],cid=o.cid||it.on,st=itemStats(it.id,it.r,cid||null);
+ const tg=o.ro?'div':'button';return `<${tg} class="itm r-${it.r}${o.cls?' '+o.cls:''}" data-u="${it.u}"${o.dis?' disabled':''}><span class="g" aria-hidden="true">${IGL[it.id]||'◆'}</span><span class="t"><b>${esc(d.name)}</b><small class="rr">${RAR[it.r].n} · ${SLOTN[d.slot]}</small><small>${statTxt(st)}${d.fx?' · '+esc(d.d):''}</small>${o.noOn||!it.on?'':`<small>Porté par ${esc(CARD[it.on].name)}</small>`}</span></${tg}>`;
+}
+function placeHTML(id,o={}){const P=PLACE[id],own=S.places[id]!=null,st=own?S.places[id]:0;return `<div class="plc${own?'':' locked'}"><span class="g" aria-hidden="true">${PGL[id]||'📍'}</span><div><b>${esc(P.name)}</b> ${own?`<span class="st">${'★'.repeat(st)}</span>`:''}<small>${esc(P.d)}${own&&st?` Bonus ×${placeMult(st).toFixed(1).replace('.',',')}.`:''}</small>${own?'':'<small>Se trouve en invocation.</small>'}</div></div>`;}
 function renderHeader(){
  if(!ME)return;
  $('#w-gold').textContent=fmt(S.gold);$('#w-tix').textContent=fmt(S.tickets);$('#w-floor').textContent=S.maxFloor;
- const b=idleBank();$('#b-gold').textContent=fmt(b.gold);$('#b-tix').textContent=fmt(b.tickets);$('#collect').disabled=b.gold<1&&b.tickets<1;
+ const e=farmEst();
+ $('#b-txt').innerHTML=e.f?`${DKN[e.f.kind]} ét. ${e.f.floor} · ${hm(e.dt)} · <b>${fmt(e.gold)}</b> or · <b>${e.tickets}</b> t.${e.items?` · <b>${e.items}</b> obj.`:''}`:'Pas de farm : bats un étage de donjon';
+ $('#collect').disabled=!e.f||e.units<1;
  $('#me-chip').innerHTML=`<span class="av el-${CARD[ME.legend].el}">${faceImg(ME.legend)}</span><span><b>${esc(ME.pseudo)}</b><small>${ME.is_admin?'<span class="adm">ADMIN</span>':ME.pvp_rating+' PvP'}</small></span>`;
  $('#tab-btn-admin').hidden=!ME.is_admin;
 }
-$('#collect').onclick=async()=>{try{const j=await api('collect');toast(`+${fmt(j.collected.gold)} or · +${j.collected.tickets} ticket${j.collected.tickets>1?'s':''}`,'good');if(tab==='invoc')renderInvoc();}catch(e){toast(errMsg(e),'bad');}};
+$('#collect').onclick=()=>showAway(true);
 document.querySelectorAll('nav.tabs button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
-const TABS={admin:()=>renderAdmin(),combat:()=>renderCombat(),equipe:()=>renderTeam(),album:()=>renderAlbum(),invoc:()=>renderInvoc(),pvp:()=>renderPvp(),rank:()=>renderRank()};
+const TABS={admin:()=>renderAdmin(),combat:()=>renderCombat(),donjons:()=>renderDungeons(),equipe:()=>renderTeam(),album:()=>renderAlbum(),invoc:()=>renderInvoc(),pvp:()=>renderPvp(),rank:()=>renderRank()};
 function showTab(t){tab=t;document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t));Object.keys(TABS).forEach(x=>$('#tab-'+x).hidden=x!==t);TABS[t]();}
 
 /* ===== Composants ===== */
@@ -878,23 +1005,37 @@ function openSheet(id){
  const c=CARD[id],own=S.owned[id],root=$('#overlay-root');
  if(!own){root.innerHTML=`<div class="overlay"><div class="sheet parch r-${c.r} el-${c.el}"><div class="top-row">${bannerHTML(id)}<div><h2>Carte #${c.no}</h2><p class="muted">Pas encore obtenue · ${RAR[c.r].n}</p><button class="btn" id="sh-close">Fermer</button></div></div></div></div>`;}
  else{
-  const m=statMult(own.lvl,own.stars),cost=levelCost(own.lvl),inT=S.team.includes(id);
+  const m=statMult(own.lvl,own.stars),cost=levelCost(own.lvl),inT=S.team.includes(id),gm=gearMult(id),gear=gearOf(id);
   root.innerHTML=`<div class="overlay"><div class="sheet parch r-${c.r} el-${c.el}" role="dialog" aria-label="${esc(c.name)}">
    <div class="top-row"><div class="artbtn" id="sh-art" title="Agrandir l'illustration">${bannerHTML(id,{noLv:true})}<span class="muted" style="font-size:11px;text-align:center;display:block">Touche pour agrandir</span></div><div style="display:grid;gap:8px"><div><h2>${esc(c.name)}</h2><div class="muted">#${c.no} · ${RAR[c.r].n} · Niveau ${own.lvl}</div></div>
-   <div class="stats"><div><b>${fmt(c.hp*8*m)}</b><span>PV</span></div><div><b>${fmt(c.atk*m)}</b><span>ATK</span></div><div><b>${c.spd}</b><span>VIT</span></div></div>
+   <div class="stats"><div><b>${fmt(c.hp*8*m*gm.hp)}</b><span>PV</span></div><div><b>${fmt(c.atk*m*gm.atk)}</b><span>ATK</span></div><div><b>${fmt(c.spd*gm.spd)}</b><span>VIT</span></div></div>
    <div><span class="pill"><span class="emb">${ELG[c.el]}</span>${EL[c.el].n} · bat ${EL[EL[c.el].b].n}</span>${c.fam.map(f=>`<span class="pill">${FAM[f]}</span>`).join('')}</div></div></div>
    <div class="kit">${c.kit.map(k=>`<div><em>${k[0]}</em><b>${esc(k[1])}</b> : ${esc(k[2])}</div>`).join('')}</div>
+   <div><h3 style="margin:0 0 6px">Équipement</h3><div class="gear">${SLOTS_EQ.map(sl=>{const it=gear.find(g=>ITEM[g.id].slot===sl);return it?`<button class="gslot full r-${it.r}" data-slot="${sl}"><span class="g" aria-hidden="true">${IGL[it.id]}</span><span><b>${esc(ITEM[it.id].name)}</b><small>${statTxt(itemStats(it.id,it.r,id))}${itemOwns(ITEM[it.id],id)?' · bonus ×2':''}</small></span></button>`:`<button class="gslot" data-slot="${sl}"><span class="g dim">+</span><span><b>${SLOTN[sl]}</b><small>${S.items.some(i=>ITEM[i.id].slot===sl)?'Choisir un objet':'Aucun objet : farme le donjon d\'équipement'}</small></span></button>`;}).join('')}</div></div>
    <div class="dupe"><b>Étoiles · ${starStr(own.stars)}</b><div class="track">${[1,2,3,4,5].map(i=>`<span class="${own.stars>=i?'on':''}"></span>`).join('')}</div><span class="muted">Chaque doublon donne une étoile, soit +20 % de stats. ${own.stars<5?'':'Étoiles au max : les doublons suivants rapportent 300 or.'}</span></div>
    <div class="row"><button class="btn primary" id="sh-up" ${S.gold<cost?'disabled':''}>Niveau ${own.lvl+1} · ${fmt(cost)} or</button><button class="btn" id="sh-team">${inT?"Retirer de l'équipe":"Mettre dans l'équipe"}</button><button class="btn" id="sh-close">Fermer</button></div>
    ${!inT&&S.team.length>=5?'<p class="muted" style="margin:0">L\'équipe est pleine : retire d\'abord un héros.</p>':''}
   </div></div>`;
   $('#sh-up').onclick=async()=>{const b=$('#sh-up');b.disabled=true;try{await api('levelup',{card:id});openSheet(id);refresh();}catch(e){toast(errMsg(e),'bad');b.disabled=false;}};
   $('#sh-team').onclick=()=>{toggleTeam(id);openSheet(id);};
+  root.querySelectorAll('.gslot').forEach(b=>b.onclick=()=>openPicker(id,b.dataset.slot));
  }
  const sa=$('#sh-art');if(sa)sa.onclick=()=>openArt(id);
  $('#sh-close').onclick=closeSheet;root.querySelector('.overlay').onclick=e=>{if(e.target.classList.contains('overlay'))closeSheet();};
 }
 function closeSheet(){$('#overlay-root').innerHTML='';}
+function openPicker(cid,slot){
+ const c=CARD[cid],root=$('#overlay-root'),cur=S.items.find(i=>i.on===cid&&ITEM[i.id].slot===slot);
+ const list=S.items.filter(i=>ITEM[i.id].slot===slot&&i!==cur).sort((a,b)=>RORD[b.r]-RORD[a.r]||(itemOwns(ITEM[b.id],cid)-itemOwns(ITEM[a.id],cid))||(!!a.on-!!b.on));
+ root.innerHTML=`<div class="overlay"><div class="sheet parch" role="dialog" aria-label="${SLOTN[slot]} de ${esc(c.name)}"><div class="row" style="justify-content:space-between"><h2>${SLOTN[slot]} · ${esc(c.name)}</h2><button class="btn small" id="pk-back">Retour</button></div>
+  ${cur?`<div><h3 class="muted" style="margin:0 0 6px">Équipé</h3>${itemHTML(cur,{cid,noOn:true,ro:true})}<button class="btn" id="pk-off" style="margin-top:8px">Retirer</button></div>`:''}
+  <div><h3 class="muted" style="margin:0 0 6px">Ton sac</h3><div class="items">${list.map(i=>itemHTML(i,{cid})).join('')||'<p class="muted">Aucun objet pour cet emplacement. Le donjon d\'équipement en fait tomber.</p>'}</div>
+  <p class="muted" style="font-size:12px;margin:8px 0 0">Les bonus affichés sont ceux que ${esc(c.name)} obtiendrait. Un objet porté par « son » pote ou sa famille compte double. Prendre un objet porté par un autre héros le lui retire.</p></div></div></div>`;
+ $('#pk-back').onclick=()=>openSheet(cid);
+ const off=$('#pk-off');if(off)off.onclick=async()=>{off.disabled=true;try{await api('unequip',{item:cur.u});openSheet(cid);refresh();}catch(e){toast(errMsg(e),'bad');off.disabled=false;}};
+ root.querySelectorAll('.items .itm').forEach(b=>b.onclick=async()=>{root.querySelectorAll('.items .itm').forEach(x=>x.disabled=true);try{await api('equip',{item:+b.dataset.u,card:cid});openSheet(cid);refresh();}catch(e){toast(errMsg(e),'bad');openPicker(cid,slot);}});
+ root.querySelector('.overlay').onclick=e=>{if(e.target.classList.contains('overlay'))closeSheet();};
+}
 function openArt(id){
  const c=CARD[id],a=ART[id],box=document.createElement('div');box.className='lightbox el-'+c.el;spr(id);
  box.innerHTML=`${a&&a.full?`<img src="${a.full}" alt="Illustration de ${esc(c.name)}">`:`<div class="pxbig"><img class="px" src="${a&&a.px?a.px:spr(id)}" style="height:min(60vh,${a&&a.px?a.pxh*9:SPR_H[id]*18}px)" alt="${esc(c.name)}"></div>`}<div class="cap">${esc(c.name)}${a&&a.full?'':' · pas encore d\'illustration'}</div><button class="btn">Fermer</button>`;
@@ -905,7 +1046,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){const l=document.qu
 /* ===== Équipe : sauvegarde et glisser-déposer ===== */
 let teamSaving=Promise.resolve();
 function saveTeam(ids){
- const prev=[...S.team];S.team=ids;teamMsg='';refresh();
+ const prev=[...S.team];S.team=ids;if(S.teams[S.teamIdx])S.teams[S.teamIdx].ids=ids;teamMsg='';refresh();
  teamSaving=teamSaving.then(()=>api('team',{ids})).then(()=>refresh()).catch(e=>{S.team=prev;toast(errMsg(e),'bad');refresh();});
 }
 function toggleTeam(id){
@@ -919,7 +1060,7 @@ function placeAt(id,slot){
  else{if(slot<t.length)t[slot]=id;else if(t.length<5)t.push(id);}
  saveTeam(t);
 }
-function refresh(){if(tab==='equipe')renderTeam();else if(tab==='album')renderAlbum();else if(tab==='combat'&&!timer&&!nextTimer&&!busy)renderCombat();}
+function refresh(){if(tab==='equipe')renderTeam();else if(tab==='album')renderAlbum();else if(tab==='donjons'&&!timer&&!busy)renderDungeons();else if(tab==='combat'&&!timer&&!nextTimer&&!busy)renderCombat();}
 let drag=null,dragSuppress=false;
 function dragStart(){
  drag.on=true;dragSuppress=true;
@@ -1044,7 +1185,7 @@ async function startBattle(){
  const bt=j.battle;lastResult=null;sel=bt.floor;
  const big=$('#tab-combat .floorsel .big');if(big)big.textContent='Étage '+sel;
  if($('#result'))$('#result').innerHTML=mode==='farmer'&&farm.wins?farmLine():'';
- runBattle(new Battle(bt.team,bt.enemies,bt.seed),'#arena',`Étage ${bt.floor}`,()=>finishFloor(j));
+ runBattle(new Battle(bt.team,bt.enemies,bt.seed,{placeA:bt.place}),'#arena',`Étage ${bt.floor}`,()=>finishFloor(j));
  syncButtons();
 }
 function farmLine(){return `<div class="result"><div><b>Farm de l'étage ${sel}</b><div class="muted">${farm.wins} victoire${farm.wins>1?'s':''} · +${fmt(farm.gold)} or · +${farm.tix} ticket${farm.tix>1?'s':''}</div></div></div>`;}
@@ -1067,6 +1208,74 @@ function showResult(r){
  const gt=$('#go-team');if(gt)gt.onclick=()=>showTab('equipe');
 }
 
+/* ===== Onglet Donjons ===== */
+let dKind='gold',dSel={gold:null,equip:null},dResult=null;
+function renderDungeons(){
+ const root=$('#tab-donjons'),cl=S.dg[dKind]||0;
+ if(dSel[dKind]===null||dSel[dKind]>cl+1)dSel[dKind]=Math.min(cl+1,Math.max(1,cl||1));
+ const f=dSel[dKind],foes=genDungeon(dKind,f),cleared=f<=cl,isFarm=S.farm&&S.farm.kind===dKind&&S.farm.floor===f;
+ const gph=farmGoldPerHour(dKind,f),rates=equipRates(f),tot=Object.values(rates).reduce((a,b)=>a+b,0);
+ root.innerHTML=`<div class="battle"><div id="d-arena"></div><div class="side-panel">
+  <div class="panel"><div class="dkinds">${['gold','equip'].map(k=>`<button data-k="${k}" aria-pressed="${dKind===k}">${DUNGEONS[k].n}<small>Record : étage ${S.dg[k]||0}${S.farm&&S.farm.kind===k?' · farm en cours':''}</small></button>`).join('')}</div>
+   <div class="row" style="justify-content:space-between"><div class="floorsel"><button class="btn small" id="d-prev" aria-label="Étage précédent">◀</button><div class="big">Étage ${f}</div><button class="btn small" id="d-next" aria-label="Étage suivant">▶</button></div><button class="btn primary" id="d-fight">Combattre</button></div>
+   <h3 style="margin-top:12px;color:var(--muted)">Ennemis niveau ${10*f}${cleared?' · déjà battu':' · nouvel étage'}</h3>
+   <div class="foes-preview">${foes.map(x=>{const c=CARD[x.id];return `<span class="chip r-${c.r} el-${c.el}"><span class="mini">${faceImg(x.id)}</span>${esc(c.name)}</span>`;}).join('')}</div></div>
+  <div class="panel"><h3 class="muted" style="margin:0 0 6px">Récompenses</h3>
+   <div style="font-size:13.5px">${dKind==='gold'?`Victoire : <b>${fmt(400*f)}</b> or, ×3 la première fois.`:`Victoire : 1 objet${cleared?'':' (au moins Rare la première fois)'} et ${fmt(100*f)} or.`}</div>
+   <div style="font-size:13.5px;margin-top:4px">Farm hors-ligne : <b>${fmt(gph)}</b> or/h · 2 tickets/h${dKind==='equip'?' · 2 objets/h':''} · 24 h max.</div>
+   ${dKind==='equip'?`<div class="odds">${['C','R','E','L'].map(r=>`<span class="r-${r}">${RAR[r].n} ${Math.round(rates[r]/tot*100)} %</span>`).join('')}</div>`:''}
+   <div class="row" style="margin-top:10px">${isFarm?'<span class="farmon">Farm hors-ligne en cours ici</span>':`<button class="btn gold" id="d-farm" ${cleared?'':'disabled'}>Farmer cet étage hors-ligne</button>`}</div>
+   <p class="muted" style="font-size:12px;margin:8px 0 0">${cleared?'Ton équipe farme l\'étage choisi pendant ton absence. Changer de farm récolte d\'abord ce qui est en attente.':'Bats cet étage pour pouvoir le farmer hors-ligne.'} L'équipe et le lieu utilisés sont ceux de l'équipe active (« ${esc(curTeam().n)} »).</p></div>
+  <div id="d-result"></div></div></div>`;
+ root.querySelectorAll('.dkinds button').forEach(b=>b.onclick=()=>{if(timer&&RUN&&RUN.root==='#d-arena')return;dKind=b.dataset.k;dResult=null;renderDungeons();});
+ $('#d-prev').onclick=()=>{dSel[dKind]--;dResult=null;renderDungeons();};
+ $('#d-next').onclick=()=>{dSel[dKind]++;dResult=null;renderDungeons();};
+ $('#d-fight').onclick=startDungeon;
+ const fb=$('#d-farm');if(fb)fb.onclick=async()=>{fb.disabled=true;try{const j=await api('farm_set',{kind:dKind,floor:f});const c=j.collected;toast(`Farm : ${DUNGEONS[dKind].n}, étage ${f}.${c&&c.units?` Récolté : +${fmt(c.gold)} or, +${c.tickets} t.${c.items.length?`, ${c.items.length} objets`:''}`:''}`,'good');renderDungeons();}catch(e){toast(errMsg(e),'bad');fb.disabled=false;}};
+ const run=!!timer||!!nextTimer||busy;
+ $('#d-fight').disabled=run;$('#d-prev').disabled=run||f<=1;$('#d-next').disabled=run||f>cl;
+ if(B&&RUN&&RUN.root==='#d-arena'){buildArena();updateArena(true);}
+ else{const mk=(c,side,i)=>({uid:`p${side}${i}`,side,d:CARD[c.id],id:c.id,lvl:c.lvl});const al=teamUnits().map((c,i)=>mk(c,0,i)),en=foes.map((c,i)=>mk(c,1,i));
+  $('#d-arena').innerHTML=sceneHTML(al.map(unitHTML).join('')+en.map(unitHTML).join(''),stripHTML(al),`${DKN[dKind]} · étage ${f}`);bindHud();}
+ if(dResult&&!timer)showDResult(dResult);
+}
+async function startDungeon(){
+ if(timer||busy||nextTimer)return;if(!S.team.length){toast('Ton équipe est vide.','bad');return;}
+ busy=true;renderDungeons();let j;
+ try{j=await api('dungeon',{kind:dKind,floor:dSel[dKind]},{noApply:true});}catch(e){busy=false;toast(errMsg(e),'bad');renderDungeons();return;}
+ busy=false;dResult=null;const bt=j.battle;
+ if(tab!=='donjons'){applyServer(j);toast(`${DUNGEONS[bt.kind].n} : ${bt.win?'victoire':'défaite'}`,bt.win?'good':'bad');return;}
+ $('#d-result').innerHTML='';
+ runBattle(new Battle(bt.team,bt.enemies,bt.seed,{placeA:bt.place}),'#d-arena',`${DKN[bt.kind]} · étage ${bt.floor}`,()=>{applyServer(j);dResult=bt;B=null;RUN=null;if(tab==='donjons')renderDungeons();});
+ renderDungeons();
+}
+function showDResult(r){
+ const el=$('#d-result');if(!el)return;
+ el.innerHTML=r.win?`<div class="result win" style="display:grid;gap:8px"><div><b>Étage ${r.floor} gagné</b><div class="muted">+${fmt(r.gold)} or${r.first?' · nouveau record':''}${r.first&&S.farm&&S.farm.kind===r.kind&&S.farm.floor===r.floor?' · farm hors-ligne lancé ici':''}${r.sold?` · sac plein : +${fmt(r.sold)} or`:''}</div></div>${r.loot&&r.loot.length?`<div class="items">${r.loot.map(i=>itemHTML(i,{ro:true})).join('')}</div>`:''}${r.first?'<button class="btn primary" id="d-nextfl">Étage suivant</button>':''}</div>`
+ :`<div class="result lose"><div><b>Défaite à l'étage ${r.floor}</b><div class="muted">Les ennemis sont niveau ${10*r.floor}. Monte tes héros, équipe-les ou change de lieu.</div></div></div>`;
+ const nf=$('#d-nextfl');if(nf)nf.onclick=()=>{dSel[dKind]=(S.dg[dKind]||0)+1;dResult=null;renderDungeons();startDungeon();};
+}
+
+/* ===== Récolte du farm hors-ligne ===== */
+let awayShown=false;
+function showAway(direct){
+ const e=farmEst();if(!e||!e.f||e.units<1){if(direct)toast('Rien à récolter pour l\'instant.');return;}
+ const root=$('#overlay-root');if(root.innerHTML&&!direct)return;
+ root.innerHTML=`<div class="overlay"><div class="away parch" role="dialog" aria-label="Récolte"><div class="ribbon">Pendant ton absence</div>
+  <p style="margin:0">Ton équipe a farmé <b>${DUNGEONS[e.f.kind].n}</b>, étage ${e.f.floor}, pendant <b>${hm(e.units*FARM_ITEM_EVERY_S)}</b>${e.dt>=FARM_CAP_S?' (maximum de 24 h atteint)':''}.</p>
+  <div class="row" style="gap:16px"><span class="big">+${fmt(e.gold)} or</span><span class="big">+${e.tickets} tickets</span>${e.items?`<span class="big">${e.items} objets</span>`:''}</div>
+  <div id="aw-items"></div>
+  <div class="row"><button class="btn primary" id="aw-go">Récupérer</button><button class="btn" id="aw-later">Plus tard</button></div></div></div>`;
+ $('#aw-later').onclick=closeSheet;
+ $('#aw-go').onclick=async()=>{const b=$('#aw-go');b.disabled=true;$('#aw-later').disabled=true;
+  try{const j=await api('collect'),c=j.collected;
+   root.querySelector('.away').innerHTML=`<div class="ribbon">Récolté</div><div class="row" style="gap:16px"><span class="big">+${fmt(c.gold)} or</span><span class="big">+${c.tickets} tickets</span></div>
+    ${c.items.length?`<div class="items">${c.items.sort((a,b)=>RORD[b.r]-RORD[a.r]).map(i=>itemHTML(i,{ro:true})).join('')}</div>`:''}${c.sold?`<p class="muted" style="margin:0">Sac plein : objets en trop revendus pour ${fmt(c.sold)} or.</p>`:''}
+    <div class="row"><button class="btn primary" id="aw-ok">Super</button></div>`;
+   $('#aw-ok').onclick=()=>{closeSheet();refresh();if(tab==='invoc')renderInvoc();};
+  }catch(err){toast(errMsg(err),'bad');closeSheet();}};
+}
+
 /* ===== Onglet Équipe ===== */
 function renderTeam(){
  const root=$('#tab-equipe'),counts=famCounts(S.team);
@@ -1076,8 +1285,12 @@ function renderTeam(){
  const synRows=Object.keys(counts).sort((a,b)=>(synTier(b,counts[b])-synTier(a,counts[a]))||counts[b]-counts[a]).map(f=>{const t=synTier(f,counts[f]),next=SYN[f].find(s=>counts[f]<s[0]);return `<button class="${t>=0?'on':''}" data-f="${f}" aria-pressed="${famFilter===f}"><span class="c">${counts[f]}</span><span><b>${FAM[f]}</b><br><span class="t">${t>=0?SYN[f][t][1]+(next?` · ${next[0]} pour : ${next[1]}`:''):`${next[0]} pour : ${next[1]}`}</span></span></button>`;}).join('');
  const peds=[0,1,2,3,4].map(i=>{const id=S.team[i];if(!id)return `<div class="ped empty" data-slot="${i}"><div class="fig">Glisse un héros ici</div><div class="base"></div><div class="tag">Vide</div></div>`;const c=CARD[id];return `<div class="ped el-${c.el}" data-slot="${i}"><button class="pedbtn" data-drag="ped" data-id="${id}" aria-label="Fiche de ${esc(c.name)}"><span class="fig">${figImg(id)}</span><span class="base"></span><span class="tag">${esc(c.name)} · ${S.owned[id].lvl}</span></button><button class="x mini" data-act="toggle" data-id="${id}" aria-label="Retirer ${esc(c.name)} de l'équipe" title="Retirer de l'équipe">×</button></div>`;}).join('');
  root.innerHTML=`<div class="cols"><div class="parch">
+  <div class="teamtabs" role="group" aria-label="Équipes enregistrées">${S.teams.map((t,i)=>`<button data-ti="${i}" aria-pressed="${i===S.teamIdx}">${esc(t.n)}<small>${t.ids.filter(x=>S.owned[x]).length}/5</small></button>`).join('')}</div>
   <div class="ribbon">Composition de l'équipe</div><div class="team-top">${peds}</div>
   <div class="row" style="justify-content:space-between;margin-top:8px"><span class="muted" style="font-size:12.5px">${teamMsg||"Glisse les héros sur les socles, ou entre eux pour changer leur place."}</span><b class="mono">Puissance ${fmt(S.team.reduce((a,id)=>a+power(id),0))}</b></div>
+  <div class="tmeta"><label for="t-place"><b>Lieu</b></label><select id="t-place"><option value="">Aucun lieu</option>${PLACES.filter(pl=>S.places[pl.id]!=null).map(pl=>`<option value="${pl.id}" ${curTeam().place===pl.id?'selected':''}>${PGL[pl.id]} ${esc(pl.name)} ${'★'.repeat(S.places[pl.id])}</option>`).join('')}</select>
+   <span class="muted">${curPlace()?esc(PLACE[curPlace().id].d):Object.keys(S.places).length?'Un lieu par équipe.':'Aucun lieu : ils se trouvent en invocation.'}</span>
+   <span style="flex:1"></span><label for="t-name" class="muted">Nom</label><input id="t-name" maxlength="20" value="${esc(curTeam().n)}" style="width:130px"><button class="btn small" id="t-name-ok">Renommer</button></div>
   <div class="ribbon" style="margin-top:18px">Tes héros</div>
   <div class="famrow" id="famrow"><button data-f="" aria-pressed="${!famFilter}">Toutes les familles</button>${ownedFams.map(f=>`<button data-f="${f}" aria-pressed="${famFilter===f}">${FAMS[f]}</button>`).join('')}</div>
   <div class="icons" id="icons">${shown.map(id=>iconHTML(id,{inteam:S.team.includes(id),teamCounts:counts,hl:famFilter})).join('')||'<p class="muted">Aucun héros avec ce filtre.</p>'}</div>
@@ -1087,6 +1300,9 @@ function renderTeam(){
   <div class="panel"><h3 class="muted">Synergies de l'équipe</h3><div class="syn" id="syn">${synRows||'<span class="muted">Ajoute des héros pour voir les familles.</span>'}</div><p class="muted" style="margin:8px 0 0;font-size:12px">Touche une famille pour filtrer tes héros.</p></div>
   <div class="panel cycle"><h3 class="muted">Éléments</h3><span class="e el-coeur">${ELG.coeur} Cœur</span> bat <span class="e el-raison">${ELG.raison} Raison</span>, qui bat <span class="e el-delire">${ELG.delire} Délire</span>, qui bat <span class="e el-prudence">${ELG.prudence} Prudence</span>, qui bat <span class="e el-coeur">Cœur</span>.<br><span class="e el-ordre">${ELG.ordre} Ordre</span> et <span class="e el-chaos">${ELG.chaos} Chaos</span> se battent entre eux. Avantage : +25 % de dégâts.</div>
  </aside></div>`;
+ root.querySelectorAll('[data-ti]').forEach(b=>b.onclick=async()=>{const k=+b.dataset.ti;if(k===S.teamIdx)return;try{await teamSaving;await api('team_select',{idx:k});teamMsg='';renderTeam();}catch(e){toast(errMsg(e),'bad');}});
+ $('#t-place').onchange=async e=>{try{await api('team_meta',{idx:S.teamIdx,place:e.target.value||null});renderTeam();}catch(err){toast(errMsg(err),'bad');renderTeam();}};
+ $('#t-name-ok').onclick=async()=>{const n=$('#t-name').value.trim();if(!n)return;try{await api('team_meta',{idx:S.teamIdx,name:n});toast('Équipe renommée.','good');renderTeam();}catch(e){toast(errMsg(e),'bad');}};
  root.querySelectorAll('[data-act="toggle"]').forEach(b=>b.onclick=e=>{e.stopPropagation();toggleTeam(b.dataset.id);});
  root.querySelectorAll('[data-drag]').forEach(b=>b.onclick=()=>{if(dragSuppress){dragSuppress=false;return;}openSheet(b.dataset.id);});
  root.querySelectorAll('#famrow button,#syn button').forEach(b=>b.onclick=()=>{const f=b.dataset.f||null;famFilter=famFilter===f?null:f;renderTeam();});
@@ -1094,25 +1310,56 @@ function renderTeam(){
 }
 
 /* ===== Onglet Héros ===== */
+let albumView='heros',itemSlot='';
 function renderAlbum(){
- const root=$('#tab-album'),n=Object.keys(S.owned).length;
- root.innerHTML=`<div class="parch"><div class="row" style="justify-content:space-between"><h2>Héros</h2><span class="mono">${n} / ${CARDS.length} obtenus</span></div>
- ${['L','E','R','C'].map(r=>`<div class="tier"><span>Héros ${RAR[r].n.toLowerCase()}s</span></div><div class="banners">${BYR[r].map(c=>bannerHTML(c.id)).join('')}</div>`).join('')}</div>`;
- root.querySelectorAll('.banner').forEach(el=>el.onclick=()=>openSheet(el.dataset.id));
+ const root=$('#tab-album'),n=Object.keys(S.owned).length,nP=Object.keys(S.places).length;
+ const seg=`<div class="seg subseg" id="alb">${[['heros',`Héros · ${n}/${CARDS.length}`],['objets',`Objets · ${S.items.length}`],['lieux',`Lieux · ${nP}/${PLACES.length}`]].map(v=>`<button data-v="${v[0]}" aria-pressed="${albumView===v[0]}">${v[1]}</button>`).join('')}</div>`;
+ if(albumView==='heros'){
+  root.innerHTML=`<div class="parch">${seg}
+  ${['L','E','R','C'].map(r=>`<div class="tier"><span>Héros ${RAR[r].n.toLowerCase()}s</span></div><div class="banners">${BYR[r].map(c=>bannerHTML(c.id)).join('')}</div>`).join('')}</div>`;
+  root.querySelectorAll('.banner').forEach(el=>el.onclick=()=>openSheet(el.dataset.id));
+ }else if(albumView==='objets'){
+  const list=S.items.filter(i=>!itemSlot||ITEM[i.id].slot===itemSlot).sort((a,b)=>SLOTS_EQ.indexOf(ITEM[a.id].slot)-SLOTS_EQ.indexOf(ITEM[b.id].slot)||RORD[b.r]-RORD[a.r]||a.id.localeCompare(b.id));
+  const junk=S.items.filter(i=>!i.on&&i.r==='C');
+  root.innerHTML=`<div class="parch">${seg}
+   <div class="row" style="justify-content:space-between;margin-bottom:10px"><div class="seg" id="isl"><button data-s="" aria-pressed="${!itemSlot}">Tout</button>${SLOTS_EQ.map(sl=>`<button data-s="${sl}" aria-pressed="${itemSlot===sl}">${SLOTN[sl]}</button>`).join('')}</div>
+   <button class="btn small" id="sell-junk" ${junk.length?'':'disabled'}>Revendre les Communs non portés (${junk.length}) · ${fmt(junk.length*SELL.C)} or</button></div>
+   <div class="items">${list.map(i=>itemHTML(i)).join('')||'<p class="muted">Aucun objet. Le donjon d\'équipement en fait tomber, en combat et en farm hors-ligne.</p>'}</div>
+   <p class="muted" style="font-size:12px;margin:12px 0 0">Pour équiper un objet, ouvre la fiche d'un héros et touche un emplacement. Sac : ${S.items.length}/300, au-delà les objets sont revendus automatiquement.</p></div>`;
+  root.querySelectorAll('#isl button').forEach(b=>b.onclick=()=>{itemSlot=b.dataset.s;renderAlbum();});
+  $('#sell-junk').onclick=async()=>{try{const j=await api('sell',{items:junk.map(i=>i.u)});toast(`+${fmt(j.sold)} or`,'good');renderAlbum();}catch(e){toast(errMsg(e),'bad');}};
+  root.querySelectorAll('.items .itm').forEach(b=>b.onclick=()=>openItem(+b.dataset.u));
+ }else{
+  root.innerHTML=`<div class="parch">${seg}<div class="places">${PLACES.map(pl=>placeHTML(pl.id)).join('')}</div>
+   <p class="muted" style="font-size:12px;margin:12px 0 0">Les lieux se trouvent en invocation (6 % par tirage). Chaque doublon donne une étoile, soit +20 % au bonus du lieu. Choisis le lieu de chaque équipe dans l'onglet Équipe.</p></div>`;
+ }
+ root.querySelectorAll('#alb button').forEach(b=>b.onclick=()=>{albumView=b.dataset.v;renderAlbum();});
+}
+function openItem(u){
+ const it=S.items.find(i=>i.u===u);if(!it)return;const d=ITEM[it.id],root=$('#overlay-root');
+ const owners=d.own.map(o=>o==='animaux'?'les animaux':o.startsWith('f:')?'la famille '+FAM[o.slice(2)]:CARD[o].name).join(', ');
+ root.innerHTML=`<div class="overlay"><div class="sheet parch" role="dialog" aria-label="${esc(d.name)}">${itemHTML(it,{ro:true})}
+  <p style="margin:0">${esc(d.d)}</p><p class="muted" style="margin:0;font-size:13px">Bonus doublé pour : ${esc(owners)}.</p>
+  <div class="row">${it.on?`<button class="btn" id="it-off">Retirer de ${esc(CARD[it.on].name)}</button>`:`<button class="btn" id="it-sell">Revendre · ${fmt(SELL[it.r])} or</button>`}<button class="btn" id="it-close">Fermer</button></div></div></div>`;
+ $('#it-close').onclick=closeSheet;root.querySelector('.overlay').onclick=e=>{if(e.target.classList.contains('overlay'))closeSheet();};
+ const off=$('#it-off');if(off)off.onclick=async()=>{try{await api('unequip',{item:u});closeSheet();renderAlbum();}catch(e){toast(errMsg(e),'bad');}};
+ const sl=$('#it-sell');if(sl)sl.onclick=async()=>{try{const j=await api('sell',{items:[u]});toast(`+${fmt(j.sold)} or`,'good');closeSheet();renderAlbum();}catch(e){toast(errMsg(e),'bad');}};
 }
 
 /* ===== Onglet Invocation ===== */
 async function pull(n){
  if(S.tickets<n)return;document.querySelectorAll('#p1,#p10').forEach(b=>b.disabled=true);
- try{const j=await api('pull',{n});lastPull=j.results.map(r=>({id:r.id,badge:r.kind==='new'?'<span class="badge-new">Nouveau</span>':r.kind==='star'?`<span class="badge-up">★${r.stars}</span>`:'<span class="badge-up">+300 or</span>'}));summonShow(lastPull);}
+ try{const j=await api('pull',{n});lastPull=j.results.map(r=>({id:r.id,place:r.place,badge:r.kind==='new'?'<span class="badge-new">Nouveau</span>':r.kind==='star'?`<span class="badge-up">★${r.stars}</span>`:'<span class="badge-up">+300 or</span>'}));summonShow(lastPull);}
  catch(e){toast(errMsg(e),'bad');renderInvoc();}
 }
+const resR=p=>p.place?'E':CARD[p.id].r;
+const resHTML=(p,o)=>p.place?`<div class="banner">${p.badge?`<span class="badge">${p.badge}</span>`:''}<div class="plcard"><span class="g">${PGL[p.place]}</span><b>${esc(PLACE[p.place].name)}</b><small>Lieu</small></div></div>`:bannerHTML(p.id,o);
 function summonShow(res){
- const best=res.reduce((a,p)=>RORD[CARD[p.id].r]>RORD[a]?CARD[p.id].r:a,'C'),glow={C:'#8E94A6',R:'#3F8FE8',E:'#A25BE6',L:'#F0B52E'}[best],root=$('#stage-root');
- root.innerHTML=`<div class="stage" style="--glow:${glow}"><div class="portal" id="portal"></div><div class="msg" id="smsg">Invocation…</div><div class="deal" id="deal" hidden>${res.map((p,i)=>`<div class="flip r-${CARD[p.id].r}" style="animation-delay:${i*60}ms"><div class="in"><div class="back">?</div><div class="front">${bannerHTML(p.id,{badge:p.badge,reveal:true,noLv:true})}</div></div></div>`).join('')}</div><button class="btn gold" id="sbtn">Tout révéler</button></div>`;
+ const best=res.reduce((a,p)=>RORD[resR(p)]>RORD[a]?resR(p):a,'C'),glow={C:'#8E94A6',R:'#3F8FE8',E:'#A25BE6',L:'#F0B52E'}[best],root=$('#stage-root');
+ root.innerHTML=`<div class="stage" style="--glow:${glow}"><div class="portal" id="portal"></div><div class="msg" id="smsg">Invocation…</div><div class="deal" id="deal" hidden>${res.map((p,i)=>`<div class="flip r-${resR(p)}" style="animation-delay:${i*60}ms"><div class="in"><div class="back">?</div><div class="front">${resHTML(p,{badge:p.badge,reveal:true,noLv:true})}</div></div></div>`).join('')}</div><button class="btn gold" id="sbtn">Tout révéler</button></div>`;
  const flips=[...root.querySelectorAll('.flip')];let done=false;const timers=[];
  const finishAll=()=>{timers.forEach(clearTimeout);flips.forEach(f=>f.classList.add('open'));done=true;$('#sbtn').textContent='Continuer';$('#smsg').textContent=best==='L'?'Légendaire !':best==='E'?'Épique !':'Résultat';};
- const startDeal=()=>{const p=$('#portal');if(p)p.remove();$('#deal').hidden=false;$('#smsg').textContent='Touche pour tout révéler';let t=500;flips.forEach((f,k)=>{t+=CARD[res[k].id].r==='L'?450:200;timers.push(setTimeout(()=>{f.classList.add('open');if(k===flips.length-1)timers.push(setTimeout(finishAll,500));},t));});};
+ const startDeal=()=>{const p=$('#portal');if(p)p.remove();$('#deal').hidden=false;$('#smsg').textContent='Touche pour tout révéler';let t=500;flips.forEach((f,k)=>{t+=resR(res[k])==='L'?450:200;timers.push(setTimeout(()=>{f.classList.add('open');if(k===flips.length-1)timers.push(setTimeout(finishAll,500));},t));});};
  if(reduce){$('#portal').remove();$('#deal').hidden=false;finishAll();}else timers.push(setTimeout(()=>{$('#portal').classList.add('out');timers.push(setTimeout(startDeal,330));},950));
  $('#sbtn').onclick=()=>{if(!done){const p=$('#portal');if(p)p.remove();$('#deal').hidden=false;finishAll();}else{root.innerHTML='';renderInvoc();}};
  root.querySelector('.stage').addEventListener('click',e=>{if(e.target.id==='sbtn')return;if(!done&&!$('#portal'))finishAll();});
@@ -1125,10 +1372,11 @@ function renderInvoc(){
   <div class="rates">${['L','E','R','C'].map(r=>`<div><span class="r-${r}" style="color:var(--rar);font-weight:800">${RAR[r].n}</span><span class="mono">${RAR[r].w} %</span></div>`).join('')}</div>
   <p class="muted" style="margin:0;font-size:13px">Légendaire garantie au 60ᵉ tirage sans légendaire (<span class="mono">${S.pity}/60</span>). Un tirage ×10 contient au moins une Rare.</p>
   <p class="muted" style="margin:0;font-size:13px"><b style="color:var(--ink)">Doublons</b> : chaque doublon donne une étoile, soit +20 % de stats, jusqu'à cinq. Au-delà, 300 or.</p>
-  <p class="muted" style="margin:0;font-size:13px">Tickets : 1 par nouvel étage, 5 de plus tous les 5 étages, 15 % de chance en farm, et 1 tous les quarts d'heure en attente.</p>
- </div><div class="parch">${lastPull?`<div class="ribbon">Dernier tirage</div><div class="banners">${lastPull.map(p=>bannerHTML(p.id,{badge:p.badge,reveal:true})).join('')}</div>`:'<div class="empty"><p class="muted">Tes tirages apparaîtront ici. Les nouveaux héros rejoignent ton équipe tant qu\'elle a de la place.</p></div>'}</div></div>`;
+  <p class="muted" style="margin:0;font-size:13px"><b style="color:var(--ink)">Lieux</b> : 6 % de chance par tirage d'obtenir un lieu à la place d'un héros. Un lieu en double gagne une étoile.</p>
+  <p class="muted" style="margin:0;font-size:13px">Tickets : 1 par nouvel étage de la tour, 5 de plus tous les 5 étages, 15 % de chance par victoire en farm de la tour, et 2 par heure de farm hors-ligne en donjon.</p>
+ </div><div class="parch">${lastPull?`<div class="ribbon">Dernier tirage</div><div class="banners">${lastPull.map(p=>resHTML(p,{badge:p.badge,reveal:true})).join('')}</div>`:'<div class="empty"><p class="muted">Tes tirages apparaîtront ici. Les nouveaux héros rejoignent ton équipe tant qu\'elle a de la place.</p></div>'}</div></div>`;
  $('#p1').onclick=()=>pull(1);$('#p10').onclick=()=>pull(10);
- root.querySelectorAll('.banner').forEach(el=>el.onclick=()=>openSheet(el.dataset.id));
+ root.querySelectorAll('.banner[data-id]').forEach(el=>el.onclick=()=>openSheet(el.dataset.id));
 }
 
 /* ===== Données des autres joueurs ===== */
@@ -1149,11 +1397,11 @@ async function renderPvp(){
  const def=(ME.defense||[]).filter(id=>S.owned[id]);
  root.innerHTML=`<div class="pvp"><div class="parch pvp-me"><div class="row" style="justify-content:space-between"><div><h2>Arène</h2><p class="muted" style="margin:2px 0 0">Attaque la défense des autres. Victoire : +150 or, défaite : +30 or.</p></div>
   <div class="rating"><b>${ME.pvp_rating}</b><span>cote</span></div><div class="rating"><b>${left}/5</b><span>combats aujourd'hui</span></div></div>
-  <div class="row" style="margin-top:12px;justify-content:space-between"><div><h3>Ta défense</h3><div class="row" style="gap:6px">${def.length?def.map(id=>miniFace(id,S.owned[id].lvl)).join(''):'<span class="muted">Aucune : ton équipe de combat sera utilisée.</span>'}</div></div>
-  <button class="btn" id="set-def" ${!S.team.length?'disabled':''}>Mettre mon équipe en défense</button></div></div>
+  <div class="row" style="margin-top:12px;justify-content:space-between"><div><h3>Ta défense</h3><div class="row" style="gap:6px">${def.length?def.map(id=>miniFace(id,S.owned[id].lvl)).join(''):'<span class="muted">Aucune : ton équipe de combat sera utilisée.</span>'}${ME.defense_place&&PLACE[ME.defense_place]?`<span class="pill">${PGL[ME.defense_place]} ${esc(PLACE[ME.defense_place].name)}</span>`:''}</div></div>
+  <button class="btn" id="set-def" ${!S.team.length?'disabled':''}>Mettre « ${esc(curTeam().n)} » en défense</button></div></div>
   <div id="pvp-list" class="pvp-list"><div class="panel empty muted">Chargement des adversaires…</div></div>
   <div class="panel"><h3 class="muted">Derniers combats</h3><div id="pvp-log" class="logl muted">…</div></div></div>`;
- $('#set-def').onclick=async()=>{try{await api('team',{ids:S.team,kind:'defense'});toast('Défense mise à jour.','good');renderPvp();}catch(e){toast(errMsg(e),'bad');}};
+ $('#set-def').onclick=async()=>{try{await api('team',{ids:S.team,kind:'defense',place:curTeam().place});toast('Défense mise à jour.','good');renderPvp();}catch(e){toast(errMsg(e),'bad');}};
  try{
   const players=await loadPlayers(true),others=players.filter(p=>p.id!==ME.id).sort((a,b)=>b.pvp_rating-a.pvp_rating),names={};players.forEach(p=>names[p.id]=p.pseudo);
   const fightBusy=!!timer||!!nextTimer||busy;
@@ -1170,7 +1418,7 @@ async function attack(target){
  let j;try{j=await api('pvp',{target},{noApply:true});}catch(e){busy=false;toast(errMsg(e),'bad');renderPvp();return;}
  busy=false;const bt=j.battle,root=$('#overlay-root');
  root.innerHTML=`<div class="overlay"><div class="pvp-fight"><div id="pvp-arena"></div><div id="pvp-res" class="row" style="justify-content:center;margin-top:10px"></div></div></div>`;
- runBattle(new Battle(bt.team,bt.enemies,bt.seed),'#pvp-arena',`Arène · ${esc(bt.targetPseudo)}`,()=>{
+ runBattle(new Battle(bt.team,bt.enemies,bt.seed,{placeA:bt.placeA,placeB:bt.placeB}),'#pvp-arena',`Arène · ${esc(bt.targetPseudo)}`,()=>{
   applyServer(j);
   if(!$('#pvp-res')){toast(`${bt.win?'Victoire':'Défaite'} contre ${bt.targetPseudo} · cote ${bt.delta>=0?'+':''}${bt.delta}`,bt.win?'good':'bad');B=null;RUN=null;if(tab==='pvp')renderPvp();return;}
   $('#pvp-res').innerHTML=`<div class="result ${bt.win?'win':'lose'}"><div><b>${bt.win?'Victoire':'Défaite'} contre ${esc(bt.targetPseudo)}</b><div class="muted">Cote ${bt.delta>=0?'+':''}${bt.delta} · +${bt.gold} or</div></div><button class="btn primary" id="pvp-close">Fermer</button></div>`;
@@ -1187,13 +1435,19 @@ function renderAdmin(){
   <form class="adm-box" id="ad-grant"><h3>Ressources</h3><label for="ad-gold">Or</label><input id="ad-gold" type="number" min="0" value="10000"><label for="ad-tix">Tickets</label><input id="ad-tix" type="number" min="0" value="50"><button class="btn primary" type="submit">Ajouter</button></form>
   <form class="adm-box" id="ad-floor"><h3>Progression</h3><label for="ad-fl">Étage max débloqué</label><input id="ad-fl" type="number" min="0" max="500" value="${S.maxFloor}"><button class="btn primary" type="submit">Appliquer</button></form>
   <form class="adm-box" id="ad-card"><h3>Héros</h3><label for="ad-c">Héros</label><select id="ad-c">${CARDS.map(c=>`<option value="${c.id}">${esc(c.name)} · ${RAR[c.r].n}</option>`).join('')}</select><div class="row" style="gap:8px"><div style="flex:1"><label for="ad-l">Niveau</label><input id="ad-l" type="number" min="1" max="300" value="10"></div><div style="flex:1"><label for="ad-s">Étoiles</label><input id="ad-s" type="number" min="0" max="5" value="0"></div></div><button class="btn primary" type="submit">Donner ou modifier</button></form>
+  <form class="adm-box" id="ad-dg"><h3>Donjons</h3><label for="ad-dk">Donjon</label><select id="ad-dk"><option value="gold">Or</option><option value="equip">Équipement</option></select><label for="ad-df">Record d'étage</label><input id="ad-df" type="number" min="0" max="50" value="1"><button class="btn primary" type="submit">Appliquer</button></form>
+  <form class="adm-box" id="ad-loot"><h3>Objets et lieux</h3><label for="ad-lr">Rareté</label><select id="ad-lr">${['C','R','E','L'].map(r=>`<option value="${r}">${RAR[r].n}</option>`).join('')}</select><button class="btn primary" type="submit">Un exemplaire de chaque objet + tous les lieux</button></form>
+  <form class="adm-box" id="ad-time"><h3>Farm hors-ligne</h3><label for="ad-h">Avancer le temps (heures)</label><input id="ad-h" type="number" min="0" max="48" value="6"><button class="btn primary" type="submit">Simuler l'absence</button></form>
   <form class="adm-box" id="ad-all"><h3>Collection complète</h3><label for="ad-al">Niveau de tous les héros</label><input id="ad-al" type="number" min="1" max="300" value="1"><button class="btn primary" type="submit">Débloquer les ${CARDS.length} héros</button></form>
  </div>
- <div class="adm-box danger" style="margin-top:14px"><h3>Remise à zéro</h3><p class="muted" style="margin:0 0 8px">Remet ce compte à son état de départ : légendaire seule, ${500} or, 10 tickets, étage 0.</p><button class="btn" id="ad-reset">${resetArm?'Confirmer : tout remettre à zéro':'Remettre à zéro'}</button></div></div>`;
+ <div class="adm-box danger" style="margin-top:14px"><h3>Remise à zéro</h3><p class="muted" style="margin:0 0 8px">Remet ce compte à son état de départ : légendaire seule, ${500} or, 10 tickets, étage 0, sans objets, lieux ni progrès en donjon.</p><button class="btn" id="ad-reset">${resetArm?'Confirmer : tout remettre à zéro':'Remettre à zéro'}</button></div></div>`;
  const run=async(action,body,ok)=>{try{await api(action,body);toast(ok,'good');renderAdmin();}catch(e){toast(errMsg(e),'bad');}};
  $('#ad-grant').onsubmit=e=>{e.preventDefault();run('admin_grant',{gold:$('#ad-gold').value,tickets:$('#ad-tix').value},'Ressources ajoutées.');};
  $('#ad-floor').onsubmit=e=>{e.preventDefault();sel=null;run('admin_floor',{floor:$('#ad-fl').value},'Étage mis à jour.');};
  $('#ad-card').onsubmit=e=>{e.preventDefault();run('admin_card',{card:$('#ad-c').value,lvl:$('#ad-l').value,stars:$('#ad-s').value},'Héros mis à jour.');};
+ $('#ad-dg').onsubmit=e=>{e.preventDefault();run('admin_dungeon',{kind:$('#ad-dk').value,floor:$('#ad-df').value},'Donjon mis à jour.');};
+ $('#ad-loot').onsubmit=e=>{e.preventDefault();run('admin_loot',{r:$('#ad-lr').value},'Objets et lieux ajoutés.');};
+ $('#ad-time').onsubmit=e=>{e.preventDefault();run('admin_time',{hours:$('#ad-h').value},'Temps avancé : récolte dans l\'en-tête.');};
  $('#ad-all').onsubmit=e=>{e.preventDefault();run('admin_all',{lvl:$('#ad-al').value},'Collection complète débloquée.');};
  $('#ad-reset').onclick=()=>{if(!resetArm){resetArm=true;renderAdmin();setTimeout(()=>{resetArm=false;if(tab==='admin')renderAdmin();},4000);return;}resetArm=false;sel=null;lastPull=null;run('admin_reset',{},'Compte remis à zéro.');};
 }
@@ -1246,6 +1500,7 @@ function showCreate(){
 function enterGame(){
  document.body.classList.remove('logged-out');$('#auth-root').innerHTML='';
  showTab(Object.keys(S.owned).length>1||S.maxFloor?'combat':'invoc');
+ if(!awayShown){awayShown=true;showAway(false);}
 }
 $('#logout').onclick=async()=>{if(timer){clearInterval(timer);timer=null;}if(nextTimer){clearTimeout(nextTimer);nextTimer=null;}B=null;ME=null;await sb.auth.signOut();showAuth();};
 async function boot(){
