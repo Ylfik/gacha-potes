@@ -62,3 +62,13 @@ revoke insert, update, delete on public.profiles, public.cards, public.pvp_log f
 
 -- Mise à jour : colonne admin (sans effet si elle existe déjà)
 alter table public.profiles add column if not exists is_admin boolean not null default false;
+
+-- Mise à jour : équipes enregistrées, équipement, lieux, donjons et farm hors-ligne
+alter table public.profiles add column if not exists teams jsonb not null default '[]';
+alter table public.profiles add column if not exists team_idx integer not null default 0;
+alter table public.profiles add column if not exists defense_place text;
+alter table public.profiles add column if not exists items jsonb not null default '[]';
+alter table public.profiles add column if not exists item_seq integer not null default 0;
+alter table public.profiles add column if not exists places jsonb not null default '{}';
+alter table public.profiles add column if not exists dungeons jsonb not null default '{"gold":0,"equip":0}';
+alter table public.profiles add column if not exists farm jsonb;
