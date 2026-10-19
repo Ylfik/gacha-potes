@@ -14,7 +14,7 @@ const CARDS=[
 {id:'yoann',name:'Yoann',r:'L',el:'raison',fam:['potes','foyer'],hp:160,atk:80,spd:70,kit:[['Attaque','Coup sec','Frappe une cible à 100 % de son ATK.'],['Passif','Caillou','Immunisé à l\'Angoisse, au Malaise et au Stress.'],['Compétence','Regard vide','Provocation pendant 1,6 s, puis frappe à 80 % de son ATK.'],['Ulti','Inébranlable','Une fois par combat : au lieu de tomber, il reste à 1 PV et gagne un Bouclier de 30 % de ses PV max.']]},
 {id:'lea',name:'Léa',r:'L',el:'coeur',fam:['potes','foyer'],hp:100,atk:110,spd:90,kit:[['Attaque','Remise en place','Frappe une cible à 100 % de son ATK.'],['Passif','Faut pas me chercher','+1 Colère à chaque coup reçu (10 max).'],['Compétence','Tu lui as fait quoi ?!','Frappe l\'ennemi qui vient de blesser un allié à 100 % de son ATK, +20 % par point de Colère.'],['Ulti','Explosion','Consomme sa Colère pour frapper tous les ennemis à 60 % de son ATK, +25 % par point de Colère.']]},
 {id:'kylian',name:'Kylian',r:'L',el:'prudence',fam:['potes','chezk'],hp:90,atk:90,spd:100,kit:[['Attaque','Investissement','Frappe une cible à 100 % de son ATK.'],['Passif','Économe','30 % de ses dégâts remplissent une cagnotte.'],['Compétence',"C'est à moi",'Vole à un ennemi son Zen, sa Hype, son Câlin, sa Colère ou son Bouclier. S\'il n\'y a rien à voler, frappe à 100 %.'],['Ulti','Rentabiliser','Bouclier pour toute l\'équipe égal à 40 % de la cagnotte (20 minimum), puis la cagnotte repart à zéro.']]},
-{id:'geoffrey',name:'Geoffrey',r:'L',el:'delire',fam:['potes','bruyants'],hp:120,atk:70,spd:110,kit:[['Attaque','Blague nulle','Frappe une cible à 100 % de son ATK.'],['Passif','Aucune honte','Immunisé au Malaise et à l\'Angoisse. Hype (1,2 s) chaque fois qu\'un ennemi tombe en Malaise.'],['Compétence','Rire strident','Malaise (0,8 s) sur tous les ennemis, et 1 chance sur 3 sur chaque allié (Yoann est immunisé).'],['Ulti','La blague de trop','Malaise (1,6 s) sur tout le monde sauf lui, et il frappe ×2 pendant 1,6 s.']]},
+{id:'geoffrey',name:'Geoffrey',r:'L',el:'delire',fam:['potes','bruyants'],hp:120,atk:70,spd:110,kit:[['Attaque','Blague nulle','Frappe une cible à 100 % de son ATK.'],['Passif','Aucune honte','Immunisé au Malaise et à l\'Angoisse. Hype (0,8 s) quand un ennemi tombe en Malaise (ne se cumule pas).'],['Compétence','Rire strident','Malaise (0,5 s) sur tous les ennemis, et 1 chance sur 3 sur chaque allié (Yoann est immunisé).'],['Ulti','La blague de trop','Malaise (0,9 s) sur tout le monde sauf lui, et il frappe ×2 pendant 0,9 s ; son Ulti ne se recharge pas pendant ce temps.']]},
 {id:'lila',name:'Lila',r:'L',el:'coeur',fam:['potes','jl'],hp:100,atk:100,spd:70,kit:[['Attaque','Petite frappe','Frappe une cible à 100 % de son ATK.'],['Passif','Arrive en douce','Arrive après 3 actions alliées (frappe à 120 % en arrivant) ; Discrète, donc impossible à cibler, tant qu\'un allié est debout.'],['Compétence','Faut pas pousser','+2 Colère, puis frappe à 140 % de son ATK.'],['Ulti','Plus du tout timide','Une fois : quand un allié tombe, elle perd sa Discrétion et gagne +60 % d\'ATK.']]},
 {id:'ryuk',name:'Ryuk',r:'E',el:'chaos',fam:['foyer','lignee'],hp:80,atk:110,spd:150,kit:[['Attaque','Griffe','Frappe une cible au hasard à 100 % de son ATK.'],['Passif','Zoomies','35 % de chance de rejouer tout de suite (2 fois d\'affilée max).'],['Compétence','Connerie','40 % : Malaise (1 s) sur un ennemi. 40 % : frappe tous les ennemis à 70 %. 20 % : il se coince (Malaise 0,8 s sur lui).']]},
 {id:'yuumi',name:'Yuumi',r:'E',el:'coeur',fam:['foyer','lignee'],hp:90,atk:40,spd:80,kit:[['Attaque','Coup de patte','Frappe une cible à 60 % de son ATK.'],['Passif','Froussarde','Quand elle est touchée, elle se cache 0,8 s (impossible à cibler).'],['Compétence','Papouilles','Câlin (2 s) sur l\'allié le plus blessé.']]},
@@ -65,7 +65,7 @@ const BYR={C:[],R:[],E:[],L:[]}; CARDS.forEach(c=>BYR[c.r].push(c));
 const RETARD=new Set(['jenlain','lila']);
 const ANIMALS=new Set(['ryuk','yuumi','traffy','echo','zoya']);
 const CHARGE=new Set(['jenlain','lea','kylian','geoffrey']);
-const SKILL_CD={udyr:3,ekko:3,thresh:3,chasseuse:3,harpie:3,legion:3,lost:3,azazel:3,magdalene:3,chasseur:3,arcaniste:3,steamer:3,yugo:3,bouftou:3,jenlain:3,yoann:3,lea:3,kylian:3,geoffrey:3,lila:3,ryuk:3,yuumi:2,traffy:4,echo:3,zoya:3};
+const SKILL_CD={udyr:3,ekko:3,thresh:3,chasseuse:3,harpie:3,legion:3,lost:3,azazel:3,magdalene:3,chasseur:3,arcaniste:3,steamer:3,yugo:3,bouftou:3,jenlain:3,yoann:3,lea:3,kylian:3,geoffrey:4,lila:3,ryuk:3,yuumi:2,traffy:4,echo:3,zoya:3};
 const NEG=new Set(['angoisse','malaise','flemme','stress','deprime','attente','piece']);
 const ST_LABEL={angoisse:'Angoisse',malaise:'Malaise',flemme:'Flemme',stress:'Stress',deprime:'Déprime',attente:'En attente',piece:'Pièce manq.',hype:'Hype',zen:'Zen',calin:'Câlin',provoc:'Provoc.',cachee:'Cachée',double:'×2'};
 const rnd=n=>Math.floor(Math.random()*n);
@@ -139,7 +139,7 @@ const KIT={
  yoann:{atk:B1(1),skill(b,u){b.say(`${b.nm(u)} fixe le vide. Tout le monde le regarde.`);b.apply(u,u,'provoc',40);B1(0.8)(b,u);}},
  lea:{atk:B1(1),skill(b,u){let t=b.sides[u.side].lastAttacker;if(!t||!t.alive||!t.present||t.side===u.side)t=b.pick(u);if(!t)return;b.say(`${b.nm(u)} : « Tu lui as fait quoi ?! »`);b.hit(u,t,1+0.2*u.colere);},ult(b,u){b.say(`${b.nm(u)} explose (${u.colere} Colère).`,'ult');const m=0.6+0.25*u.colere;u.colere=0;b.foes(u).forEach(t=>b.hit(u,t,m));}},
  kylian:{atk:B1(1),skill(b,u){const fs=b.foes(u).filter(t=>t.st.hype||t.st.zen||t.st.calin||t.colere>0||t.shield>0);if(!fs.length){B1(1)(b,u);return;}const t=fs[b.rnd(fs.length)];let w;if(t.st.zen){u.st.zen=t.st.zen;delete t.st.zen;w='Zen';}else if(t.st.hype){u.st.hype=t.st.hype;delete t.st.hype;w='Hype';}else if(t.st.calin){u.st.calin=t.st.calin;delete t.st.calin;w='Câlin';}else if(t.colere>0){u.colere=Math.min(10,u.colere+t.colere);t.colere=0;w='sa Colère';}else{u.shield+=t.shield;t.shield=0;w='son Bouclier';}b.say(`${b.nm(u)} : « C'est à moi. » Il prend ${w} à ${b.nm(t)}.`);},ult(b,u){const v=Math.max(20,Math.round(u.cagnotte*0.4));b.say(`${b.nm(u)} rentabilise : Bouclier de ${v} pour l'équipe.`,'ult');b.allies(u).forEach(a=>{a.shield+=v;b.ev(a,'+'+v+' bouclier','pos');});u.cagnotte=0;}},
- geoffrey:{atk:B1(1),skill(b,u){b.say(`${b.nm(u)} éclate de rire. Malaise général.`);b.foes(u).forEach(t=>b.apply(u,t,'malaise',20));b.allies(u).forEach(a=>{if(a!==u&&b.rand()<1/3)b.apply(u,a,'malaise',20);});},ult(b,u){b.say(`${b.nm(u)} sort LA blague de trop.`,'ult');b.units.filter(x=>x.alive&&x.present&&x!==u).forEach(x=>b.apply(u,x,'malaise',40));b.apply(u,u,'double',40);}},
+ geoffrey:{atk:B1(1),skill(b,u){b.say(`${b.nm(u)} éclate de rire. Malaise général.`);b.foes(u).forEach(t=>b.apply(u,t,'malaise',12));b.allies(u).forEach(a=>{if(a!==u&&b.rand()<1/3)b.apply(u,a,'malaise',12);});},ult(b,u){b.say(`${b.nm(u)} sort LA blague de trop.`,'ult');b.units.filter(x=>x.alive&&x.present&&x!==u).forEach(x=>b.apply(u,x,'malaise',22));b.apply(u,u,'double',22);}},
  lila:{atk:B1(1),skill(b,u){u.colere=Math.min(10,u.colere+2);b.say(`${b.nm(u)} : « Faut pas pousser. »`);B1(1.4)(b,u);}},
  ryuk:{atk:B1(1),skill(b,u){const r=b.rand();if(r<0.4){const t=b.pick(u);if(!t)return;b.say(`${b.nm(u)} renverse un verre sur ${b.nm(t)}.`);b.apply(u,t,'malaise',25);}else if(r<0.8){b.say(`${b.nm(u)} fait tomber un truc de l'étagère.`);b.foes(u).forEach(t=>b.hit(u,t,0.7));}else{b.say(`${b.nm(u)} s'est coincé derrière le meuble.`);u.st.malaise={t:20};}}},
  yuumi:{atk:B1(0.6),skill(b,u){const a=b.mostHurt(u);b.say(`${b.nm(u)} réclame des papouilles à ${b.nm(a)}.`);b.apply(u,a,'calin',50);}},
@@ -316,7 +316,7 @@ class Battle{
    if((y.paperasse||0)>=2)dur*=1.3;
    if(name==='malaise'&&(y.bruyants||0)>=2)dur*=1.4;
    if(name==='attente'&&(y.numerique||0)>=2)dur*=1.5;
-   if(name==='malaise')this.units.filter(x=>x.id==='geoffrey'&&x.side!==t.side&&x.alive).forEach(g=>{g.st.hype={t:30};});
+   if(name==='malaise')this.units.filter(x=>x.id==='geoffrey'&&x.side!==t.side&&x.alive&&!x.st.hype).forEach(g=>{g.st.hype={t:20};});
   }
   const cur=t.st[name];
   if(name==='stress'&&s&&s.id==='legion')dur*=1.5;
@@ -340,10 +340,10 @@ class Battle{
   const k=KIT[u.id]||{atk:B1(1)};let kind='atk';
   if(CHARGE.has(u.id)&&u.charge>=100){kind='ult';u.charge=0;}
   else if(SKILL_CD[u.id]&&u.cd<=0){kind='skill';u.cd=SKILL_CD[u.id];}
-  if(kind!=='atk'){const kk=u.d.kit.find(x=>x[0]===(kind==='ult'?'Ulti':'Compétence'));this.fx.push({k:'act',uid:u.uid,name:kk?kk[1]:''});}
+  if(kind!=='atk'){const kk=u.d.kit.find(x=>x[0]===(kind==='ult'?'Ulti':'Compétence'));this.fx.push({k:'act',uid:u.uid,name:kk?kk[1]:'',kind});}
   (k[kind]||k.atk)(this,u);
   u.cd--;u.acts++;this.lastActor=u.uid;
-  if(CHARGE.has(u.id)&&kind!=='ult')u.charge=Math.min(100,u.charge+20);
+  if(CHARGE.has(u.id)&&kind!=='ult'&&!(u.id==='geoffrey'&&u.st.double))u.charge=Math.min(100,u.charge+20);
   if(u.alive&&u.st.stress){const d=Math.max(1,Math.round(u.maxhp*0.04*(u.st.stress.mul||1)));this.ev(u,'-'+d+' stress','neg');this.damage(u,d,null);}
   if(u.alive&&AFTER[u.id])AFTER[u.id](this,u);
   this.arrivals();this.checkEnd();
