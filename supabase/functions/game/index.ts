@@ -444,8 +444,8 @@ function makeGame(db,now=()=>Date.now()){
  }
  async function withProfile(uid,f){
   for(let i=0;;i++){
-   const p=await getProfile(uid);if(!p)fail('noprofile','Crée d\'abord ton profil.');
-   try{return await f(p);}catch(e){if(e.code==='conflict'&&i<3)continue;throw e;}
+   const [p,cards]=await Promise.all([getProfile(uid),getCards(uid)]);if(!p)fail('noprofile','Crée d\'abord ton profil.');
+   try{return await f(p,cards);}catch(e){if(e.code==='conflict'&&i<3)continue;throw e;}
   }
  }
  async function upsertCards(uid,list){
@@ -453,7 +453,8 @@ function makeGame(db,now=()=>Date.now()){
   const {error}=await db.from('cards').upsert(list.map(c=>({user_id:uid,card_id:c.id,lvl:c.lvl,stars:c.stars})),{onConflict:'user_id,card_id'});
   if(error)throw error;
  }
- async function full(uid,extra={}){
+ async function full(uid,extra={},p0,c0){
+  if(p0&&c0)return {...extra,profile:p0,cards:c0,now:now()};
   const [p,cards]=await Promise.all([getProfile(uid),getCards(uid)]);
   return {...extra,profile:p,cards,now:now()};
  }
@@ -475,9 +476,9 @@ function makeGame(db,now=()=>Date.now()){
 
  A.pull=async(uid,{n})=>{
   n=n===10?10:1;
-  return withProfile(uid,async p=>{
+  return withProfile(uid,async(p,cards)=>{
    if(p.tickets<n)fail('tickets','Pas assez de tickets.');
-   const cards=await getCards(uid);
+   
    let pity=p.pity,gold=p.gold;const ids=[],places={...(p.places||{})},placeRes=[];
    for(let i=0;i<n;i++){
     pity++;
@@ -496,71 +497,74 @@ function makeGame(db,now=()=>Date.now()){
    }
    const cs=collectionStats(work);
    const teams=teamsOf(p),ti=p.team_idx||0;teams[ti]={...teams[ti],ids:team};
-   await commit(p,{tickets:p.tickets-n,pity,pulls:p.pulls+n,gold,team,teams,places,collection_score:cs.score,collection_count:cs.count});
+   p=await commit(p,{tickets:p.tickets-n,pity,pulls:p.pulls+n,gold,team,teams,places,collection_score:cs.score,collection_count:cs.count});
    await upsertCards(uid,Object.keys(changed).map(id=>({id,...work[id]})));
-   return full(uid,{results});
+   return full(uid,{results},p,work);
   });
  };
 
- A.levelup=async(uid,{card})=>withProfile(uid,async p=>{
-  const cards=await getCards(uid),c=cards[card];if(!c)fail('card','Tu n\'as pas ce héros.');
-  const cost=levelCost(c.lvl);if(p.gold<cost)fail('gold','Pas assez d\'or.');
-  await commit(p,{gold:p.gold-cost});
-  const {error}=await db.from('cards').update({lvl:c.lvl+1}).eq('user_id',uid).eq('card_id',card).eq('lvl',c.lvl);if(error)throw error;
-  return full(uid);
+ A.levelup=async(uid,{card,n})=>withProfile(uid,async(p,cards)=>{
+  const c=cards[card];if(!c)fail('card','Tu n\'as pas ce héros.');
+  n=[1,5,10].includes(+n)?+n:1;let lvl=c.lvl,gold=p.gold,k=0;
+  while(k<n&&gold>=levelCost(lvl)){gold-=levelCost(lvl);lvl++;k++;}
+  if(!k)fail('gold','Pas assez d\'or.');
+  p=await commit(p,{gold});
+  const {error}=await db.from('cards').update({lvl}).eq('user_id',uid).eq('card_id',card).eq('lvl',c.lvl);if(error)throw error;
+  cards[card]={...c,lvl};
+  return full(uid,{levels:k},p,cards);
  });
 
- A.team=async(uid,{ids,kind,place,idx})=>withProfile(uid,async p=>{
-  const cards=await getCards(uid);
+ A.team=async(uid,{ids,kind,place,idx})=>withProfile(uid,async(p,cards)=>{
+  
   if(!Array.isArray(ids)||ids.length>5||new Set(ids).size!==ids.length||ids.some(id=>!cards[id]))fail('team','Équipe invalide.');
   if(kind==='defense'){
    if(!ids.length)fail('team','La défense doit compter au moins un héros.');
    if(place&&(p.places||{})[place]==null)fail('place','Tu n\'as pas ce lieu.');
-   await commit(p,{defense:ids,defense_place:place||null});return full(uid);
+   p=await commit(p,{defense:ids,defense_place:place||null});return full(uid,{},p,cards);
   }
   const teams=teamsOf(p),ti=p.team_idx||0,k=idx==null?ti:Math.floor(+idx);
   if(!(k>=0&&k<MAX_TEAMS))fail('team','Équipe invalide.');
   teams[k]={...teams[k],ids};
-  await commit(p,k===ti?{teams,team:ids}:{teams});
-  return full(uid);
+  p=await commit(p,k===ti?{teams,team:ids}:{teams});
+  return full(uid,{},p,cards);
  });
- A.team_select=async(uid,{idx})=>withProfile(uid,async p=>{
+ A.team_select=async(uid,{idx})=>withProfile(uid,async(p,cards)=>{
   const teams=teamsOf(p),k=Math.floor(+idx);if(!(k>=0&&k<MAX_TEAMS))fail('team','Équipe invalide.');
-  const cards=await getCards(uid);
-  await commit(p,{teams,team_idx:k,team:teams[k].ids.filter(id=>cards[id])});
-  return full(uid);
+  
+  p=await commit(p,{teams,team_idx:k,team:teams[k].ids.filter(id=>cards[id])});
+  return full(uid,{},p,cards);
  });
- A.team_meta=async(uid,{idx,name,place})=>withProfile(uid,async p=>{
+ A.team_meta=async(uid,{idx,name,place})=>withProfile(uid,async(p,cards)=>{
   const teams=teamsOf(p),k=Math.floor(+idx);if(!(k>=0&&k<MAX_TEAMS))fail('team','Équipe invalide.');
   if(name!=null){name=String(name).trim().slice(0,20);if(!name)fail('team','Nom vide.');teams[k].n=name;}
   if(place!==undefined){if(place&&(p.places||{})[place]==null)fail('place','Tu n\'as pas ce lieu.');teams[k].place=place||null;}
-  await commit(p,{teams});
-  return full(uid);
+  p=await commit(p,{teams});
+  return full(uid,{},p,cards);
  });
  /* Équipement */
- A.equip=async(uid,{item,card})=>withProfile(uid,async p=>{
-  const cards=await getCards(uid);if(!cards[card])fail('card','Tu n\'as pas ce héros.');
+ A.equip=async(uid,{item,card})=>withProfile(uid,async(p,cards)=>{
+  if(!cards[card])fail('card','Tu n\'as pas ce héros.');
   const items=(p.items||[]).map(x=>({...x})),it=items.find(x=>x.u===item);if(!it)fail('item','Objet introuvable.');
   const slot=ITEM[it.id].slot;items.forEach(x=>{if(x.on===card&&x!==it&&ITEM[x.id].slot===slot)x.on=null;});it.on=card;
-  await commit(p,{items});return full(uid);
+  p=await commit(p,{items});return full(uid,{},p,cards);
  });
- A.unequip=async(uid,{item})=>withProfile(uid,async p=>{
+ A.unequip=async(uid,{item})=>withProfile(uid,async(p,cards)=>{
   const items=(p.items||[]).map(x=>({...x})),it=items.find(x=>x.u===item);if(!it)fail('item','Objet introuvable.');
-  it.on=null;await commit(p,{items});return full(uid);
+  it.on=null;p=await commit(p,{items});return full(uid,{},p,cards);
  });
- A.sell=async(uid,{items:list})=>withProfile(uid,async p=>{
+ A.sell=async(uid,{items:list})=>withProfile(uid,async(p,cards)=>{
   if(!Array.isArray(list)||!list.length)fail('item','Rien à revendre.');
   const set=new Set(list);let gold=0;
   const items=(p.items||[]).filter(x=>{if(set.has(x.u)&&!x.on){gold+=SELL[x.r];return false;}return true;});
-  await commit(p,{items,gold:p.gold+gold});return full(uid,{sold:gold});
+  p=await commit(p,{items,gold:p.gold+gold});return full(uid,{sold:gold},p,cards);
  });
  /* Donjons et farm hors-ligne */
- A.dungeon=async(uid,{kind,floor})=>withProfile(uid,async p=>{
+ A.dungeon=async(uid,{kind,floor})=>withProfile(uid,async(p,cards)=>{
   if(!DUNGEONS[kind])fail('dungeon','Donjon inconnu.');
   const dg={gold:0,equip:0,...(p.dungeons||{})};floor=Math.floor(Number(floor));
   if(!(floor>=1&&floor<=dg[kind]+1))fail('floor','Étage non débloqué.');
   const wait=Date.parse(p.next_fight_at)-now();if(wait>300&&!p.is_admin)fail('cooldown','Combat précédent encore en cours.',{wait});
-  const cards=await getCards(uid),team=unitsOf(p.team,cards,p.items);if(!team.length)fail('team','Ton équipe est vide.');
+  const team=unitsOf(p.team,cards,p.items);if(!team.length)fail('team','Ton équipe est vide.');
   const place=placeOf(p,teamsOf(p)[p.team_idx||0].place);
   const enemies=genDungeon(kind,floor),seed=Math.floor(Math.random()*2147483647);
   const b=new Battle(team,enemies,seed,{placeA:place});while(!b.over)b.step();
@@ -573,69 +577,72 @@ function makeGame(db,now=()=>Date.now()){
   const add=addItems(p,loot);
   patch={gold:p.gold+gold+add.gold,items:add.items,item_seq:add.item_seq,dungeons:dg,next_fight_at:new Date(now()+Math.round(b.t*40/4*0.9)).toISOString()};
   if(first&&!p.farm){patch.farm={kind,floor};patch.last_collect=new Date(now()).toISOString();}
-  await commit(p,patch);
-  return full(uid,{battle:{seed,kind,floor,team,enemies,place,win,gold,first,loot:add.items.filter(x=>x.u>(p.item_seq||0)),sold:add.gold,ticks:b.t}});
+  const newItems=add.items.filter(x=>x.u>(p.item_seq||0));
+  p=await commit(p,patch);
+  return full(uid,{battle:{seed,kind,floor,team,enemies,place,win,gold,first,loot:newItems,sold:add.gold,ticks:b.t}},p,cards);
  });
- A.farm_set=async(uid,{kind,floor})=>withProfile(uid,async p=>{
+ A.farm_set=async(uid,{kind,floor})=>withProfile(uid,async(p,cards)=>{
   if(!DUNGEONS[kind])fail('dungeon','Donjon inconnu.');
   const dg={gold:0,equip:0,...(p.dungeons||{})};floor=Math.floor(Number(floor));
   if(!(floor>=1&&floor<=dg[kind]))fail('floor','Bats d\'abord cet étage pour pouvoir le farmer.');
   const bank=farmBank(p,now(),Math.random),add=addItems(p,bank.items);
-  await commit(p,{gold:p.gold+bank.gold+add.gold,tickets:p.tickets+bank.tickets,items:add.items,item_seq:add.item_seq,farm:{kind,floor},last_collect:new Date(now()).toISOString()});
-  return full(uid,{collected:{...bank,items:add.items.filter(x=>x.u>(p.item_seq||0)),sold:add.gold}});
+  const newItems=add.items.filter(x=>x.u>(p.item_seq||0));
+  p=await commit(p,{gold:p.gold+bank.gold+add.gold,tickets:p.tickets+bank.tickets,items:add.items,item_seq:add.item_seq,farm:{kind,floor},last_collect:new Date(now()).toISOString()});
+  return full(uid,{collected:{...bank,items:newItems,sold:add.gold}},p,cards);
  });
- A.collect=async uid=>withProfile(uid,async p=>{
+ A.collect=async uid=>withProfile(uid,async(p,cards)=>{
   const b=farmBank(p,now(),Math.random),add=addItems(p,b.items);
-  await commit(p,{gold:p.gold+b.gold+add.gold,tickets:p.tickets+b.tickets,items:add.items,item_seq:add.item_seq,last_collect:b.next});
-  return full(uid,{collected:{...b,items:add.items.filter(x=>x.u>(p.item_seq||0)),sold:add.gold}});
+  const newItems=add.items.filter(x=>x.u>(p.item_seq||0));
+  p=await commit(p,{gold:p.gold+b.gold+add.gold,tickets:p.tickets+b.tickets,items:add.items,item_seq:add.item_seq,last_collect:b.next});
+  return full(uid,{collected:{...b,items:newItems,sold:add.gold}},p,cards);
  });
 
- A.fight=async(uid,{floor})=>withProfile(uid,async p=>{
+ A.fight=async(uid,{floor})=>withProfile(uid,async(p,cards)=>{
   floor=Math.floor(Number(floor));
   if(!(floor>=1&&floor<=p.max_floor+1))fail('floor','Étage non débloqué.');
   const wait=Date.parse(p.next_fight_at)-now();if(wait>300&&!p.is_admin)fail('cooldown','Combat précédent encore en cours.',{wait});
-  const cards=await getCards(uid),team=unitsOf(p.team,cards,p.items);if(!team.length)fail('team','Ton équipe est vide.');
+  const team=unitsOf(p.team,cards,p.items);if(!team.length)fail('team','Ton équipe est vide.');
   const place=placeOf(p,teamsOf(p)[p.team_idx||0].place);
   const enemies=genEnemies(floor),seed=Math.floor(Math.random()*2147483647);
   const b=new Battle(team,enemies,seed,{placeA:place});while(!b.over)b.step();
   const win=b.winner===0,gb=goldBonus(p.team);let gold=0,tickets=0,first=false;
   if(win){if(floor>p.max_floor){first=true;gold=Math.round((30+12*floor)*gb);tickets=1+(floor%5===0?5:0);}else{gold=Math.round((30+12*floor)*0.5*gb);if(Math.random()<0.15)tickets=1;}}
   const cooldownMs=Math.round(b.t*40/4*0.9);
-  await commit(p,{gold:p.gold+gold,tickets:p.tickets+tickets,max_floor:first?floor:p.max_floor,next_fight_at:new Date(now()+cooldownMs).toISOString()});
-  return full(uid,{battle:{seed,floor,team,enemies,place,win,gold,tickets,first,ticks:b.t}});
+  p=await commit(p,{gold:p.gold+gold,tickets:p.tickets+tickets,max_floor:first?floor:p.max_floor,next_fight_at:new Date(now()+cooldownMs).toISOString()});
+  return full(uid,{battle:{seed,floor,team,enemies,place,win,gold,tickets,first,ticks:b.t}},p,cards);
  });
 
  A.pvp=async(uid,{target})=>{
   if(!target||target===uid)fail('target','Adversaire invalide.');
   const t=await getProfile(target);if(!t)fail('target','Adversaire introuvable.');
   if(t.is_admin)fail('target','Le compte admin ne participe pas à l\'arène.');
-  return withProfile(uid,async p=>{
+  return withProfile(uid,async(p,cards)=>{
    if(p.is_admin)fail('admin','Le compte admin ne participe pas à l\'arène, pour ne pas fausser les cotes.');
    const day=parisDay(now()),used=p.pvp_day===day?p.pvp_used:0;
    if(used>=PVP_PER_DAY)fail('pvp','Plus de combats PvP aujourd\'hui. Reviens demain.');
-   const [mine,theirs]=await Promise.all([getCards(uid),getCards(target)]);
+   const mine=cards,theirs=await getCards(target);
    const att=unitsOf(p.team,mine,p.items);if(!att.length)fail('team','Ton équipe est vide.');
    let def=unitsOf(t.defense,theirs,t.items),dplace=placeOf(t,t.defense_place);if(!def.length){def=unitsOf(t.team,theirs,t.items);dplace=placeOf(t,teamsOf(t)[t.team_idx||0].place);}if(!def.length)fail('target','Cet adversaire n\'a pas de défense.');
    const aplace=placeOf(p,teamsOf(p)[p.team_idx||0].place);
    const seed=Math.floor(Math.random()*2147483647),b=new Battle(att,def,seed,{placeA:aplace,placeB:dplace});while(!b.over)b.step();
    const win=b.winner===0,exp=1/(1+Math.pow(10,(t.pvp_rating-p.pvp_rating)/400)),delta=Math.round(32*((win?1:0)-exp));
    const gold=win?150:30;
-   await commit(p,{pvp_rating:p.pvp_rating+delta,pvp_wins:p.pvp_wins+(win?1:0),pvp_losses:p.pvp_losses+(win?0:1),pvp_day:day,pvp_used:used+1,gold:p.gold+gold});
+   p=await commit(p,{pvp_rating:p.pvp_rating+delta,pvp_wins:p.pvp_wins+(win?1:0),pvp_losses:p.pvp_losses+(win?0:1),pvp_day:day,pvp_used:used+1,gold:p.gold+gold});
    for(let i=0;i<5;i++){const d=await getProfile(target);try{await commit(d,{pvp_rating:d.pvp_rating-delta});break;}catch(e){if(e.code!=='conflict')throw e;}}
    await db.from('pvp_log').insert({attacker:uid,defender:target,win,delta,seed});
-   return full(uid,{battle:{seed,team:att,enemies:def,placeA:aplace,placeB:dplace,win,delta,gold,targetPseudo:t.pseudo}});
+   return full(uid,{battle:{seed,team:att,enemies:def,placeA:aplace,placeB:dplace,win,delta,gold,targetPseudo:t.pseudo}},p,cards);
   });
  };
  /* Outils réservés au compte admin, qui n'agissent que sur lui-même */
- const admin=f=>async(uid,body)=>withProfile(uid,async p=>{if(!p.is_admin)fail('admin','Réservé au compte admin.');return f(uid,p,body||{});});
- A.admin_grant=admin(async(uid,p,{gold,tickets})=>{gold=Math.max(0,Math.min(1e7,Math.floor(+gold||0)));tickets=Math.max(0,Math.min(1000,Math.floor(+tickets||0)));await commit(p,{gold:p.gold+gold,tickets:p.tickets+tickets});return full(uid);});
- A.admin_floor=admin(async(uid,p,{floor})=>{floor=Math.max(0,Math.min(500,Math.floor(+floor||0)));await commit(p,{max_floor:floor});return full(uid);});
- A.admin_card=admin(async(uid,p,{card,lvl,stars})=>{if(!CARD[card])fail('card','Héros inconnu.');const cards=await getCards(uid);cards[card]={lvl:Math.max(1,Math.min(300,Math.floor(+lvl||1))),stars:Math.max(0,Math.min(5,Math.floor(+stars||0)))};const cs=collectionStats(cards);await commit(p,{collection_score:cs.score,collection_count:cs.count});await upsertCards(uid,[{id:card,...cards[card]}]);return full(uid);});
- A.admin_all=admin(async(uid,p,{lvl})=>{lvl=Math.max(1,Math.min(300,Math.floor(+lvl||1)));const cards={};CARDS.forEach(c=>cards[c.id]={lvl,stars:0});const cs=collectionStats(cards);await commit(p,{collection_score:cs.score,collection_count:cs.count});await upsertCards(uid,CARDS.map(c=>({id:c.id,lvl,stars:0})));return full(uid);});
- A.admin_dungeon=admin(async(uid,p,{kind,floor})=>{if(!DUNGEONS[kind])fail('dungeon','Donjon inconnu.');floor=Math.max(0,Math.min(50,Math.floor(+floor||0)));const dg={gold:0,equip:0,...(p.dungeons||{})};dg[kind]=floor;await commit(p,{dungeons:dg});return full(uid);});
- A.admin_loot=admin(async(uid,p,{r})=>{r=IRAR[r]?r:'C';const add=addItems(p,ITEMS.map(i=>({id:i.id,r})));const places={...(p.places||{})};PLACES.forEach(pl=>{if(places[pl.id]==null)places[pl.id]=0;});await commit(p,{items:add.items,item_seq:add.item_seq,places,gold:p.gold+add.gold});return full(uid);});
- A.admin_time=admin(async(uid,p,{hours})=>{hours=Math.max(0,Math.min(48,+hours||0));await commit(p,{last_collect:new Date(Date.parse(p.last_collect)-hours*3600e3).toISOString()});return full(uid);});
- A.admin_reset=admin(async(uid,p)=>{const {error}=await db.from('cards').delete().eq('user_id',uid).neq('card_id',p.legend);if(error)throw error;await db.from('cards').update({lvl:1,stars:0}).eq('user_id',uid).eq('card_id',p.legend);const cs=collectionStats({[p.legend]:{lvl:1,stars:0}});await commit(p,{gold:START_GOLD,tickets:START_TICKETS,max_floor:0,pity:0,pulls:0,team:[p.legend],defense:[p.legend],defense_place:null,teams:teamsOf({team:[p.legend]}),team_idx:0,items:[],item_seq:0,places:{},dungeons:{gold:0,equip:0},farm:null,collection_score:cs.score,collection_count:cs.count,last_collect:new Date(now()).toISOString()});return full(uid);});
+ const admin=f=>async(uid,body)=>withProfile(uid,async(p,cards)=>{if(!p.is_admin)fail('admin','Réservé au compte admin.');return f(uid,p,body||{},cards);});
+ A.admin_grant=admin(async(uid,p,{gold,tickets},cards)=>{gold=Math.max(0,Math.min(1e7,Math.floor(+gold||0)));tickets=Math.max(0,Math.min(1000,Math.floor(+tickets||0)));p=await commit(p,{gold:p.gold+gold,tickets:p.tickets+tickets});return full(uid,{},p,cards);});
+ A.admin_floor=admin(async(uid,p,{floor},cards)=>{floor=Math.max(0,Math.min(500,Math.floor(+floor||0)));p=await commit(p,{max_floor:floor});return full(uid,{},p,cards);});
+ A.admin_card=admin(async(uid,p,{card,lvl,stars},cards)=>{if(!CARD[card])fail('card','Héros inconnu.');cards[card]={lvl:Math.max(1,Math.min(300,Math.floor(+lvl||1))),stars:Math.max(0,Math.min(5,Math.floor(+stars||0)))};const cs=collectionStats(cards);p=await commit(p,{collection_score:cs.score,collection_count:cs.count});await upsertCards(uid,[{id:card,...cards[card]}]);return full(uid,{},p,cards);});
+ A.admin_all=admin(async(uid,p,{lvl})=>{lvl=Math.max(1,Math.min(300,Math.floor(+lvl||1)));const cards={};CARDS.forEach(c=>cards[c.id]={lvl,stars:0});const cs=collectionStats(cards);p=await commit(p,{collection_score:cs.score,collection_count:cs.count});await upsertCards(uid,CARDS.map(c=>({id:c.id,lvl,stars:0})));return full(uid,{},p,cards);});
+ A.admin_dungeon=admin(async(uid,p,{kind,floor},cards)=>{if(!DUNGEONS[kind])fail('dungeon','Donjon inconnu.');floor=Math.max(0,Math.min(50,Math.floor(+floor||0)));const dg={gold:0,equip:0,...(p.dungeons||{})};dg[kind]=floor;p=await commit(p,{dungeons:dg});return full(uid,{},p,cards);});
+ A.admin_loot=admin(async(uid,p,{r},cards)=>{r=IRAR[r]?r:'C';const add=addItems(p,ITEMS.map(i=>({id:i.id,r})));const places={...(p.places||{})};PLACES.forEach(pl=>{if(places[pl.id]==null)places[pl.id]=0;});p=await commit(p,{items:add.items,item_seq:add.item_seq,places,gold:p.gold+add.gold});return full(uid,{},p,cards);});
+ A.admin_time=admin(async(uid,p,{hours},cards)=>{hours=Math.max(0,Math.min(48,+hours||0));p=await commit(p,{last_collect:new Date(Date.parse(p.last_collect)-hours*3600e3).toISOString()});return full(uid,{},p,cards);});
+ A.admin_reset=admin(async(uid,p)=>{const {error}=await db.from('cards').delete().eq('user_id',uid).neq('card_id',p.legend);if(error)throw error;await db.from('cards').update({lvl:1,stars:0}).eq('user_id',uid).eq('card_id',p.legend);const cs=collectionStats({[p.legend]:{lvl:1,stars:0}});p=await commit(p,{gold:START_GOLD,tickets:START_TICKETS,max_floor:0,pity:0,pulls:0,team:[p.legend],defense:[p.legend],defense_place:null,teams:teamsOf({team:[p.legend]}),team_idx:0,items:[],item_seq:0,places:{},dungeons:{gold:0,equip:0},farm:null,collection_score:cs.score,collection_count:cs.count,last_collect:new Date(now()).toISOString()});return full(uid);});
  return A;
 }
 
@@ -647,18 +654,40 @@ const CORS = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
+// Jetons déjà vérifiés : on évite un aller-retour vers le service d'authentification à chaque clic
+const AUTH = new Map();
+async function userOf(token) {
+  if (!token) return null;
+  const c = AUTH.get(token);
+  if (c && c.exp > Date.now() / 1000 + 5) return c.uid;
+  let uid = null, exp = 0;
+  try {
+    if (db.auth.getClaims) {
+      const { data, error } = await db.auth.getClaims(token);
+      if (!error && data && data.claims && data.claims.sub) { uid = data.claims.sub; exp = data.claims.exp || 0; }
+    }
+  } catch (_) {}
+  if (!uid) {
+    const { data, error } = await db.auth.getUser(token);
+    if (error || !data || !data.user) return null;
+    uid = data.user.id;
+    try { exp = JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))).exp; } catch (_) { exp = Date.now() / 1000 + 300; }
+  }
+  if (AUTH.size > 500) AUTH.clear();
+  AUTH.set(token, { uid, exp });
+  return uid;
+}
 const reply = (o, status = 200) => new Response(JSON.stringify(o), { status, headers: { ...CORS, "Content-Type": "application/json" } });
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   try {
     const token = (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
-    const { data, error } = await db.auth.getUser(token);
-    if (error || !data || !data.user) return reply({ error: "auth", message: "Connexion requise." }, 401);
-    const body = await req.json().catch(() => ({}));
+    const [uid, body] = await Promise.all([userOf(token), req.json().catch(() => ({}))]);
+    if (!uid) return reply({ error: "auth", message: "Connexion requise." }, 401);
     const fn = GAME[body.action];
     if (!fn) return reply({ error: "bad", message: "Action inconnue." }, 400);
-    return reply(await fn(data.user.id, body));
+    return reply(await fn(uid, body));
   } catch (e) {
     if (e && e.code && e instanceof GameError) return reply({ error: e.code, message: e.message, ...(e.extra || {}) }, 400);
     console.error(e);
