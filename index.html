@@ -372,6 +372,13 @@ body.logged-out header.top,body.logged-out main{display:none}
 .away{max-width:520px;width:100%;display:grid;gap:12px;max-height:min(90vh,760px);overflow:auto}
 .away .big{font-family:var(--font-display);font-size:22px}
 .subseg{margin-bottom:12px}
+.rarlv{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:4px}
+.rarb{background:var(--rar);color:#fff;font-family:var(--font-display);font-weight:700;font-size:15px;padding:2px 12px;border-radius:8px;border:2px solid #2a1709;text-shadow:0 1px 0 rgba(0,0,0,.4)}
+.lvb{background:#2a1709;color:var(--gold);font-family:var(--font-display);font-weight:700;font-size:18px;padding:1px 12px;border-radius:8px}
+.lvrow .btn{flex:1 1 auto}
+.kit .cad{color:var(--pmuted);font-style:normal;font-size:12.5px}
+.glossary{display:grid;gap:3px;font-size:12.5px;color:var(--pmuted);background:var(--parch-2);border:1px solid var(--parch-3);border-radius:8px;padding:8px 10px}
+.glossary b{color:var(--pink)}
 </style>
 </head><body>
 
@@ -424,55 +431,55 @@ const FAM={soirees:'Les Soirées jeu',lol:'League of Legends',dbd:'Dead by Dayli
 const SYN={soirees:[[3,'+15 % VIT']],lol:[[2,'+10 % ATK'],[3,'+10 % ATK et Bouclier au début']],dbd:[[2,'Angoisse sur un ennemi au début'],[3,'Angoisse sur tous les ennemis au début']],isaac:[[2,'+10 % ATK'],[3,'+15 % ATK et +15 % PV']],destiny:[[2,'Bouclier au début']],krosmoz:[[2,'+15 % VIT'],[3,'+15 % VIT et +15 % PV']],potes:[[3,'+10 % ATK'],[5,'+25 % ATK']],foyer:[[2,'Quand un membre tombe, les autres gagnent 2 Colère']],chezk:[[2,"+15 % d'or"],[3,"+30 % d'or"]],jl:[[2,'Entrée fracassante +50 %']],lignee:[[2,"Câlin sur toute l'équipe au début"]],bruyants:[[2,'Malaise plus long']],lents:[[2,'+20 % PV'],[3,'+40 % PV']],paperasse:[[2,'États négatifs plus longs']],argent:[[2,"+15 % d'or"]],sante:[[2,'Soins +30 %']],poste:[[2,'+20 % VIT']],boulot:[[2,'Stress plus douloureux']],matin:[[2,'Flemme sur les ennemis au début']],numerique:[[2,'En attente plus long']],relous:[[2,'Stress sur un ennemi au début']],nuisibles:[[2,'+10 % esquive']],corvee:[[2,'+15 % PV'],[4,'+30 % PV']],quotidien:[[3,'+10 % ATK'],[5,'+20 % ATK']]};
 
 const CARDS=[
-{id:'jenlain',name:'Jenlain',r:'L',el:'delire',fam:['potes','jl'],hp:110,atk:120,spd:70,kit:[['Attaque','Punchline','Frappe une cible.'],['Passif','Retardataire','Arrive après 3 actions alliées, avec une entrée fracassante.'],['Compétence','Freestyle','Frappe tous les ennemis, plus fort à chaque utilisation.'],['Ulti','Concert',"À charger. Frappe tous les ennemis et donne Hype à toute l'équipe."]]},
-{id:'yoann',name:'Yoann',r:'L',el:'raison',fam:['potes','foyer'],hp:160,atk:80,spd:70,kit:[['Attaque','Coup sec','Frappe une cible.'],['Passif','Caillou',"Immunisé à l'Angoisse, au Malaise et au Stress."],['Compétence','Regard vide','Provocation, puis frappe.'],['Ulti','Inébranlable','Une fois par combat : quand il devrait tomber, il reste à 1 PV et gagne un gros Bouclier.']]},
-{id:'lea',name:'Léa',r:'L',el:'coeur',fam:['potes','foyer'],hp:100,atk:110,spd:90,kit:[['Attaque','Remise en place','Frappe une cible.'],['Passif','Faut pas me chercher','Gagne Colère à chaque coup reçu.'],['Compétence','Tu lui as fait quoi ?!',"Frappe l'ennemi qui vient de blesser un allié, plus fort selon sa Colère."],['Ulti','Explosion','À charger. Consomme sa Colère pour frapper tous les ennemis.']]},
-{id:'kylian',name:'Kylian',r:'L',el:'prudence',fam:['potes','chezk'],hp:90,atk:90,spd:100,kit:[['Attaque','Investissement','Frappe une cible.'],['Passif','Économe','Une partie de ses dégâts remplit une cagnotte.'],['Compétence',"C'est à moi",'Vole un état positif à un ennemi.'],['Ulti','Rentabiliser',"À charger. Vide la cagnotte en Bouclier pour toute l'équipe."]]},
-{id:'geoffrey',name:'Geoffrey',r:'L',el:'delire',fam:['potes','bruyants'],hp:120,atk:70,spd:110,kit:[['Attaque','Blague nulle','Frappe une cible.'],['Passif','Aucune honte',"Immunisé au Malaise et à l'Angoisse. Gagne Hype quand un ennemi tombe en Malaise."],['Compétence','Rire strident','Malaise sur tous les ennemis, et une chance sur trois sur chaque allié (sauf Yoann).'],['Ulti','La blague de trop','À charger. Malaise long sur tout le terrain sauf lui et Yoann ; il frappe deux fois plus fort pendant ce temps.']]},
-{id:'lila',name:'Lila',r:'L',el:'coeur',fam:['potes','jl'],hp:100,atk:100,spd:70,kit:[['Attaque','Petite frappe','Frappe une cible.'],['Passif','Arrive en douce',"Retardataire, et Discrétion tant qu'un allié est debout."],['Compétence','Faut pas pousser','Gagne Colère et frappe fort.'],['Ulti','Plus du tout timide',"Une fois : quand un allié tombe, elle perd sa Discrétion et gagne +60 % d'ATK."]]},
-{id:'ryuk',name:'Ryuk',r:'E',el:'chaos',fam:['foyer','lignee'],hp:80,atk:110,spd:150,kit:[['Attaque','Griffe','Frappe une cible au hasard.'],['Passif','Zoomies',"Chance de rejouer jusqu'à 2 fois d'affilée."],['Compétence','Connerie','Effet aléatoire : renverse un verre (Malaise), fait tomber un objet (dégâts à tous), ou se coince quelque part.']]},
-{id:'yuumi',name:'Yuumi',r:'E',el:'coeur',fam:['foyer','lignee'],hp:90,atk:40,spd:80,kit:[['Attaque','Coup de patte','Frappe une cible.'],['Passif','Froussarde','Quand elle est touchée, elle se cache un court moment.'],['Compétence','Papouilles',"Câlin sur l'allié le plus blessé."]]},
-{id:'traffy',name:'Traffy',r:'E',el:'prudence',fam:['chezk','lents'],hp:200,atk:60,spd:20,kit:[['Attaque','Gros dodo sur toi','Frappe une cible.'],['Passif','Pas pressé','+10 % à ses stats à chacune de ses actions.'],['Compétence','Sieste','Se donne Zen et un Bouclier.']]},
-{id:'echo',name:'Echo',r:'E',el:'coeur',fam:['chezk','lignee'],hp:90,atk:80,spd:100,kit:[['Attaque','Coup de patte','Frappe une cible.'],['Passif','Miaou de protestation','Renvoi : renvoie les états négatifs à l\'envoyeur.'],['Compétence','Câlin','Câlin sur un allié blessé.']]},
-{id:'zoya',name:'Zoya',r:'E',el:'prudence',fam:['foyer','lents'],hp:180,atk:70,spd:10,kit:[['Attaque','Morsure','Frappe une cible ; ×3 contre les Nuisibles.'],['Passif','Bronzette','Gagne régulièrement un Bouclier.'],['Compétence','Croque-souris',"Grosse morsure sur l'ennemi le plus faible ; récupère des PV si elle l'achève."]]},
-{id:'impots',name:'Les Impôts',r:'R',el:'ordre',fam:['paperasse','argent'],hp:140,atk:80,spd:60,kit:[['Attaque','Ponction','Frappe une cible.'],['Passif','Prélèvement à la source','Soigne son équipe avec une partie de ses dégâts ; +50 % contre Kylian.']]},
-{id:'assurance',name:"L'Assurance maladie",r:'R',el:'ordre',fam:['paperasse','sante'],hp:120,atk:70,spd:60,kit:[['Attaque','Pièce manquante','Frappe et annule le prochain soin de la cible.'],['Passif','Dossier en cours','Les soins reçus par son équipe arrivent en retard, mais doublés.']]},
-{id:'proprio',name:'Le Proprio',r:'R',el:'ordre',fam:['paperasse','argent'],hp:140,atk:90,spd:60,kit:[['Attaque','Relance','Frappe une cible.'],['Passif','Loyer','Toutes les 3 actions, dégâts à tous les ennemis, sauf Kylian.']]},
-{id:'caf',name:'La CAF',r:'R',el:'chaos',fam:['paperasse','argent'],hp:100,atk:90,spd:90,kit:[['Attaque','Versement','Dégâts aléatoires, de presque rien à énorme.'],['Passif','Montant variable','Donne un état positif au hasard à un allié ; parfois Trop-perçu, qui en retire un.']]},
-{id:'file',name:"La File d'attente",r:'R',el:'prudence',fam:['paperasse','lents'],hp:120,atk:60,spd:70,kit:[['Attaque','Prenez un ticket','Frappe une cible.'],['Passif','Veuillez patienter',"En attente sur l'ennemi le plus rapide en début de combat."]]},
-{id:'recommande',name:'Le Recommandé',r:'R',el:'raison',fam:['paperasse','poste'],hp:90,atk:110,spd:90,kit:[['Attaque','Avis de passage','Frappe une cible.'],['Passif','Toujours délivré','Ignore Bouclier et Discrétion.']]},
-{id:'lundi',name:'Le Lundi matin',r:'R',el:'raison',fam:['boulot','matin'],hp:120,atk:80,spd:70,kit:[['Attaque','Réveil difficile','Frappe une cible.'],['Passif','Reprise',"Flemme sur toute l'équipe ennemie en début de combat."]]},
-{id:'service',name:'Le Service client',r:'R',el:'prudence',fam:['boulot','lents'],hp:120,atk:60,spd:90,kit:[['Attaque','Votre appel est important','Frappe une cible.'],['Passif',"Musique d'attente",'Ses attaques peuvent mettre En attente.']]},
-{id:'bug',name:'Le Bug en prod',r:'R',el:'chaos',fam:['boulot','numerique'],hp:80,atk:110,spd:110,kit:[['Attaque','Erreur 500','Frappe une cible au hasard.'],['Passif','Comportement inattendu','Effet aléatoire à chaque action ; rate plus souvent contre Kylian.']]},
-{id:'collegue',name:'Le Collègue chiant',r:'R',el:'coeur',fam:['boulot','relous'],hp:120,atk:70,spd:90,kit:[['Attaque','T\'as deux minutes ?','Frappe et applique Stress.'],['Passif','Pot de colle',"Sa dernière cible a Flemme tant qu'il est en vie."]]},
-{id:'chef',name:'Le Chef incompétent',r:'R',el:'delire',fam:['boulot','relous'],hp:130,atk:90,spd:70,kit:[['Attaque','Directive floue','Frappe une cible.'],['Passif','Ordre absurde','Fait régulièrement agir un allié tout de suite, sur une cible au hasard (même dans son camp).']]},
-{id:'souris',name:'La Souris',r:'C',el:'prudence',fam:['quotidien','nuisibles'],hp:60,atk:60,spd:140,kit:[['Attaque','Grignotage','Petits dégâts. Esquive élevée.']]},
-{id:'moustique',name:'Le Moustique',r:'C',el:'delire',fam:['nuisibles','relous'],hp:50,atk:70,spd:150,kit:[['Attaque','Piqûre','Petits dégâts et Stress.']]},
-{id:'linge',name:'Le Linge sale',r:'C',el:'delire',fam:['quotidien','corvee'],hp:140,atk:40,spd:40,kit:[['Attaque','Odeur suspecte','Frappe et gagne des PV max.']]},
-{id:'vaisselle',name:'La Vaisselle',r:'C',el:'raison',fam:['quotidien','corvee'],hp:90,atk:80,spd:80,kit:[['Attaque',"Pile qui s'effondre",'Dégâts qui augmentent à chaque utilisation.']]},
-{id:'aspirateur',name:"L'Aspirateur",r:'C',el:'delire',fam:['corvee','bruyants'],hp:100,atk:70,spd:80,kit:[['Attaque','Vrombissement','Frappe ; Angoisse si la cible est un animal.']]},
-{id:'chaussette',name:'La Chaussette orpheline',r:'C',el:'coeur',fam:['quotidien','corvee'],hp:70,atk:70,spd:90,kit:[['Attaque','Coup de chaussette',"Dégâts doublés si c'est la seule carte du Quotidien de l'équipe."]]},
-{id:'veto',name:'Le Véto',r:'C',el:'raison',fam:['quotidien','sante'],hp:110,atk:70,spd:70,kit:[['Attaque','Vaccin',"Frappe et soigne un peu l'allié le plus blessé."]]},
-{id:'reveil',name:'Le Réveil',r:'C',el:'raison',fam:['matin','bruyants'],hp:70,atk:80,spd:100,kit:[['Attaque','Sonnerie','Dégâts doublés contre les Retardataires.']]},
-{id:'embouteillages',name:'Les Embouteillages',r:'C',el:'prudence',fam:['matin','lents'],hp:130,atk:50,spd:40,kit:[['Attaque','Bouchon','Frappe et applique Flemme.']]},
-{id:'wifi',name:'La Coupure de wifi',r:'C',el:'delire',fam:['quotidien','numerique'],hp:80,atk:70,spd:110,kit:[['Attaque','Déconnexion','Frappe et met En attente.']]},
-{id:'messagevu',name:'Le Message vu sans réponse',r:'C',el:'coeur',fam:['quotidien','numerique'],hp:80,atk:80,spd:90,kit:[['Attaque','Vu à 23 h 42','Frappe et applique Angoisse.']]},
-{id:'facture',name:'La Facture',r:'C',el:'raison',fam:['quotidien','argent'],hp:90,atk:90,spd:70,kit:[['Attaque','Échéance','Frappe et applique Déprime.']]},
-{id:'udyr',name:'Udyr',r:'E',el:'delire',fam:['soirees','lol'],hp:150,atk:110,spd:90,kit:[['Attaque','Coup de griffe','Frappe une cible.'],['Passif','Postures','Alterne à chaque action : posture offensive (gagne Colère) puis défensive (gagne un Bouclier).'],['Compétence',"Charge de l'ours",'Frappe fort et met la cible en Malaise.']]},
-{id:'ekko',name:'Ekko',r:'E',el:'raison',fam:['soirees','lol'],hp:100,atk:105,spd:110,kit:[['Attaque','Batte temporelle','Frappe une cible ; une attaque sur trois frappe deux fois et donne Hype.'],['Passif','Résonance','Se souvient de ses PV des dernières actions.'],['Compétence','Retour en arrière',"Récupère les PV qu'il avait trois actions plus tôt et frappe tous les ennemis."]]},
-{id:'thresh',name:'Thresh',r:'E',el:'chaos',fam:['soirees','lol'],hp:160,atk:80,spd:70,kit:[['Attaque','Fléau','Frappe une cible.'],['Passif','Damnation',"Chaque ennemi K.O. lui donne +6 % d'ATK et +5 % de PV max."],['Compétence','Lanterne',"Bouclier sur l'allié le plus blessé et Malaise sur un ennemi."]]},
-{id:'chasseuse',name:'La Chasseuse',r:'E',el:'raison',fam:['soirees','dbd'],hp:130,atk:110,spd:80,kit:[['Attaque','Hachette','Frappe une cible, même cachée.'],['Passif','Berceuse','Au début du combat, Angoisse sur un ennemi au hasard.'],['Compétence','Salve de hachettes','Lance trois hachettes sur des ennemis au hasard.']]},
-{id:'harpie',name:"L'Esprit",r:'E',el:'chaos',fam:['soirees','dbd'],hp:110,atk:115,spd:95,kit:[['Attaque','Katana','Frappe une cible.'],['Passif','Entre deux mondes','Au début du combat, elle est Cachée un moment.'],['Compétence','Marche des phases',"Disparaît (Cachée), puis frappe fort l'ennemi le plus faible et lui applique Angoisse."]]},
-{id:'legion',name:'La Légion',r:'E',el:'delire',fam:['soirees','dbd'],hp:110,atk:95,spd:120,kit:[['Attaque','Coup de couteau','Frappe une cible différente à chaque fois et applique Stress.'],['Passif','Saignement','Son Stress dure plus longtemps.'],['Compétence','Frénésie',"Frappe tous les ennemis à la suite et applique Stress, puis s'essouffle (Flemme)."]]},
-{id:'lost',name:'The Lost',r:'E',el:'ordre',fam:['soirees','isaac'],hp:45,atk:115,spd:110,kit:[['Attaque','Larmes','Frappe une cible.'],['Passif','Manteau sacré','Très fragile, mais esquive souvent et annule le premier coup reçu.'],['Compétence','Larmes spectrales','Frappe deux ennemis en traversant Bouclier et Discrétion, et récupère son Manteau sacré.']]},
-{id:'azazel',name:'Azazel',r:'E',el:'chaos',fam:['soirees','isaac'],hp:110,atk:108,spd:90,kit:[['Attaque','Souffle court','Frappe une cible et un deuxième ennemi.'],['Passif','Ailes','Esquive parfois les coups.'],['Compétence','Brimstone','Rayon sur tous les ennemis.']]},
-{id:'magdalene',name:'Magdalene',r:'E',el:'coeur',fam:['soirees','isaac'],hp:200,atk:65,spd:60,kit:[['Attaque','Larmes','Frappe une cible.'],['Passif','Cœurs en plus','Récupère un peu de PV à chaque action.'],['Compétence','Yum Heart',"Soigne fort l'allié le plus blessé, et elle-même un peu."]]},
-{id:'chasseur',name:'Le Chasseur',r:'E',el:'delire',fam:['soirees','destiny'],hp:100,atk:108,spd:110,kit:[['Attaque','Canon à main','Frappe une cible.'],['Passif','Esquive du chasseur','Esquive parfois les coups.'],['Compétence',"Pistolet d'or","Trois tirs sur l'ennemi le plus faible."]]},
-{id:'arcaniste',name:"L'Arcaniste",r:'E',el:'coeur',fam:['soirees','destiny'],hp:110,atk:85,spd:90,kit:[['Attaque','Nova','Frappe une cible.'],['Passif','Puits de lumière',"Au début du combat, Hype sur toute l'équipe."],['Compétence','Faille de soin',"Soigne toute l'équipe et lui donne Câlin."]]},
-{id:'steamer',name:'Le Steamer',r:'E',el:'prudence',fam:['soirees','krosmoz'],hp:130,atk:85,spd:70,kit:[['Attaque','Coup de clé','Frappe une cible.'],['Passif','Harponneuse','Après chacune de ses actions, sa tourelle tire sur un ennemi au hasard.'],['Compétence','Gardienne',"Bouclier sur toute l'équipe."]]},
-{id:'yugo',name:'Yugo',r:'E',el:'raison',fam:['soirees','krosmoz'],hp:110,atk:105,spd:100,kit:[['Attaque','Portail','Frappe un ennemi au hasard, en passant à travers Provocation et Discrétion.'],['Passif','Téléportation','La première fois que ses PV passent sous 30 %, il disparaît dans un portail (Caché).'],['Compétence','Wakmeha','Frappe tous les ennemis et gagne Hype.']]},
-{id:'bouftou',name:'Le Bouftou Royal',r:'E',el:'delire',fam:['soirees','krosmoz'],hp:220,atk:75,spd:50,kit:[['Attaque','Coup de corne','Frappe une cible.'],['Passif','Majesté laineuse','Au début du combat, Provocation : les ennemis le visent en priorité.'],['Compétence','Charge royale','Fonce sur une cible, la met en Malaise et gagne un Bouclier.']]},
-{id:'colis',name:'Le Colis introuvable',r:'C',el:'delire',fam:['quotidien','poste'],hp:80,atk:100,spd:80,kit:[['Attaque','Livré chez le voisin','Gros dégâts sur une cible au hasard.']]}
+{id:'jenlain',name:'Jenlain',r:'L',el:'delire',fam:['potes','jl'],hp:110,atk:120,spd:70,kit:[['Attaque','Punchline','Frappe une cible à 100 % de son ATK.'],['Passif','Retardataire','Arrive après 3 actions alliées et frappe à 120 % de son ATK en arrivant.'],['Compétence','Freestyle','Frappe tous les ennemis à 60 % de son ATK, +10 % à chaque nouvelle utilisation.'],['Ulti','Concert','Frappe tous les ennemis à 100 % de son ATK et donne Hype (2 s) à toute l\'équipe.']]},
+{id:'yoann',name:'Yoann',r:'L',el:'raison',fam:['potes','foyer'],hp:160,atk:80,spd:70,kit:[['Attaque','Coup sec','Frappe une cible à 100 % de son ATK.'],['Passif','Caillou','Immunisé à l\'Angoisse, au Malaise et au Stress.'],['Compétence','Regard vide','Provocation pendant 1,6 s, puis frappe à 80 % de son ATK.'],['Ulti','Inébranlable','Une fois par combat : au lieu de tomber, il reste à 1 PV et gagne un Bouclier de 30 % de ses PV max.']]},
+{id:'lea',name:'Léa',r:'L',el:'coeur',fam:['potes','foyer'],hp:100,atk:110,spd:90,kit:[['Attaque','Remise en place','Frappe une cible à 100 % de son ATK.'],['Passif','Faut pas me chercher','+1 Colère à chaque coup reçu (10 max).'],['Compétence','Tu lui as fait quoi ?!','Frappe l\'ennemi qui vient de blesser un allié à 100 % de son ATK, +20 % par point de Colère.'],['Ulti','Explosion','Consomme sa Colère pour frapper tous les ennemis à 60 % de son ATK, +25 % par point de Colère.']]},
+{id:'kylian',name:'Kylian',r:'L',el:'prudence',fam:['potes','chezk'],hp:90,atk:90,spd:100,kit:[['Attaque','Investissement','Frappe une cible à 100 % de son ATK.'],['Passif','Économe','30 % de ses dégâts remplissent une cagnotte.'],['Compétence',"C'est à moi",'Vole à un ennemi son Zen, sa Hype, son Câlin, sa Colère ou son Bouclier. S\'il n\'y a rien à voler, frappe à 100 %.'],['Ulti','Rentabiliser','Bouclier pour toute l\'équipe égal à 40 % de la cagnotte (20 minimum), puis la cagnotte repart à zéro.']]},
+{id:'geoffrey',name:'Geoffrey',r:'L',el:'delire',fam:['potes','bruyants'],hp:120,atk:70,spd:110,kit:[['Attaque','Blague nulle','Frappe une cible à 100 % de son ATK.'],['Passif','Aucune honte','Immunisé au Malaise et à l\'Angoisse. Hype (1,2 s) chaque fois qu\'un ennemi tombe en Malaise.'],['Compétence','Rire strident','Malaise (0,8 s) sur tous les ennemis, et 1 chance sur 3 sur chaque allié (Yoann est immunisé).'],['Ulti','La blague de trop','Malaise (1,6 s) sur tout le monde sauf lui, et il frappe ×2 pendant 1,6 s.']]},
+{id:'lila',name:'Lila',r:'L',el:'coeur',fam:['potes','jl'],hp:100,atk:100,spd:70,kit:[['Attaque','Petite frappe','Frappe une cible à 100 % de son ATK.'],['Passif','Arrive en douce','Arrive après 3 actions alliées (frappe à 120 % en arrivant) ; Discrète, donc impossible à cibler, tant qu\'un allié est debout.'],['Compétence','Faut pas pousser','+2 Colère, puis frappe à 140 % de son ATK.'],['Ulti','Plus du tout timide','Une fois : quand un allié tombe, elle perd sa Discrétion et gagne +60 % d\'ATK.']]},
+{id:'ryuk',name:'Ryuk',r:'E',el:'chaos',fam:['foyer','lignee'],hp:80,atk:110,spd:150,kit:[['Attaque','Griffe','Frappe une cible au hasard à 100 % de son ATK.'],['Passif','Zoomies','35 % de chance de rejouer tout de suite (2 fois d\'affilée max).'],['Compétence','Connerie','40 % : Malaise (1 s) sur un ennemi. 40 % : frappe tous les ennemis à 70 %. 20 % : il se coince (Malaise 0,8 s sur lui).']]},
+{id:'yuumi',name:'Yuumi',r:'E',el:'coeur',fam:['foyer','lignee'],hp:90,atk:40,spd:80,kit:[['Attaque','Coup de patte','Frappe une cible à 60 % de son ATK.'],['Passif','Froussarde','Quand elle est touchée, elle se cache 0,8 s (impossible à cibler).'],['Compétence','Papouilles','Câlin (2 s) sur l\'allié le plus blessé.']]},
+{id:'traffy',name:'Traffy',r:'E',el:'prudence',fam:['chezk','lents'],hp:200,atk:60,spd:20,kit:[['Attaque','Gros dodo sur toi','Frappe une cible à 100 % de son ATK.'],['Passif','Pas pressé','+10 % d\'ATK et de VIT à chacune de ses actions (+150 % max).'],['Compétence','Sieste','Zen (2 s) et Bouclier de 20 % de ses PV max.']]},
+{id:'echo',name:'Echo',r:'E',el:'coeur',fam:['chezk','lignee'],hp:90,atk:80,spd:100,kit:[['Attaque','Coup de patte','Frappe une cible à 100 % de son ATK.'],['Passif','Miaou de protestation','Renvoie à l\'envoyeur les états négatifs qu\'un ennemi lui applique.'],['Compétence','Câlin','Câlin (2 s) sur l\'allié le plus blessé.']]},
+{id:'zoya',name:'Zoya',r:'E',el:'prudence',fam:['foyer','lents'],hp:180,atk:70,spd:10,kit:[['Attaque','Morsure','Frappe une cible à 100 % de son ATK, 300 % contre les Nuisibles.'],['Passif','Bronzette','Bouclier de 15 % de ses PV max toutes les 2 actions.'],['Compétence','Croque-souris','Morsure à 200 % sur l\'ennemi le plus faible (600 % contre les Nuisibles) ; si elle l\'achève, récupère 25 % de ses PV max.']]},
+{id:'impots',name:'Les Impôts',r:'R',el:'ordre',fam:['paperasse','argent'],hp:140,atk:80,spd:60,kit:[['Attaque','Ponction','Frappe une cible à 100 % de son ATK, +50 % contre Kylian.'],['Passif','Prélèvement à la source','Soigne l\'allié le plus blessé de 30 % des dégâts qu\'il inflige.']]},
+{id:'assurance',name:"L'Assurance maladie",r:'R',el:'ordre',fam:['paperasse','sante'],hp:120,atk:70,spd:60,kit:[['Attaque','Pièce manquante','Frappe à 100 % de son ATK ; le prochain soin de la cible est annulé.'],['Passif','Dossier en cours','Les soins reçus par son équipe arrivent 0,8 s plus tard, mais doublés.']]},
+{id:'proprio',name:'Le Proprio',r:'R',el:'ordre',fam:['paperasse','argent'],hp:140,atk:90,spd:60,kit:[['Attaque','Relance','Frappe une cible à 100 % de son ATK.'],['Passif','Loyer','Toutes les 3 actions, frappe tous les ennemis à 50 % (sauf Kylian).']]},
+{id:'caf',name:'La CAF',r:'R',el:'chaos',fam:['paperasse','argent'],hp:100,atk:90,spd:90,kit:[['Attaque','Versement','Frappe entre 30 % et 220 % de son ATK, au hasard.'],['Passif','Montant variable','Après chaque action, donne à un allié Hype, Zen, Câlin, 1 Colère ou un Bouclier de 10 % ; 20 % de chance de Trop-perçu, qui en retire un.']]},
+{id:'file',name:"La File d'attente",r:'R',el:'prudence',fam:['paperasse','lents'],hp:120,atk:60,spd:70,kit:[['Attaque','Prenez un ticket','Frappe une cible à 100 % de son ATK.'],['Passif','Veuillez patienter','Au début du combat, met l\'ennemi le plus rapide En attente 1,6 s.']]},
+{id:'recommande',name:'Le Recommandé',r:'R',el:'raison',fam:['paperasse','poste'],hp:90,atk:110,spd:90,kit:[['Attaque','Avis de passage','Frappe une cible à 100 % de son ATK.'],['Passif','Toujours délivré','Ignore les Boucliers, l\'esquive et la Discrétion.']]},
+{id:'lundi',name:'Le Lundi matin',r:'R',el:'raison',fam:['boulot','matin'],hp:120,atk:80,spd:70,kit:[['Attaque','Réveil difficile','Frappe une cible à 100 % de son ATK.'],['Passif','Reprise','Au début du combat, Flemme (2 s) sur toute l\'équipe ennemie.']]},
+{id:'service',name:'Le Service client',r:'R',el:'prudence',fam:['boulot','lents'],hp:120,atk:60,spd:90,kit:[['Attaque','Votre appel est important','Frappe une cible à 100 % de son ATK.'],['Passif',"Musique d'attente",'35 % de chance de mettre la cible En attente 0,8 s.']]},
+{id:'bug',name:'Le Bug en prod',r:'R',el:'chaos',fam:['boulot','numerique'],hp:80,atk:110,spd:110,kit:[['Attaque','Erreur 500','Frappe une cible au hasard à 100 % de son ATK ; rate 40 % du temps contre Kylian.'],['Passif','Comportement inattendu','Après chaque action : 25 % Malaise (0,6 s) sur un ennemi, 25 % Hype (1,2 s) pour lui, 15 % il frappe un allié à 50 %.']]},
+{id:'collegue',name:'Le Collègue chiant',r:'R',el:'coeur',fam:['boulot','relous'],hp:120,atk:70,spd:90,kit:[['Attaque','T\'as deux minutes ?','Frappe à 100 % de son ATK et applique Stress (1,6 s).'],['Passif','Pot de colle','Sa dernière cible a Flemme tant qu\'il est en vie.']]},
+{id:'chef',name:'Le Chef incompétent',r:'R',el:'delire',fam:['boulot','relous'],hp:130,atk:90,spd:70,kit:[['Attaque','Directive floue','Frappe une cible à 100 % de son ATK.'],['Passif','Ordre absurde','Toutes les 3 actions, fait agir un allié tout de suite, sur une cible au hasard (même dans son camp).']]},
+{id:'souris',name:'La Souris',r:'C',el:'prudence',fam:['quotidien','nuisibles'],hp:60,atk:60,spd:140,kit:[['Attaque','Grignotage','Frappe à 60 % de son ATK. 25 % d\'esquive.']]},
+{id:'moustique',name:'Le Moustique',r:'C',el:'delire',fam:['nuisibles','relous'],hp:50,atk:70,spd:150,kit:[['Attaque','Piqûre','Frappe à 50 % de son ATK et applique Stress (1,6 s).']]},
+{id:'linge',name:'Le Linge sale',r:'C',el:'delire',fam:['quotidien','corvee'],hp:140,atk:40,spd:40,kit:[['Attaque','Odeur suspecte','Frappe à 80 % de son ATK et gagne +5 % de PV max.']]},
+{id:'vaisselle',name:'La Vaisselle',r:'C',el:'raison',fam:['quotidien','corvee'],hp:90,atk:80,spd:80,kit:[['Attaque',"Pile qui s'effondre",'Frappe à 75 % de son ATK, +15 % à chaque nouvelle utilisation.']]},
+{id:'aspirateur',name:"L'Aspirateur",r:'C',el:'delire',fam:['corvee','bruyants'],hp:100,atk:70,spd:80,kit:[['Attaque','Vrombissement','Frappe à 100 % de son ATK ; Angoisse (1,6 s) si la cible est un animal.']]},
+{id:'chaussette',name:'La Chaussette orpheline',r:'C',el:'coeur',fam:['quotidien','corvee'],hp:70,atk:70,spd:90,kit:[['Attaque','Coup de chaussette','Frappe à 100 % de son ATK, 200 % si c\'est la seule carte du Quotidien de l\'équipe.']]},
+{id:'veto',name:'Le Véto',r:'C',el:'raison',fam:['quotidien','sante'],hp:110,atk:70,spd:70,kit:[['Attaque','Vaccin','Frappe à 80 % de son ATK et soigne l\'allié le plus blessé de 8 % de ses PV max.']]},
+{id:'reveil',name:'Le Réveil',r:'C',el:'raison',fam:['matin','bruyants'],hp:70,atk:80,spd:100,kit:[['Attaque','Sonnerie','Frappe à 100 % de son ATK, 200 % contre les Retardataires.']]},
+{id:'embouteillages',name:'Les Embouteillages',r:'C',el:'prudence',fam:['matin','lents'],hp:130,atk:50,spd:40,kit:[['Attaque','Bouchon','Frappe à 80 % de son ATK et applique Flemme (1,6 s).']]},
+{id:'wifi',name:'La Coupure de wifi',r:'C',el:'delire',fam:['quotidien','numerique'],hp:80,atk:70,spd:110,kit:[['Attaque','Déconnexion','Frappe à 80 % de son ATK et met En attente 0,8 s.']]},
+{id:'messagevu',name:'Le Message vu sans réponse',r:'C',el:'coeur',fam:['quotidien','numerique'],hp:80,atk:80,spd:90,kit:[['Attaque','Vu à 23 h 42','Frappe à 80 % de son ATK et applique Angoisse (1,6 s).']]},
+{id:'facture',name:'La Facture',r:'C',el:'raison',fam:['quotidien','argent'],hp:90,atk:90,spd:70,kit:[['Attaque','Échéance','Frappe à 90 % de son ATK et applique Déprime (2 s).']]},
+{id:'udyr',name:'Udyr',r:'E',el:'delire',fam:['soirees','lol'],hp:150,atk:110,spd:90,kit:[['Attaque','Coup de griffe','Frappe une cible à 100 % de son ATK.'],['Passif','Postures','Alterne à chaque action : +1 Colère, puis Bouclier de 8 % de ses PV max.'],['Compétence',"Charge de l'ours",'Frappe à 140 % de son ATK et met la cible en Malaise (0,8 s).']]},
+{id:'ekko',name:'Ekko',r:'E',el:'raison',fam:['soirees','lol'],hp:100,atk:105,spd:110,kit:[['Attaque','Batte temporelle','Frappe à 100 % de son ATK ; une attaque sur trois frappe encore à 60 % et lui donne Hype (1,2 s).'],['Passif','Résonance','Retient ses PV des 3 dernières actions.'],['Compétence','Retour en arrière','Revient aux PV qu\'il avait 3 actions plus tôt (s\'ils étaient plus hauts) et frappe tous les ennemis à 50 %.']]},
+{id:'thresh',name:'Thresh',r:'E',el:'chaos',fam:['soirees','lol'],hp:160,atk:80,spd:70,kit:[['Attaque','Fléau','Frappe une cible à 100 % de son ATK.'],['Passif','Damnation','Chaque ennemi K.O. lui donne +6 % d\'ATK et +5 % de PV max.'],['Compétence','Lanterne','Bouclier de 20 % de ses PV max sur l\'allié le plus blessé, et Malaise (0,6 s) sur un ennemi.']]},
+{id:'chasseuse',name:'La Chasseuse',r:'E',el:'raison',fam:['soirees','dbd'],hp:130,atk:110,spd:80,kit:[['Attaque','Hachette','Frappe à 100 % de son ATK, même une cible cachée.'],['Passif','Berceuse','Au début du combat, Angoisse (2 s) sur un ennemi au hasard.'],['Compétence','Salve de hachettes','Trois hachettes à 70 % de son ATK sur des ennemis au hasard.']]},
+{id:'harpie',name:"L'Esprit",r:'E',el:'chaos',fam:['soirees','dbd'],hp:110,atk:115,spd:95,kit:[['Attaque','Katana','Frappe une cible à 100 % de son ATK.'],['Passif','Entre deux mondes','Cachée pendant 1,6 s au début du combat.'],['Compétence','Marche des phases','Se cache 1 s, puis frappe l\'ennemi le plus faible à 150 % de son ATK et lui applique Angoisse (1,6 s).']]},
+{id:'legion',name:'La Légion',r:'E',el:'delire',fam:['soirees','dbd'],hp:110,atk:95,spd:120,kit:[['Attaque','Coup de couteau','Frappe à 90 % de son ATK une cible différente à chaque fois et applique Stress.'],['Passif','Saignement','Son Stress dure 50 % plus longtemps (3,6 s).'],['Compétence','Frénésie','Frappe tous les ennemis à 60 % et leur applique Stress, puis Flemme (1 s) sur elle.']]},
+{id:'lost',name:'The Lost',r:'E',el:'ordre',fam:['soirees','isaac'],hp:45,atk:115,spd:110,kit:[['Attaque','Larmes','Frappe une cible à 100 % de son ATK.'],['Passif','Manteau sacré','Très fragile, mais 20 % d\'esquive, et le premier coup reçu est annulé.'],['Compétence','Larmes spectrales','Frappe deux ennemis à 100 % en traversant Bouclier, esquive et Discrétion, et récupère son Manteau sacré.']]},
+{id:'azazel',name:'Azazel',r:'E',el:'chaos',fam:['soirees','isaac'],hp:110,atk:108,spd:90,kit:[['Attaque','Souffle court','Frappe une cible à 100 % de son ATK et un deuxième ennemi à 50 %.'],['Passif','Ailes','15 % d\'esquive.'],['Compétence','Brimstone','Frappe tous les ennemis à 90 % de son ATK.']]},
+{id:'magdalene',name:'Magdalene',r:'E',el:'coeur',fam:['soirees','isaac'],hp:200,atk:65,spd:60,kit:[['Attaque','Larmes','Frappe une cible à 100 % de son ATK.'],['Passif','Cœurs en plus','Récupère 3 % de ses PV max à chacune de ses actions.'],['Compétence','Yum Heart','Soigne l\'allié le plus blessé de 25 % de ses PV max, et elle-même de 10 %.']]},
+{id:'chasseur',name:'Le Chasseur',r:'E',el:'delire',fam:['soirees','destiny'],hp:100,atk:108,spd:110,kit:[['Attaque','Canon à main','Frappe une cible à 100 % de son ATK.'],['Passif','Esquive du chasseur','15 % d\'esquive.'],['Compétence',"Pistolet d'or",'Trois tirs à 80 % de son ATK sur l\'ennemi le plus faible.']]},
+{id:'arcaniste',name:"L'Arcaniste",r:'E',el:'coeur',fam:['soirees','destiny'],hp:110,atk:85,spd:90,kit:[['Attaque','Nova','Frappe une cible à 100 % de son ATK.'],['Passif','Puits de lumière','Hype (1,2 s) sur toute l\'équipe au début du combat.'],['Compétence','Faille de soin','Soigne toute l\'équipe de 8 % de leurs PV max et donne Câlin (1,6 s).']]},
+{id:'steamer',name:'Le Steamer',r:'E',el:'prudence',fam:['soirees','krosmoz'],hp:130,atk:85,spd:70,kit:[['Attaque','Coup de clé','Frappe une cible à 100 % de son ATK.'],['Passif','Harponneuse','Après chacune de ses actions, sa tourelle frappe un ennemi au hasard à 40 %.'],['Compétence','Gardienne','Bouclier de 12 % de leurs PV max sur toute l\'équipe.']]},
+{id:'yugo',name:'Yugo',r:'E',el:'raison',fam:['soirees','krosmoz'],hp:110,atk:105,spd:100,kit:[['Attaque','Portail','Frappe un ennemi au hasard à 100 % de son ATK, en passant à travers Provocation et Discrétion.'],['Passif','Téléportation','La première fois que ses PV passent sous 30 %, il se cache 1,6 s.'],['Compétence','Wakmeha','Frappe tous les ennemis à 70 % de son ATK et gagne Hype (1,2 s).']]},
+{id:'bouftou',name:'Le Bouftou Royal',r:'E',el:'delire',fam:['soirees','krosmoz'],hp:220,atk:75,spd:50,kit:[['Attaque','Coup de corne','Frappe une cible à 100 % de son ATK.'],['Passif','Majesté laineuse','Provocation pendant 2,4 s au début du combat : les ennemis le visent en priorité.'],['Compétence','Charge royale','Frappe à 120 % de son ATK, met la cible en Malaise (0,8 s) et gagne un Bouclier de 12 % de ses PV max.']]},
+{id:'colis',name:'Le Colis introuvable',r:'C',el:'delire',fam:['quotidien','poste'],hp:80,atk:100,spd:80,kit:[['Attaque','Livré chez le voisin','Frappe une cible au hasard à 160 % de son ATK.']]}
 ];
 const CARD={}; CARDS.forEach((c,i)=>{c.no=i+1;CARD[c.id]=c;});
 const BYR={C:[],R:[],E:[],L:[]}; CARDS.forEach(c=>BYR[c.r].push(c));
@@ -544,7 +551,8 @@ function genDungeon(kind,f){
 }
 const equipRates=f=>({C:Math.max(10,60-10*f),R:30+2*f,E:Math.min(35,6+5*f),L:Math.min(20,Math.max(0,3*(f-1)))});
 const farmGoldPerHour=(kind,f)=>kind==='gold'?Math.round(3600*(1+6*f)):Math.round(3600*(1+6*f)*0.25);
-const FARM_ITEM_EVERY_S=1800,FARM_TICKET_EVERY_S=1800,FARM_CAP_S=24*3600;
+// Farm continu : un tirage toutes les 10 min, jusqu'à 24 h sans récolter
+const FARM_TICK_S=600,FARM_CAP_S=24*3600,FARM_P={ticket:1/3,item:1/3,jackpot:0.03};
 
 const B1=m=>(b,u)=>{const t=b.pick(u);if(t)b.hit(u,t,m);return t;};
 const KIT={
@@ -971,14 +979,13 @@ const reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)'
 function toast(msg,kind=''){const t=document.createElement('div');t.className='toast '+kind;t.textContent=msg;$('#toasts').appendChild(t);setTimeout(()=>t.remove(),3800);}
 const errMsg=e=>(e&&e.message)||'Une erreur est survenue.';
 
-/* ===== Farm hors-ligne (estimation ; le serveur fait foi) ===== */
+/* ===== Farm continu (le serveur tire le butin à la récolte) ===== */
 const IGL={micro:'🎤',manette:'🎮',calculatrice:'🧮',pipe:'💨',trousseau:'🔑',polo:'👕',dentelle:'👔',teeshirt:'👚',pull:'🎄',plaid:'🛋️',casquette:'🧢',casque:'🎧',couronne:'👑',solaires:'🕶️',capuche:'🥷',bague:'💍',montre:'⌚',portefeuille:'👛',croquettes:'🦴',de20:'🎲'};
 const PGL={appart:'🏠',chezkylian:'🏢',chezjl:'🏡',soiree:'🎲',bureau:'💼',canape:'🛋️',dune:'🏖️',concert:'🎶'};
 const DKN={gold:'Or',equip:'Équipement'};
 function farmEst(){
- if(!ME)return null;const f=S.farm,dtr=Math.max(0,(nowMs()-Date.parse(ME.last_collect))/1000),dt=Math.min(dtr,FARM_CAP_S),units=Math.floor(dt/FARM_ITEM_EVERY_S);
- if(!f)return {f:null,units:0,gold:0,tickets:0,items:0,dt};
- return {f,units,dt,gold:Math.floor(farmGoldPerHour(f.kind,f.floor)*units/2*goldBonus(ME.team||[])),tickets:units,items:f.kind==='equip'?units:0};
+ if(!ME)return null;const f=S.farm,dtr=Math.max(0,(nowMs()-Date.parse(ME.last_collect))/1000),dt=Math.min(dtr,FARM_CAP_S);
+ return {f,dt,units:f?Math.floor(dt/FARM_TICK_S):0,next:FARM_TICK_S-dt%FARM_TICK_S};
 }
 const hm=s=>{s=Math.floor(s/60);return `${Math.floor(s/60)} h ${String(s%60).padStart(2,'0')}`;};
 const statTxt=o=>Object.keys(o).map(k=>`+${String(o[k]).replace('.',',')} % ${k==='atk'?'ATK':k==='hp'?'PV':'VIT'}`).join(' · ');
@@ -991,7 +998,7 @@ function renderHeader(){
  if(!ME)return;
  $('#w-gold').textContent=fmt(S.gold);$('#w-tix').textContent=fmt(S.tickets);$('#w-floor').textContent=S.maxFloor;
  const e=farmEst();
- $('#b-txt').innerHTML=e.f?`${DKN[e.f.kind]} ét. ${e.f.floor} · ${hm(e.dt)} · <b>${fmt(e.gold)}</b> or · <b>${e.tickets}</b> t.${e.items?` · <b>${e.items}</b> obj.`:''}`:'Pas de farm : bats un étage de donjon';
+ $('#b-txt').innerHTML=e.f?`Farm continu · ${DKN[e.f.kind]} ét. ${e.f.floor} · <b>${hm(e.dt)}</b>${e.dt>=FARM_CAP_S?' (plein)':` · ${e.units} tirage${e.units>1?'s':''}`}`:'Pas de farm : bats un étage de donjon';
  $('#collect').disabled=!e.f||e.units<1;
  $('#me-chip').innerHTML=`<span class="av el-${CARD[ME.legend].el}">${faceImg(ME.legend)}</span><span><b>${esc(ME.pseudo)}</b><small>${ME.is_admin?'<span class="adm">ADMIN</span>':ME.pvp_rating+' PvP'}</small></span>`;
  $('#tab-btn-admin').hidden=!ME.is_admin;
@@ -1015,20 +1022,25 @@ const miniFace=(id,lvl)=>{const c=CARD[id];return `<span class="mface r-${c.r} e
 
 /* ===== Fiche ===== */
 let sheetId=null;
+const ST_HELP={'Malaise':"ne peut plus agir",'Angoisse':'subit +25 % de dégâts','Stress':'perd 4 % de ses PV max à chaque action','Flemme':'−30 % de VIT','Déprime':'soins reçus −50 %','En attente':'bloqué, sa jauge ne se remplit plus','Hype':'+30 % de VIT','Zen':'immunisé aux états négatifs','Câlin':'récupère 2 % de ses PV max toutes les 0,4 s','Provocation':'les ennemis doivent le viser','Colère':"+10 % d'ATK par point",'Bouclier':'absorbe les dégâts avant les PV','Discr':'impossible à cibler tant qu\'un allié est debout','cache':'impossible à cibler'};
+function kitHelp(c){const txt=c.kit.map(k=>k[2]).join(' ');return Object.keys(ST_HELP).filter(k=>txt.includes(k)).map(k=>`<span><b>${k==='Discr'?'Discrétion':k==='cache'?'Caché':k}</b> : ${ST_HELP[k]}</span>`).join('');}
+function kitCadence(id,type){if(type==='Compétence'&&SKILL_CD[id])return ` <i class="cad">Toutes les ${SKILL_CD[id]} actions.</i>`;if(type==='Ulti'&&CHARGE.has(id))return ' <i class="cad">Se charge de 20 par action et 10 par coup reçu ; se lance à 100.</i>';return '';}
 function openSheet(id){
+ const keepScroll=sheetId===id&&$('#overlay-root .sheet')?$('#overlay-root .sheet').scrollTop:0;
  sheetId=id;
  const c=CARD[id],own=S.owned[id],root=$('#overlay-root');
  if(!own){root.innerHTML=`<div class="overlay"><div class="sheet parch r-${c.r} el-${c.el}"><div class="top-row">${bannerHTML(id)}<div><h2>Carte #${c.no}</h2><p class="muted">Pas encore obtenue · ${RAR[c.r].n}</p><button class="btn" id="sh-close">Fermer</button></div></div></div></div>`;}
  else{
   const m=statMult(own.lvl,own.stars),cost=levelCost(own.lvl),inT=S.team.includes(id),gm=gearMult(id),gear=gearOf(id);
   root.innerHTML=`<div class="overlay"><div class="sheet parch r-${c.r} el-${c.el}" role="dialog" aria-label="${esc(c.name)}">
-   <div class="top-row"><div class="artbtn" id="sh-art" title="Agrandir l'illustration">${bannerHTML(id,{noLv:true})}<span class="muted" style="font-size:11px;text-align:center;display:block">Touche pour agrandir</span></div><div style="display:grid;gap:8px"><div><h2>${esc(c.name)}</h2><div class="muted">#${c.no} · ${RAR[c.r].n} · Niveau ${own.lvl}</div></div>
+   <div class="top-row"><div class="artbtn" id="sh-art" title="Agrandir l'illustration">${bannerHTML(id,{noLv:true})}<span class="muted" style="font-size:11px;text-align:center;display:block">Touche pour agrandir</span></div><div style="display:grid;gap:8px"><div><h2>${esc(c.name)}</h2><div class="rarlv"><span class="rarb r-${c.r}">${RAR[c.r].n}</span><span class="lvb">Niv. ${own.lvl}</span><span class="muted">#${c.no}</span></div></div>
    <div class="stats"><div><b>${fmt(c.hp*8*m*gm.hp)}</b><span>PV</span></div><div><b>${fmt(c.atk*m*gm.atk)}</b><span>ATK</span></div><div><b>${fmt(c.spd*gm.spd)}</b><span>VIT</span></div></div>
    <div><span class="pill"><span class="emb">${ELG[c.el]}</span>${EL[c.el].n} · bat ${EL[EL[c.el].b].n}</span>${c.fam.map(f=>`<span class="pill">${FAM[f]}</span>`).join('')}</div></div></div>
-   <div class="kit">${c.kit.map(k=>`<div><em>${k[0]}</em><b>${esc(k[1])}</b> : ${esc(k[2])}</div>`).join('')}</div>
+   <div class="row lvrow">${[1,5,10].map(n=>{const c2=lvlCostN(own.lvl,n);return `<button class="btn ${n===1?'primary':''}" data-up="${n}" ${S.gold<c2?'disabled':''}>+${n} niv. · ${fmt(c2)} or</button>`;}).join('')}</div>
+   <div class="kit">${c.kit.map(k=>`<div><em>${k[0]}</em><b>${esc(k[1])}</b> : ${esc(k[2])}${kitCadence(id,k[0])}</div>`).join('')}</div>
+   ${kitHelp(c)?`<div class="glossary">${kitHelp(c)}</div>`:''}
    <div><h3 style="margin:0 0 6px">Équipement</h3><div class="gear">${SLOTS_EQ.map(sl=>{const it=gear.find(g=>ITEM[g.id].slot===sl);return it?`<button class="gslot full r-${it.r}" data-slot="${sl}"><span class="g" aria-hidden="true">${IGL[it.id]}</span><span><b>${esc(ITEM[it.id].name)}</b><small>${statTxt(itemStats(it.id,it.r,id))}${itemOwns(ITEM[it.id],id)?' · bonus ×2':''}</small></span></button>`:`<button class="gslot" data-slot="${sl}"><span class="g dim">+</span><span><b>${SLOTN[sl]}</b><small>${S.items.some(i=>ITEM[i.id].slot===sl)?'Choisir un objet':'Aucun objet : farme le donjon d\'équipement'}</small></span></button>`;}).join('')}</div></div>
    <div class="dupe"><b>Étoiles · ${starStr(own.stars)}</b><div class="track">${[1,2,3,4,5].map(i=>`<span class="${own.stars>=i?'on':''}"></span>`).join('')}</div><span class="muted">Chaque doublon donne une étoile, soit +20 % de stats. ${own.stars<5?'':'Étoiles au max : les doublons suivants rapportent 300 or.'}</span></div>
-   <div class="row">${[1,5,10].map(n=>{const c2=lvlCostN(own.lvl,n);return `<button class="btn ${n===1?'primary':''}" data-up="${n}" ${S.gold<c2?'disabled':''}>+${n} niv. · ${fmt(c2)} or</button>`;}).join('')}</div>
    <div class="row"><button class="btn" id="sh-team">${inT?"Retirer de l'équipe":"Mettre dans l'équipe"}</button><button class="btn" id="sh-close">Fermer</button></div>
    ${!inT&&S.team.length>=5?'<p class="muted" style="margin:0">L\'équipe est pleine : retire d\'abord un héros.</p>':''}
   </div></div>`;
@@ -1038,6 +1050,7 @@ function openSheet(id){
   root.querySelectorAll('.gslot').forEach(b=>b.onclick=()=>openPicker(id,b.dataset.slot));
  }
  const sa=$('#sh-art');if(sa)sa.onclick=()=>openArt(id);
+ if(keepScroll){const sh=root.querySelector('.sheet');if(sh)sh.scrollTop=keepScroll;}
  $('#sh-close').onclick=closeSheet;root.querySelector('.overlay').onclick=e=>{if(e.target.classList.contains('overlay'))closeSheet();};
 }
 function closeSheet(){$('#overlay-root').innerHTML='';sheetId=null;}
@@ -1111,7 +1124,7 @@ document.addEventListener('contextmenu',e=>{if(drag&&drag.on)e.preventDefault();
 const SLOTS=[[37,26],[31,40],[17,23],[12,36],[20,49]];
 function unitHTML(u,i){
  const [x,b]=SLOTS[i]||[50,30],left=u.side===0?x:100-x;
- return `<div class="u side${u.side} el-${u.d.el}" id="u${u.uid}" style="left:${left}%;bottom:${b}%;z-index:${100-b}"><div class="st"></div><div class="bars"><div class="bar h"><span class="sh"></span><span class="hp"></span></div>${CHARGE.has(u.id)?'<div class="bar ul"><span></span></div>':''}<div class="bar g"><span></span></div></div>${battleImg(u.id)}<div class="shadow"></div></div>`;
+ return `<div class="u side${u.side} el-${u.d.el}" id="u${u.uid}" style="left:${left}%;bottom:${b}%;z-index:${100-b}"><div class="st"></div><div class="bars"><div class="bar h"><span class="sh" style="width:100%"></span><span class="hp" style="width:100%"></span></div>${CHARGE.has(u.id)?'<div class="bar ul"><span></span></div>':''}<div class="bar g"><span></span></div></div>${battleImg(u.id)}<div class="shadow"></div></div>`;
 }
 function stripHTML(list){let h='';for(let i=0;i<5;i++){const u=list[i];h+=u?`<div class="p r-${u.d.r} el-${u.d.el}" id="sp${u.uid}"><div class="face">${faceImg(u.id)}<b>${esc(u.d.name)}</b></div><div class="bar"><span style="width:100%"></span></div>${CHARGE.has(u.id)?'<div class="bar ul"><span style="width:0"></span></div>':''}</div>`:`<div class="p empty"><div class="face"></div></div>`;}return h;}
 function sceneHTML(units,strip,label){
@@ -1170,7 +1183,7 @@ function renderCombat(){
    <h3 style="margin-top:12px;color:var(--muted)">${boss?'Étage de boss':sel<=S.maxFloor?'Déjà battu : idéal pour farmer':'Nouvel étage'}</h3><div class="foes-preview">${foes.map(f=>{const c=CARD[f.id];return `<span class="chip r-${c.r} el-${c.el}"><span class="mini">${faceImg(f.id)}</span>${esc(c.name)} · ${f.lvl}</span>`;}).join('')}</div></div>
   <div class="panel"><div class="row"><span class="muted">Mode</span><div class="seg" id="mode">${[['manuel','Manuel'],['monter','Monter'],['farmer','Farmer']].map(m=>`<button aria-pressed="${mode===m[0]}" data-m="${m[0]}">${m[1]}</button>`).join('')}</div><button class="btn small" id="stop">Arrêter</button></div>
    <p class="muted" style="margin:8px 0 0;font-size:12.5px">Monter : enchaîne les nouveaux étages et repasse en farm sur le dernier étage battu en cas de défaite. Farmer : rejoue l'étage choisi en boucle (or, et 15 % de chance de ticket par victoire).</p></div>
-  <div id="result"></div>
+  <div>${otherFight('#arena')}</div><div id="result"></div>
   <details class="log panel"><summary>Journal du combat</summary><div class="logl" id="log" aria-live="polite"></div></details>
  </div></div>`;
  $('#f-prev').onclick=()=>{sel--;B=null;lastResult=null;farm={wins:0,gold:0,tix:0};renderCombat();};
@@ -1225,6 +1238,14 @@ function showResult(r){
  const gt=$('#go-team');if(gt)gt.onclick=()=>showTab('equipe');
 }
 
+/* Un seul combat à la fois : on prévient si l'autre mode tourne encore */
+function otherFight(here){
+ const loop=!!nextTimer||(mode!=='manuel'&&RUN&&RUN.root==='#arena');
+ if(here==='#d-arena'&&((timer&&RUN&&RUN.root==='#arena')||loop))return `<div class="result lose"><div><b>La tour tourne encore</b><div class="muted">${mode==='monter'?'Mode Monter':mode==='farmer'?'Mode Farmer':'Un combat'} en cours dans l'onglet Combat.</div></div><button class="btn" id="stop-other">Arrêter la tour</button></div>`;
+ if(here==='#arena'&&timer&&RUN&&RUN.root==='#d-arena')return `<div class="result"><div><b>Combat de donjon en cours</b><div class="muted">Il se termine dans l'onglet Donjons.</div></div></div>`;
+ return '';
+}
+function bindOther(){const b=$('#stop-other');if(b)b.onclick=()=>{if(nextTimer){clearTimeout(nextTimer);nextTimer=null;}mode='manuel';if(timer&&RUN&&RUN.root==='#arena'){clearInterval(timer);timer=null;B=null;RUN=null;lastResult=null;}toast('Tour arrêtée.');api('state').catch(()=>{}).then(()=>{if(tab==='donjons')renderDungeons();});};}
 /* ===== Onglet Donjons ===== */
 let dKind='gold',dSel={gold:null,equip:null},dResult=null;
 function renderDungeons(){
@@ -1239,11 +1260,12 @@ function renderDungeons(){
    <div class="foes-preview">${foes.map(x=>{const c=CARD[x.id];return `<span class="chip r-${c.r} el-${c.el}"><span class="mini">${faceImg(x.id)}</span>${esc(c.name)}</span>`;}).join('')}</div></div>
   <div class="panel"><h3 class="muted" style="margin:0 0 6px">Récompenses</h3>
    <div style="font-size:13.5px">${dKind==='gold'?`Victoire : <b>${fmt(400*f)}</b> or, ×3 la première fois.`:`Victoire : 1 objet${cleared?'':' (au moins Rare la première fois)'} et ${fmt(100*f)} or.`}</div>
-   <div style="font-size:13.5px;margin-top:4px">Farm hors-ligne : <b>${fmt(gph)}</b> or/h · 2 tickets/h${dKind==='equip'?' · 2 objets/h':''} · 24 h max.</div>
+   <div style="font-size:13.5px;margin-top:6px"><b>Farm continu</b>, un tirage toutes les 10 min : ${Math.round(FARM_P.ticket*100)} % de chance d'un ticket${dKind==='equip'?`, ${Math.round(FARM_P.item*100)} % de chance d'un objet`:`, ${Math.round(FARM_P.jackpot*100)} % de chance d'un jackpot d'or`}, et un peu d'or à chaque fois.</div>
    ${dKind==='equip'?`<div class="odds">${['C','R','E','L'].map(r=>`<span class="r-${r}">${RAR[r].n} ${Math.round(rates[r]/tot*100)} %</span>`).join('')}</div>`:''}
-   <div class="row" style="margin-top:10px">${isFarm?'<span class="farmon">Farm hors-ligne en cours ici</span>':`<button class="btn gold" id="d-farm" ${cleared?'':'disabled'}>Farmer cet étage hors-ligne</button>`}</div>
-   <p class="muted" style="font-size:12px;margin:8px 0 0">${cleared?'Ton équipe farme l\'étage choisi pendant ton absence. Changer de farm récolte d\'abord ce qui est en attente.':'Bats cet étage pour pouvoir le farmer hors-ligne.'} L'équipe et le lieu utilisés sont ceux de l'équipe active (« ${esc(curTeam().n)} »).</p></div>
-  <div id="d-result"></div></div></div>`;
+   <div class="row" style="margin-top:10px">${isFarm?'<span class="farmon">Farm continu en cours ici</span>':`<button class="btn gold" id="d-farm" ${cleared?'':'disabled'}>Lancer le farm continu ici</button>`}</div>
+   <p class="muted" style="font-size:12px;margin:8px 0 0">${cleared?'Le farm tourne tout de suite, que tu joues à autre chose ou que tu sois déconnecté. Récolte quand tu veux avec le bouton en haut. Changer de farm récolte d\'abord ce qui est en attente.':'Bats cet étage pour pouvoir le farmer en continu.'} L'équipe et le lieu utilisés sont ceux de l'équipe active (« ${esc(curTeam().n)} »).</p></div>
+  <div id="d-other">${otherFight('#d-arena')}</div><div id="d-result"></div></div></div>`;
+ bindOther();
  root.querySelectorAll('.dkinds button').forEach(b=>b.onclick=()=>{if(timer&&RUN&&RUN.root==='#d-arena')return;dKind=b.dataset.k;dResult=null;renderDungeons();});
  $('#d-prev').onclick=()=>{dSel[dKind]--;dResult=null;renderDungeons();};
  $('#d-next').onclick=()=>{dSel[dKind]++;dResult=null;renderDungeons();};
@@ -1257,7 +1279,7 @@ function renderDungeons(){
  if(dResult&&!timer)showDResult(dResult);
 }
 async function startDungeon(){
- if(timer||busy||nextTimer)return;if(!S.team.length){toast('Ton équipe est vide.','bad');return;}
+ if(timer||busy||nextTimer){toast(timer&&RUN&&RUN.root==='#d-arena'?'Combat déjà en cours.':'Arrête d\'abord le combat de la tour.','bad');renderDungeons();return;}if(!S.team.length){toast('Ton équipe est vide.','bad');return;}
  busy=true;renderDungeons();let j;
  try{j=await api('dungeon',{kind:dKind,floor:dSel[dKind]},{noApply:true});}catch(e){busy=false;toast(errMsg(e),'bad');renderDungeons();return;}
  busy=false;dResult=null;const bt=j.battle;
@@ -1273,20 +1295,20 @@ function showDResult(r){
  const nf=$('#d-nextfl');if(nf)nf.onclick=()=>{dSel[dKind]=(S.dg[dKind]||0)+1;dResult=null;renderDungeons();startDungeon();};
 }
 
-/* ===== Récolte du farm hors-ligne ===== */
+/* ===== Récolte du farm continu ===== */
 let awayShown=false;
 function showAway(direct){
  const e=farmEst();if(!e||!e.f||e.units<1){if(direct)toast('Rien à récolter pour l\'instant.');return;}
  const root=$('#overlay-root');if(root.innerHTML&&!direct)return;
  root.innerHTML=`<div class="overlay"><div class="away parch" role="dialog" aria-label="Récolte"><div class="ribbon">Pendant ton absence</div>
-  <p style="margin:0">Ton équipe a farmé <b>${DUNGEONS[e.f.kind].n}</b>, étage ${e.f.floor}, pendant <b>${hm(e.units*FARM_ITEM_EVERY_S)}</b>${e.dt>=FARM_CAP_S?' (maximum de 24 h atteint)':''}.</p>
-  <div class="row" style="gap:16px"><span class="big">+${fmt(e.gold)} or</span><span class="big">+${e.tickets} tickets</span>${e.items?`<span class="big">${e.items} objets</span>`:''}</div>
+  <p style="margin:0">Ton équipe farme <b>${DUNGEONS[e.f.kind].n}</b>, étage ${e.f.floor}, depuis <b>${hm(e.dt)}</b>${e.dt>=FARM_CAP_S?' (maximum de 24 h atteint)':''}.</p>
+  <p class="big" style="margin:0">${e.units} tirage${e.units>1?'s':''} à ouvrir</p>
   <div id="aw-items"></div>
   <div class="row"><button class="btn primary" id="aw-go">Récupérer</button><button class="btn" id="aw-later">Plus tard</button></div></div></div>`;
  $('#aw-later').onclick=closeSheet;
  $('#aw-go').onclick=async()=>{const b=$('#aw-go');b.disabled=true;$('#aw-later').disabled=true;
   try{const j=await api('collect'),c=j.collected;
-   root.querySelector('.away').innerHTML=`<div class="ribbon">Récolté</div><div class="row" style="gap:16px"><span class="big">+${fmt(c.gold)} or</span><span class="big">+${c.tickets} tickets</span></div>
+   root.querySelector('.away').innerHTML=`<div class="ribbon">Récolté</div><p class="muted" style="margin:0">${c.units} tirage${c.units>1?'s':''} · ${hm(c.seconds)}</p><div class="row" style="gap:16px"><span class="big">+${fmt(c.gold)} or</span><span class="big">+${c.tickets} ticket${c.tickets>1?'s':''}</span>${c.items.length?`<span class="big">${c.items.length} objet${c.items.length>1?'s':''}</span>`:''}</div>${c.jackpots?`<p style="margin:0"><b>Jackpot ×${c.jackpots} !</b></p>`:''}
     ${c.items.length?`<div class="items">${c.items.sort((a,b)=>RORD[b.r]-RORD[a.r]).map(i=>itemHTML(i,{ro:true})).join('')}</div>`:''}${c.sold?`<p class="muted" style="margin:0">Sac plein : objets en trop revendus pour ${fmt(c.sold)} or.</p>`:''}
     <div class="row"><button class="btn primary" id="aw-ok">Super</button></div>`;
    $('#aw-ok').onclick=()=>{closeSheet();refresh();if(tab==='invoc')renderInvoc();};
@@ -1341,7 +1363,7 @@ function renderAlbum(){
   root.innerHTML=`<div class="parch">${seg}
    <div class="row" style="justify-content:space-between;margin-bottom:10px"><div class="seg" id="isl"><button data-s="" aria-pressed="${!itemSlot}">Tout</button>${SLOTS_EQ.map(sl=>`<button data-s="${sl}" aria-pressed="${itemSlot===sl}">${SLOTN[sl]}</button>`).join('')}</div>
    <button class="btn small" id="sell-junk" ${junk.length?'':'disabled'}>Revendre les Communs non portés (${junk.length}) · ${fmt(junk.length*SELL.C)} or</button></div>
-   <div class="items">${list.map(i=>itemHTML(i)).join('')||'<p class="muted">Aucun objet. Le donjon d\'équipement en fait tomber, en combat et en farm hors-ligne.</p>'}</div>
+   <div class="items">${list.map(i=>itemHTML(i)).join('')||'<p class="muted">Aucun objet. Le donjon d\'équipement en fait tomber, en combat et en farm continu.</p>'}</div>
    <p class="muted" style="font-size:12px;margin:12px 0 0">Pour équiper un objet, ouvre la fiche d'un héros et touche un emplacement. Sac : ${S.items.length}/300, au-delà les objets sont revendus automatiquement.</p></div>`;
   root.querySelectorAll('#isl button').forEach(b=>b.onclick=()=>{itemSlot=b.dataset.s;renderAlbum();});
   $('#sell-junk').onclick=async()=>{try{const j=await api('sell',{items:junk.map(i=>i.u)});toast(`+${fmt(j.sold)} or`,'good');renderAlbum();}catch(e){toast(errMsg(e),'bad');}};
@@ -1390,7 +1412,7 @@ function renderInvoc(){
   <p class="muted" style="margin:0;font-size:13px">Légendaire garantie au 60ᵉ tirage sans légendaire (<span class="mono">${S.pity}/60</span>). Un tirage ×10 contient au moins une Rare.</p>
   <p class="muted" style="margin:0;font-size:13px"><b style="color:var(--ink)">Doublons</b> : chaque doublon donne une étoile, soit +20 % de stats, jusqu'à cinq. Au-delà, 300 or.</p>
   <p class="muted" style="margin:0;font-size:13px"><b style="color:var(--ink)">Lieux</b> : 6 % de chance par tirage d'obtenir un lieu à la place d'un héros. Un lieu en double gagne une étoile.</p>
-  <p class="muted" style="margin:0;font-size:13px">Tickets : 1 par nouvel étage de la tour, 5 de plus tous les 5 étages, 15 % de chance par victoire en farm de la tour, et 2 par heure de farm hors-ligne en donjon.</p>
+  <p class="muted" style="margin:0;font-size:13px">Tickets : 1 par nouvel étage de la tour, 5 de plus tous les 5 étages, 15 % de chance par victoire en farm de la tour, et 1 chance sur 3 toutes les 10 min en farm continu de donjon.</p>
  </div><div class="parch">${lastPull?`<div class="ribbon">Dernier tirage</div><div class="banners">${lastPull.map(p=>resHTML(p,{badge:p.badge,reveal:true})).join('')}</div>`:'<div class="empty"><p class="muted">Tes tirages apparaîtront ici. Les nouveaux héros rejoignent ton équipe tant qu\'elle a de la place.</p></div>'}</div></div>`;
  $('#p1').onclick=()=>pull(1);$('#p10').onclick=()=>pull(10);
  root.querySelectorAll('.banner[data-id]').forEach(el=>el.onclick=()=>openSheet(el.dataset.id));
@@ -1454,7 +1476,7 @@ function renderAdmin(){
   <form class="adm-box" id="ad-card"><h3>Héros</h3><label for="ad-c">Héros</label><select id="ad-c">${CARDS.map(c=>`<option value="${c.id}">${esc(c.name)} · ${RAR[c.r].n}</option>`).join('')}</select><div class="row" style="gap:8px"><div style="flex:1"><label for="ad-l">Niveau</label><input id="ad-l" type="number" min="1" max="300" value="10"></div><div style="flex:1"><label for="ad-s">Étoiles</label><input id="ad-s" type="number" min="0" max="5" value="0"></div></div><button class="btn primary" type="submit">Donner ou modifier</button></form>
   <form class="adm-box" id="ad-dg"><h3>Donjons</h3><label for="ad-dk">Donjon</label><select id="ad-dk"><option value="gold">Or</option><option value="equip">Équipement</option></select><label for="ad-df">Record d'étage</label><input id="ad-df" type="number" min="0" max="50" value="1"><button class="btn primary" type="submit">Appliquer</button></form>
   <form class="adm-box" id="ad-loot"><h3>Objets et lieux</h3><label for="ad-lr">Rareté</label><select id="ad-lr">${['C','R','E','L'].map(r=>`<option value="${r}">${RAR[r].n}</option>`).join('')}</select><button class="btn primary" type="submit">Un exemplaire de chaque objet + tous les lieux</button></form>
-  <form class="adm-box" id="ad-time"><h3>Farm hors-ligne</h3><label for="ad-h">Avancer le temps (heures)</label><input id="ad-h" type="number" min="0" max="48" value="6"><button class="btn primary" type="submit">Simuler l'absence</button></form>
+  <form class="adm-box" id="ad-time"><h3>Farm continu</h3><label for="ad-h">Avancer le temps (heures)</label><input id="ad-h" type="number" min="0" max="48" value="6"><button class="btn primary" type="submit">Simuler l'absence</button></form>
   <form class="adm-box" id="ad-all"><h3>Collection complète</h3><label for="ad-al">Niveau de tous les héros</label><input id="ad-al" type="number" min="1" max="300" value="1"><button class="btn primary" type="submit">Débloquer les ${CARDS.length} héros</button></form>
  </div>
  <div class="adm-box danger" style="margin-top:14px"><h3>Remise à zéro</h3><p class="muted" style="margin:0 0 8px">Remet ce compte à son état de départ : légendaire seule, ${500} or, 10 tickets, étage 0, sans objets, lieux ni progrès en donjon.</p><button class="btn" id="ad-reset">${resetArm?'Confirmer : tout remettre à zéro':'Remettre à zéro'}</button></div></div>`;
