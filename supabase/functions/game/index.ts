@@ -70,10 +70,13 @@ const NEG=new Set(['angoisse','malaise','flemme','stress','deprime','attente','p
 const ST_LABEL={angoisse:'Angoisse',malaise:'Malaise',flemme:'Flemme',stress:'Stress',deprime:'Déprime',attente:'En attente',piece:'Pièce manq.',hype:'Hype',zen:'Zen',calin:'Câlin',provoc:'Provoc.',cachee:'Cachée',double:'×2'};
 const rnd=n=>Math.floor(Math.random()*n);
 const statMult=(lvl,stars)=>(1+0.12*(lvl-1))*(1+0.2*stars);
+// Ordre et Chaos : plus rares en invocation, et plus puissants
+const RARE_EL=new Set(['ordre','chaos']),ELB=c=>RARE_EL.has(c.el)?1.15:1,EL_PULL_W=0.35;
+function pickCard(r,rnd){const list=BYR[r],w=list.map(c=>RARE_EL.has(c.el)?EL_PULL_W:1),tot=w.reduce((a,b)=>a+b,0);let x=rnd()*tot;for(let i=0;i<list.length;i++){x-=w[i];if(x<0)return list[i];}return list[list.length-1];}
 const elemMult=(a,d)=>EL[a].b===d?1.25:1;
 function famCounts(ids){const c={};[...new Set(ids)].forEach(id=>CARD[id].fam.forEach(f=>c[f]=(c[f]||0)+1));return c;}
 function synTier(f,n){let t=-1;(SYN[f]||[]).forEach((s,i)=>{if(n>=s[0])t=i;});return t;}
-function goldBonus(ids){const c=famCounts(ids);let b=1;if((c.chezk||0)>=3)b+=0.30;else if((c.chezk||0)>=2)b+=0.15;if((c.argent||0)>=2)b+=0.15;return b;}
+function goldBonus(){return 1;}
 
 /* ===== Équipement ===== */
 const SLOTS_EQ=['arme','torse','chapeau','acc'];
@@ -201,18 +204,8 @@ class Battle{
   teamA.forEach(c=>this.add(c,0));teamB.forEach(c=>this.add(c,1));
   [0,1].forEach(s=>{
    const side=this.sides[s],us=this.units.filter(u=>u.side===s);side.syn=famCounts(us.map(u=>u.id));const y=side.syn;
+   // Plus de bonus de famille automatiques : les familles servent aux objets, aux lieux et aux effets des cartes
    let atk=1,hp=1,spd=1,dodge=0;
-   if((y.potes||0)>=5)atk*=1.25;else if((y.potes||0)>=3)atk*=1.10;
-   if((y.quotidien||0)>=5)atk*=1.20;else if((y.quotidien||0)>=3)atk*=1.10;
-   if((y.lents||0)>=3)hp*=1.4;else if((y.lents||0)>=2)hp*=1.2;
-   if((y.corvee||0)>=4)hp*=1.3;else if((y.corvee||0)>=2)hp*=1.15;
-   if((y.poste||0)>=2)spd*=1.2;
-   if((y.nuisibles||0)>=2)dodge+=0.1;
-   if((y.soirees||0)>=3)spd*=1.15;
-   if((y.lol||0)>=2)atk*=1.10;
-   if((y.isaac||0)>=3){atk*=1.15;hp*=1.15;}else if((y.isaac||0)>=2)atk*=1.10;
-   if((y.krosmoz||0)>=2)spd*=1.15;
-   if((y.krosmoz||0)>=3)hp*=1.15;
    const pl=s===0?opt.placeA:opt.placeB,P=pl&&PLACE[pl.id];
    us.forEach(u=>{
     let a=atk,h=hp,v=spd;
@@ -227,13 +220,6 @@ class Battle{
     if(u.id==='lundi'){this.say(`${this.nm(u)} : Flemme générale en face.`);foes.forEach(t=>this.apply(u,t,'flemme',50));}
     if(u.id==='file'&&foes.length){const t=foes.reduce((a,c)=>this.spd(a)>this.spd(c)?a:c);this.say(`${this.nm(u)} : « Veuillez patienter. »`);this.apply(u,t,'attente',40);}
    });
-   const src=us[0];if(!src)return;
-   if((y.matin||0)>=2)foes.forEach(t=>this.apply(src,t,'flemme',40));
-   if((y.relous||0)>=2&&foes.length)this.apply(src,foes[this.rnd(foes.length)],'stress',50);
-   if((y.lignee||0)>=2)us.filter(u=>u.present).forEach(a=>this.apply(src,a,'calin',50));
-   if((y.lol||0)>=3)us.forEach(a=>{a.shield+=Math.round(a.maxhp*0.1);});
-   if((y.destiny||0)>=2)us.forEach(a=>{a.shield+=Math.round(a.maxhp*0.15);});
-   if((y.dbd||0)>=3)foes.forEach(t=>this.apply(src,t,'angoisse',50));else if((y.dbd||0)>=2&&foes.length)this.apply(src,foes[this.rnd(foes.length)],'angoisse',50);
    const pl=s===0?opt.placeA:opt.placeB,P=pl&&PLACE[pl.id];
    us.forEach(u=>{
     (u.gear||[]).forEach(g=>{const it=ITEM[g.id];if(it&&(it.fx==='calin'||it.fx==='hype'))this.apply(u,u,it.fx,it.fx==='calin'?50:30);});
@@ -246,7 +232,7 @@ class Battle{
   });
  }
  add(c,side){
-  const d=CARD[c.id],m=statMult(c.lvl||1,c.stars||0);
+  const d=CARD[c.id],m=statMult(c.lvl||1,c.stars||0)*ELB(CARD[c.id]);
   const u={uid:this.units.length,id:c.id,d,side,lvl:c.lvl||1,stars:c.stars||0,maxhp:Math.round(d.hp*8*m),atk0:d.atk*m,spd0:d.spd,hp:0,gauge:RETARD.has(c.id)?0:100+this.rand()*450,alive:true,present:!RETARD.has(c.id),st:{},colere:0,shield:0,cd:2,charge:0,uses:0,acts:0,atkMul:1,spdMul:1,dodge:c.id==='souris'?0.25:c.id==='lost'?0.2:(c.id==='azazel'||c.id==='chasseur')?0.15:0,mantle:c.id==='lost',gear:(c.gear||[]).filter(g=>ITEM[g.id]&&IRAR[g.r]).slice(0,4),arriveAt:3,immune:new Set(c.id==='yoann'?['angoisse','malaise','stress']:c.id==='geoffrey'?['malaise','angoisse']:[]),once:false,discreet:c.id==='lila',cagnotte:0,stacks:0,confused:false,colle:null,alone:false};
   u.hp=u.maxhp;this.units.push(u);
  }
@@ -296,14 +282,12 @@ class Battle{
   this.units.filter(x=>x.side===t.side&&x.alive).forEach(x=>{
    if(x.id==='lila'&&!x.once){x.once=true;x.discreet=false;x.atkMul*=1.6;this.say(`${this.nm(x)} n'est plus du tout timide.`,'ult');}
   });
-  if(t.d.fam.includes('foyer')&&(this.sides[t.side].syn.foyer||0)>=2)this.units.filter(x=>x.side===t.side&&x.alive&&x.d.fam.includes('foyer')).forEach(x=>{x.colere=Math.min(10,x.colere+2);this.ev(x,'+2 Colère','pos');});
  }
  heal(t,amt,o={}){
   if(!t||!t.alive)return;
   if(t.st.piece){delete t.st.piece;this.ev(t,'Soin annulé','neg');return;}
   if(!o.queued&&this.units.some(x=>x.id==='assurance'&&x.side===t.side&&x.alive)){this.queue.push({at:this.t+20,u:t,amt:amt*2});if(!o.silent)this.ev(t,'Dossier en cours','info');return;}
   if(t.st.deprime)amt*=0.5;
-  if((this.sides[t.side].syn.sante||0)>=2)amt*=1.3;
   amt=Math.round(amt);if(amt<=0)return;t.hp=Math.min(t.maxhp,t.hp+amt);this.ev(t,'+'+amt,'heal');
  }
  apply(s,t,name,dur,noRenvoi){
@@ -312,15 +296,11 @@ class Battle{
    if(t.immune.has(name)){this.ev(t,'Immunisé','info');return false;}
    if(t.st.zen){this.ev(t,'Zen','info');return false;}
    if(t.id==='echo'&&s&&s.side!==t.side&&s.alive&&!noRenvoi){this.say(`${this.nm(t)} miaule et renvoie ${ST_LABEL[name]} à ${this.nm(s)}.`);return this.apply(t,s,name,dur,true);}
-   const y=s?this.sides[s.side].syn:{};
-   if((y.paperasse||0)>=2)dur*=1.3;
-   if(name==='malaise'&&(y.bruyants||0)>=2)dur*=1.4;
-   if(name==='attente'&&(y.numerique||0)>=2)dur*=1.5;
    if(name==='malaise')this.units.filter(x=>x.id==='geoffrey'&&x.side!==t.side&&x.alive&&!x.st.hype).forEach(g=>{g.st.hype={t:20};});
   }
   const cur=t.st[name];
   if(name==='stress'&&s&&s.id==='legion')dur*=1.5;
-  t.st[name]={t:Math.max(cur?cur.t:0,Math.round(dur)),src:s,mul:(name==='stress'&&s&&(this.sides[s.side].syn.boulot||0)>=2)?1.5:1};
+  t.st[name]={t:Math.max(cur?cur.t:0,Math.round(dur)),src:s,mul:1};
   this.ev(t,ST_LABEL[name],NEG.has(name)?'neg':'pos');return true;
  }
  arrivals(){
@@ -329,8 +309,7 @@ class Battle{
    const none=!this.units.some(u=>u.side===s&&u.alive&&u.present);
    const ready=abs.filter(u=>none||side.actions>=u.arriveAt);
    if(ready.length){
-    const jl=(side.syn.jl||0)>=2;
-    ready.forEach(u=>{u.present=true;u.gauge=0;this.say(`${this.nm(u)} arrive enfin${jl?' avec sa moitié':''}.`);const t=this.pick(u);if(t)this.hit(u,t,1.2*(jl?1.5:1));});
+    ready.forEach(u=>{u.present=true;u.gauge=0;this.say(`${this.nm(u)} arrive enfin.`);const t=this.pick(u);if(t)this.hit(u,t,1.2);});
    }
   });
  }
@@ -491,7 +470,7 @@ function makeGame(db,now=()=>Date.now()){
     if(pity<PITY&&Math.random()<PLACE_CHANCE){const pl=PLACES[Math.floor(Math.random()*PLACES.length)];
      if(places[pl.id]==null){places[pl.id]=0;placeRes.push({place:pl.id,kind:'new'});}else if(places[pl.id]<5){places[pl.id]++;placeRes.push({place:pl.id,kind:'star',stars:places[pl.id]});}else{gold+=300;placeRes.push({place:pl.id,kind:'gold',gold:300});}
      continue;}
-    const r=pity>=PITY?'L':rollW(RATES,Math.random);if(r==='L')pity=0;ids.push(BYR[r][Math.floor(Math.random()*BYR[r].length)].id);
+    const r=pity>=PITY?'L':rollW(RATES,Math.random);if(r==='L')pity=0;ids.push(pickCard(r,Math.random).id);
    }
    if(n===10&&ids.length&&ids.every(id=>CARD[id].r==='C'))ids[ids.length-1]=BYR.R[Math.floor(Math.random()*BYR.R.length)].id;
    const work=JSON.parse(JSON.stringify(cards)),changed={},results=[...placeRes],team=[...(p.team||[])];

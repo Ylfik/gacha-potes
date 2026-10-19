@@ -247,7 +247,7 @@ body.is-dragging{cursor:grabbing;-webkit-user-select:none;user-select:none}
 .flip .back{clip-path:polygon(0 0,100% 0,100% 78%,50% 87%,0 78%);background:repeating-linear-gradient(45deg,#4b3121 0 8px,#3a2618 8px 16px);border:4px solid var(--rar);display:grid;place-items:center;font-family:var(--font-display);font-size:34px;color:var(--rar);filter:drop-shadow(0 0 14px var(--rar))}
 .flip.r-L.open .front .frame{animation:legend 1.2s ease-out}
 @keyframes legend{0%{filter:drop-shadow(0 0 0 var(--r-L))}30%{filter:drop-shadow(0 0 22px var(--r-L)) brightness(1.4)}100%{filter:none}}
-.stage .msg{font-family:var(--font-display);font-weight:700;font-size:24px;color:#fff}
+.stage .msg{font-family:var(--font-display);font-weight:700;font-size:24px;color:#fff;text-align:center}
 
 /* Fiche */
 .overlay{position:fixed;inset:0;background:rgba(10,6,3,.72);z-index:20;display:grid;place-items:center;padding:16px}
@@ -338,7 +338,7 @@ body.logged-out header.top,body.logged-out main{display:none}
 .rank-list li.me{border-color:var(--accent);background:#f6e2c4}
 .rank-list .pos{font-family:var(--font-display);font-weight:700;font-size:18px;min-width:26px;text-align:center}
 .rank-list .val{margin-left:auto;font-weight:800;font-size:13px;color:var(--pmuted)}
-@media (max-width:560px){.ped .fig{height:104px}.ped .fig img.full{max-height:104px}.team-top{gap:2px}.ped .tag{font-size:11px}.u .bars{width:46px}}
+@media (max-width:560px){.ped .fig{height:142px}.ped .fig img.px{transform:scale(.85);transform-origin:50% 100%}.ped .fig img.full{max-height:104px}.team-top{gap:2px}.ped .tag{font-size:11px}.u .bars{width:46px}}
 .u.dead .spr{animation:none}
 @media (prefers-reduced-motion:reduce){.u .spr{animation:none}.fl,.flip,.portal,.flip.r-L.open .front .frame{animation:none}.flip .in{transition:none}}
 
@@ -444,6 +444,15 @@ body.logged-out header.top,body.logged-out main{display:none}
 .ultcut.side1{animation-name:ultcut1}
 @keyframes ultcut1{0%{transform:translateX(110%) skewX(12deg)}18%{transform:translateX(0) skewX(12deg)}78%{transform:translateX(-3%) skewX(12deg);opacity:1}100%{transform:translateX(-110%) skewX(12deg);opacity:0}}
 @media (prefers-reduced-motion:reduce){.fx,.ultcut,.u .cast,.u .spark,.u .st span{animation:none!important}}
+.eli{width:1em;height:1em;vertical-align:-.14em;display:inline-block}
+.emb .eli{width:68%;height:68%;filter:drop-shadow(0 1px 0 rgba(0,0,0,.35))}
+.elbar button .eli{width:16px;height:16px}
+button.sum{all:unset;position:relative;width:210px;height:210px;cursor:pointer;display:block}
+.sum.idle{animation:idleb 1.6s ease-in-out infinite}.sum.idle .sum-core{inset:80px}
+@keyframes idleb{50%{transform:scale(1.05)}}
+.flip.tapflip{cursor:pointer}.flip.tapflip .front .banner{pointer-events:none}
+.flip:not(.open) .in:hover{transform:translateY(-4px)}
+.flip.r-E:not(.open) .in{filter:drop-shadow(0 0 10px #A25BE6)}.flip.r-L:not(.open) .in{filter:drop-shadow(0 0 14px #F0B52E)}
 </style>
 </head><body>
 
@@ -556,10 +565,13 @@ const NEG=new Set(['angoisse','malaise','flemme','stress','deprime','attente','p
 const ST_LABEL={angoisse:'Angoisse',malaise:'Malaise',flemme:'Flemme',stress:'Stress',deprime:'Déprime',attente:'En attente',piece:'Pièce manq.',hype:'Hype',zen:'Zen',calin:'Câlin',provoc:'Provoc.',cachee:'Cachée',double:'×2'};
 const rnd=n=>Math.floor(Math.random()*n);
 const statMult=(lvl,stars)=>(1+0.12*(lvl-1))*(1+0.2*stars);
+// Ordre et Chaos : plus rares en invocation, et plus puissants
+const RARE_EL=new Set(['ordre','chaos']),ELB=c=>RARE_EL.has(c.el)?1.15:1,EL_PULL_W=0.35;
+function pickCard(r,rnd){const list=BYR[r],w=list.map(c=>RARE_EL.has(c.el)?EL_PULL_W:1),tot=w.reduce((a,b)=>a+b,0);let x=rnd()*tot;for(let i=0;i<list.length;i++){x-=w[i];if(x<0)return list[i];}return list[list.length-1];}
 const elemMult=(a,d)=>EL[a].b===d?1.25:1;
 function famCounts(ids){const c={};[...new Set(ids)].forEach(id=>CARD[id].fam.forEach(f=>c[f]=(c[f]||0)+1));return c;}
 function synTier(f,n){let t=-1;(SYN[f]||[]).forEach((s,i)=>{if(n>=s[0])t=i;});return t;}
-function goldBonus(ids){const c=famCounts(ids);let b=1;if((c.chezk||0)>=3)b+=0.30;else if((c.chezk||0)>=2)b+=0.15;if((c.argent||0)>=2)b+=0.15;return b;}
+function goldBonus(){return 1;}
 
 /* ===== Équipement ===== */
 const SLOTS_EQ=['arme','torse','chapeau','acc'];
@@ -687,18 +699,8 @@ class Battle{
   teamA.forEach(c=>this.add(c,0));teamB.forEach(c=>this.add(c,1));
   [0,1].forEach(s=>{
    const side=this.sides[s],us=this.units.filter(u=>u.side===s);side.syn=famCounts(us.map(u=>u.id));const y=side.syn;
+   // Plus de bonus de famille automatiques : les familles servent aux objets, aux lieux et aux effets des cartes
    let atk=1,hp=1,spd=1,dodge=0;
-   if((y.potes||0)>=5)atk*=1.25;else if((y.potes||0)>=3)atk*=1.10;
-   if((y.quotidien||0)>=5)atk*=1.20;else if((y.quotidien||0)>=3)atk*=1.10;
-   if((y.lents||0)>=3)hp*=1.4;else if((y.lents||0)>=2)hp*=1.2;
-   if((y.corvee||0)>=4)hp*=1.3;else if((y.corvee||0)>=2)hp*=1.15;
-   if((y.poste||0)>=2)spd*=1.2;
-   if((y.nuisibles||0)>=2)dodge+=0.1;
-   if((y.soirees||0)>=3)spd*=1.15;
-   if((y.lol||0)>=2)atk*=1.10;
-   if((y.isaac||0)>=3){atk*=1.15;hp*=1.15;}else if((y.isaac||0)>=2)atk*=1.10;
-   if((y.krosmoz||0)>=2)spd*=1.15;
-   if((y.krosmoz||0)>=3)hp*=1.15;
    const pl=s===0?opt.placeA:opt.placeB,P=pl&&PLACE[pl.id];
    us.forEach(u=>{
     let a=atk,h=hp,v=spd;
@@ -713,13 +715,6 @@ class Battle{
     if(u.id==='lundi'){this.say(`${this.nm(u)} : Flemme générale en face.`);foes.forEach(t=>this.apply(u,t,'flemme',50));}
     if(u.id==='file'&&foes.length){const t=foes.reduce((a,c)=>this.spd(a)>this.spd(c)?a:c);this.say(`${this.nm(u)} : « Veuillez patienter. »`);this.apply(u,t,'attente',40);}
    });
-   const src=us[0];if(!src)return;
-   if((y.matin||0)>=2)foes.forEach(t=>this.apply(src,t,'flemme',40));
-   if((y.relous||0)>=2&&foes.length)this.apply(src,foes[this.rnd(foes.length)],'stress',50);
-   if((y.lignee||0)>=2)us.filter(u=>u.present).forEach(a=>this.apply(src,a,'calin',50));
-   if((y.lol||0)>=3)us.forEach(a=>{a.shield+=Math.round(a.maxhp*0.1);});
-   if((y.destiny||0)>=2)us.forEach(a=>{a.shield+=Math.round(a.maxhp*0.15);});
-   if((y.dbd||0)>=3)foes.forEach(t=>this.apply(src,t,'angoisse',50));else if((y.dbd||0)>=2&&foes.length)this.apply(src,foes[this.rnd(foes.length)],'angoisse',50);
    const pl=s===0?opt.placeA:opt.placeB,P=pl&&PLACE[pl.id];
    us.forEach(u=>{
     (u.gear||[]).forEach(g=>{const it=ITEM[g.id];if(it&&(it.fx==='calin'||it.fx==='hype'))this.apply(u,u,it.fx,it.fx==='calin'?50:30);});
@@ -732,7 +727,7 @@ class Battle{
   });
  }
  add(c,side){
-  const d=CARD[c.id],m=statMult(c.lvl||1,c.stars||0);
+  const d=CARD[c.id],m=statMult(c.lvl||1,c.stars||0)*ELB(CARD[c.id]);
   const u={uid:this.units.length,id:c.id,d,side,lvl:c.lvl||1,stars:c.stars||0,maxhp:Math.round(d.hp*8*m),atk0:d.atk*m,spd0:d.spd,hp:0,gauge:RETARD.has(c.id)?0:100+this.rand()*450,alive:true,present:!RETARD.has(c.id),st:{},colere:0,shield:0,cd:2,charge:0,uses:0,acts:0,atkMul:1,spdMul:1,dodge:c.id==='souris'?0.25:c.id==='lost'?0.2:(c.id==='azazel'||c.id==='chasseur')?0.15:0,mantle:c.id==='lost',gear:(c.gear||[]).filter(g=>ITEM[g.id]&&IRAR[g.r]).slice(0,4),arriveAt:3,immune:new Set(c.id==='yoann'?['angoisse','malaise','stress']:c.id==='geoffrey'?['malaise','angoisse']:[]),once:false,discreet:c.id==='lila',cagnotte:0,stacks:0,confused:false,colle:null,alone:false};
   u.hp=u.maxhp;this.units.push(u);
  }
@@ -782,14 +777,12 @@ class Battle{
   this.units.filter(x=>x.side===t.side&&x.alive).forEach(x=>{
    if(x.id==='lila'&&!x.once){x.once=true;x.discreet=false;x.atkMul*=1.6;this.say(`${this.nm(x)} n'est plus du tout timide.`,'ult');}
   });
-  if(t.d.fam.includes('foyer')&&(this.sides[t.side].syn.foyer||0)>=2)this.units.filter(x=>x.side===t.side&&x.alive&&x.d.fam.includes('foyer')).forEach(x=>{x.colere=Math.min(10,x.colere+2);this.ev(x,'+2 Colère','pos');});
  }
  heal(t,amt,o={}){
   if(!t||!t.alive)return;
   if(t.st.piece){delete t.st.piece;this.ev(t,'Soin annulé','neg');return;}
   if(!o.queued&&this.units.some(x=>x.id==='assurance'&&x.side===t.side&&x.alive)){this.queue.push({at:this.t+20,u:t,amt:amt*2});if(!o.silent)this.ev(t,'Dossier en cours','info');return;}
   if(t.st.deprime)amt*=0.5;
-  if((this.sides[t.side].syn.sante||0)>=2)amt*=1.3;
   amt=Math.round(amt);if(amt<=0)return;t.hp=Math.min(t.maxhp,t.hp+amt);this.ev(t,'+'+amt,'heal');
  }
  apply(s,t,name,dur,noRenvoi){
@@ -798,15 +791,11 @@ class Battle{
    if(t.immune.has(name)){this.ev(t,'Immunisé','info');return false;}
    if(t.st.zen){this.ev(t,'Zen','info');return false;}
    if(t.id==='echo'&&s&&s.side!==t.side&&s.alive&&!noRenvoi){this.say(`${this.nm(t)} miaule et renvoie ${ST_LABEL[name]} à ${this.nm(s)}.`);return this.apply(t,s,name,dur,true);}
-   const y=s?this.sides[s.side].syn:{};
-   if((y.paperasse||0)>=2)dur*=1.3;
-   if(name==='malaise'&&(y.bruyants||0)>=2)dur*=1.4;
-   if(name==='attente'&&(y.numerique||0)>=2)dur*=1.5;
    if(name==='malaise')this.units.filter(x=>x.id==='geoffrey'&&x.side!==t.side&&x.alive&&!x.st.hype).forEach(g=>{g.st.hype={t:20};});
   }
   const cur=t.st[name];
   if(name==='stress'&&s&&s.id==='legion')dur*=1.5;
-  t.st[name]={t:Math.max(cur?cur.t:0,Math.round(dur)),src:s,mul:(name==='stress'&&s&&(this.sides[s.side].syn.boulot||0)>=2)?1.5:1};
+  t.st[name]={t:Math.max(cur?cur.t:0,Math.round(dur)),src:s,mul:1};
   this.ev(t,ST_LABEL[name],NEG.has(name)?'neg':'pos');return true;
  }
  arrivals(){
@@ -815,8 +804,7 @@ class Battle{
    const none=!this.units.some(u=>u.side===s&&u.alive&&u.present);
    const ready=abs.filter(u=>none||side.actions>=u.arriveAt);
    if(ready.length){
-    const jl=(side.syn.jl||0)>=2;
-    ready.forEach(u=>{u.present=true;u.gauge=0;this.say(`${this.nm(u)} arrive enfin${jl?' avec sa moitié':''}.`);const t=this.pick(u);if(t)this.hit(u,t,1.2*(jl?1.5:1));});
+    ready.forEach(u=>{u.present=true;u.gauge=0;this.say(`${this.nm(u)} arrive enfin.`);const t=this.pick(u);if(t)this.hit(u,t,1.2);});
    }
   });
  }
@@ -878,7 +866,7 @@ const ART={"arcaniste": {"banner": "img/arcaniste_banner_aa435293.webp", "icon":
 
 /* ===== Sprites pixel art ===== */
 const ELC={coeur:'#E8508A',raison:'#3F86E6',delire:'#EE9A1E',prudence:'#2BB27E',ordre:'#8C97AE',chaos:'#9659E0'};
-const ELG={coeur:'♥',raison:'◆',delire:'✦',prudence:'▲',ordre:'◎',chaos:'✷'};
+const ELG={coeur:'<svg class="eli" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21s-7.4-4.6-9.6-9.2C.9 8.4 3 4.6 6.7 4.6c2.2 0 3.6 1.2 5.3 3 1.7-1.8 3.1-3 5.3-3 3.7 0 5.8 3.8 4.3 7.2C19.4 16.4 12 21 12 21z"/></svg>',raison:'<svg class="eli" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a7.3 7.3 0 0 0-4.3 13.2V18h8.6v-2.6A7.3 7.3 0 0 0 12 2.2z"/><rect fill="currentColor" x="8.6" y="19.3" width="6.8" height="2.4" rx="1"/></svg>',delire:'<svg class="eli" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M12.6 12.4a1.2 1.2 0 1 0-1.4-1.6 3.4 3.4 0 1 0 4.6 3.6 5.6 5.6 0 1 0-8.9 4.4 7.8 7.8 0 1 0 0-13.2"/></svg>',prudence:'<svg class="eli" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.8l8.4 3.2v6.3c0 5.2-3.6 9.3-8.4 11-4.8-1.7-8.4-5.8-8.4-11V5z"/></svg>',ordre:'<svg class="eli" viewBox="0 0 24 24" aria-hidden="true"><circle fill="currentColor" cx="12" cy="12" r="4.6"/><g stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g></svg>',chaos:'<svg class="eli" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.8 14.6A9 9 0 1 1 9.4 3.2a7.2 7.2 0 0 0 11.4 11.4z"/><path fill="currentColor" d="M17 3.5l.7 1.6 1.6.7-1.6.7-.7 1.6-.7-1.6-1.6-.7 1.6-.7z"/></svg>'};
 const BASEPAL={E:'#15151f',M:'#9c4040',W:'#f4f4f8',L:'#b9bfd2',D:'#2a2a3a',Y:'#ffd34d',K:'#24242f',R:'#ff4d4d',N:'#ff9eb5',S:'#f0c094',P:'#2f3756',B:'#3a2c28',G:'#1d1d26',Z:'#c43a3a',b:'#a8743f',w:'#d9cdb4'};
 function tplHuman(o){
  const r=["....HHHH....","...HHHHHH...","..HHHHHHHH..","..HSSSSSSH..","..SSESSESS..","..SSSSSSSS..","...SSMMSS...","....SSSS....","...TTTTTT...","..TTTTTTTT..",".STTTTTTTTS.",".S.TTTTTT.S.","...PPPPPP...","...PP..PP...","...PP..PP...","..BBB..BBB.."].map(s=>s.split(''));
@@ -946,12 +934,12 @@ function spr(id){
 const pxSrc=id=>ART[id]&&ART[id].px?ART[id].px:spr(id);
 // Taille relative de certains persos (Yuumi est plus petite et plus fine que Ryuk)
 // Les humains sont plus grands que les animaux
-const SIZE={jenlain:1.15,yoann:1.15,lea:1.15,kylian:1.15,geoffrey:1.15,lila:1.15,ryuk:0.72,yuumi:0.64,echo:0.66,traffy:0.8,zoya:0.55,lost:0.8,azazel:0.85,magdalene:0.8,souris:0.6,moustique:0.6,chaussette:0.75};
+const SIZE={jenlain:1.35,yoann:1.35,lea:1.35,kylian:1.35,geoffrey:1.35,lila:1.35,ryuk:0.6,yuumi:0.54,echo:0.55,traffy:0.68,zoya:0.5,lost:0.75,azazel:0.8,magdalene:0.75,souris:0.5,moustique:0.5,chaussette:0.7,reveil:0.85,wifi:0.9,messagevu:0.9,facture:0.9,colis:0.85,linge:0.85,vaisselle:0.85,aspirateur:0.9};
 const pxScale=(id,target)=>{const h=ART[id]&&ART[id].px?ART[id].pxh:(spr(id),SPR_H[id]);const t=target*(SIZE[id]||1);return h>=30?Math.round(t):Math.max(1,Math.round(t/h))*h;};
 const faceImg=id=>ART[id]&&ART[id].icon?`<img class="full" src="${ART[id].icon}" alt="">`:`<img class="px" src="${pxSrc(id)}" alt="">`;
 const bannerImg=id=>ART[id]&&ART[id].banner?`<img class="full" src="${ART[id].banner}" alt="">`:`<img class="px" src="${pxSrc(id)}" alt="">`;
-function battleImg(id){return `<img class="px spr" src="${pxSrc(id)}" style="height:${pxScale(id,76)}px" alt="">`;}
-function figImg(id){return `<img class="px" src="${pxSrc(id)}" style="height:${Math.min(140,pxScale(id,120))}px" alt="">`;}
+function battleImg(id){return `<img class="px spr" src="${pxSrc(id)}" style="height:${pxScale(id,76)}px;max-width:none" alt="">`;}
+function figImg(id){return `<img class="px" src="${pxSrc(id)}" style="height:${Math.min(150,pxScale(id,112))}px;max-width:none" alt="">`;}
 
 /* ===== Décor de combat ===== */
 function makeBG(){
@@ -1039,7 +1027,7 @@ const starStr=st=>'★'.repeat(st)+'☆'.repeat(5-st);
 const gearOf=id=>S.items.filter(i=>i.on===id);
 const teamUnits=()=>S.team.filter(id=>S.owned[id]).map(id=>({id,lvl:S.owned[id].lvl,stars:S.owned[id].stars,gear:gearOf(id).map(i=>({id:i.id,r:i.r}))}));
 function gearMult(id,gear){const m={atk:1,hp:1,spd:1};(gear||gearOf(id)).forEach(g=>{const o=itemStats(g.id,g.r,id);for(const k in o)m[k]*=1+o[k]/100;});return m;}
-function power(id,o=S.owned[id],gear){const c=CARD[id],m=statMult(o.lvl,o.stars),g=gearMult(id,gear||(o===S.owned[id]?undefined:[]));return Math.round((c.hp*8*g.hp+c.atk*6*g.atk+c.spd*4*g.spd)*m/10);}
+function power(id,o=S.owned[id],gear){const c=CARD[id],m=statMult(o.lvl,o.stars)*ELB(c),g=gearMult(id,gear||(o===S.owned[id]?undefined:[]));return Math.round((c.hp*8*g.hp+c.atk*6*g.atk+c.spd*4*g.spd)*m/10);}
 const reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
 function toast(msg,kind=''){const t=document.createElement('div');t.className='toast '+kind;t.textContent=msg;$('#toasts').appendChild(t);setTimeout(()=>t.remove(),3800);}
 const errMsg=e=>(e&&e.message)||'Une erreur est survenue.';
@@ -1080,7 +1068,7 @@ function bannerHTML(id,o={}){
 }
 function iconHTML(id,o={}){
  const c=CARD[id],own=S.owned[id],st=own?own.stars:0,tc=o.teamCounts;
- const fams=c.fam.map(f=>{let cls='';if(o.hl===f)cls='hl';else if(tc&&synTier(f,tc[f]||0)>=0)cls='on';return `<i class="${cls}">${FAMS[f]}</i>`;}).join('');
+ const fams=c.fam.map(f=>{let cls='';if(o.hl===f)cls='hl';return `<i class="${cls}">${FAMS[f]}</i>`;}).join('');
  return `<div class="ico r-${c.r} el-${c.el}${o.inteam?' inteam':''}"><button class="sq" data-drag="col" data-id="${id}" aria-label="Fiche de ${esc(c.name)}"><span class="in">${faceImg(id)}</span><span class="lv">${own?own.lvl:1}</span><span class="stars">${'★'.repeat(st)}</span></button><span class="emb" title="${EL[c.el].n}">${ELG[c.el]}</span><button class="info mini" data-act="toggle" data-id="${id}" aria-label="${o.inteam?"Retirer de l'équipe":"Ajouter à l'équipe"}" title="${o.inteam?"Retirer de l'équipe":"Ajouter à l'équipe"}">${o.inteam?'−':'+'}</button><span class="nm">${esc(c.name)}</span><span class="fams">${fams}</span></div>`;
 }
 const miniFace=(id,lvl)=>{const c=CARD[id];return `<span class="mface r-${c.r} el-${c.el}" title="${esc(c.name)}">${faceImg(id)}${lvl?`<b>${lvl}</b>`:''}</span>`;};
@@ -1096,11 +1084,11 @@ function openSheet(id){
  const c=CARD[id],own=S.owned[id],root=$('#overlay-root');
  if(!own){root.innerHTML=`<div class="overlay"><div class="sheet parch r-${c.r} el-${c.el}"><div class="top-row">${bannerHTML(id)}<div><h2>Carte #${c.no}</h2><p class="muted">Pas encore obtenue · ${RAR[c.r].n}</p><button class="btn" id="sh-close">Fermer</button></div></div></div></div>`;}
  else{
-  const m=statMult(own.lvl,own.stars),cost=levelCost(own.lvl),inT=S.team.includes(id),gm=gearMult(id),gear=gearOf(id);
+  const m=statMult(own.lvl,own.stars)*ELB(c),cost=levelCost(own.lvl),inT=S.team.includes(id),gm=gearMult(id),gear=gearOf(id);
   root.innerHTML=`<div class="overlay"><div class="sheet parch r-${c.r} el-${c.el}" role="dialog" aria-label="${esc(c.name)}">
    <div class="top-row"><div class="artbtn" id="sh-art" title="Agrandir l'illustration">${bannerHTML(id,{noLv:true})}<span class="muted" style="font-size:11px;text-align:center;display:block">Touche pour agrandir</span></div><div style="display:grid;gap:8px"><div><h2>${esc(c.name)}</h2><div class="rarlv"><span class="rarb r-${c.r}">${RAR[c.r].n}</span><span class="lvb">Niv. ${own.lvl}</span><span class="muted">#${c.no}</span></div></div>
    <div class="stats"><div><b>${fmt(c.hp*8*m*gm.hp)}</b><span>PV</span></div><div><b>${fmt(c.atk*m*gm.atk)}</b><span>ATK</span></div><div><b>${fmt(c.spd*gm.spd)}</b><span>VIT</span></div></div>
-   <div><span class="pill"><span class="emb">${ELG[c.el]}</span>${EL[c.el].n} · bat ${EL[EL[c.el].b].n}</span>${c.fam.map(f=>`<span class="pill">${FAM[f]}</span>`).join('')}</div></div></div>
+   <div><span class="pill"><span class="emb">${ELG[c.el]}</span>${EL[c.el].n} · bat ${EL[EL[c.el].b].n}${RARE_EL.has(c.el)?' · +15 % stats':''}</span>${c.fam.map(f=>`<span class="pill">${FAM[f]}</span>`).join('')}</div></div></div>
    <div class="row lvrow">${[1,5,10].map(n=>{const c2=lvlCostN(own.lvl,n);return `<button class="btn ${n===1?'primary':''}" data-up="${n}" ${S.gold<c2?'disabled':''}>+${n} niv. · ${fmt(c2)} or</button>`;}).join('')}</div>
    <div class="kit">${c.kit.map(k=>`<div><em>${k[0]}</em><b>${esc(k[1])}</b> : ${esc(k[2])}${kitCadence(id,k[0])}</div>`).join('')}</div>
    ${kitHelp(c)?`<div class="glossary">${kitHelp(c)}</div>`:''}
@@ -1424,7 +1412,6 @@ function renderTeam(){
  const ids=Object.keys(S.owned).sort((a,b)=>RORD[CARD[b].r]-RORD[CARD[a].r]||power(b)-power(a));
  const ownedFams=[...new Set(ids.flatMap(id=>CARD[id].fam))];if(famFilter&&!ownedFams.includes(famFilter))famFilter=null;
  const shown=ids.filter(id=>(!famFilter||CARD[id].fam.includes(famFilter))&&(!elFilter||CARD[id].el===elFilter));
- const synRows=Object.keys(counts).sort((a,b)=>(synTier(b,counts[b])-synTier(a,counts[a]))||counts[b]-counts[a]).map(f=>{const t=synTier(f,counts[f]),next=SYN[f].find(s=>counts[f]<s[0]);return `<button class="${t>=0?'on':''}" data-f="${f}" aria-pressed="${famFilter===f}"><span class="c">${counts[f]}</span><span><b>${FAM[f]}</b><br><span class="t">${t>=0?SYN[f][t][1]+(next?` · ${next[0]} pour : ${next[1]}`:''):`${next[0]} pour : ${next[1]}`}</span></span></button>`;}).join('');
  const peds=[0,1,2,3,4].map(i=>{const id=S.team[i];if(!id)return `<div class="ped empty" data-slot="${i}"><div class="fig">Glisse un héros ici</div><div class="base"></div><div class="tag">Vide</div></div>`;const c=CARD[id];return `<div class="ped el-${c.el}" data-slot="${i}"><button class="pedbtn" data-drag="ped" data-id="${id}" aria-label="Fiche de ${esc(c.name)}"><span class="fig">${figImg(id)}</span><span class="base"></span><span class="tag">${esc(c.name)} · ${S.owned[id].lvl}</span></button><button class="x mini" data-act="toggle" data-id="${id}" aria-label="Retirer ${esc(c.name)} de l'équipe" title="Retirer de l'équipe">×</button></div>`;}).join('');
  root.innerHTML=`<div class="cols"><div class="parch">
   <div class="teamtabs" role="group" aria-label="Équipes enregistrées">${S.teams.map((t,i)=>`<button data-ti="${i}" aria-pressed="${i===S.teamIdx}">${esc(t.n)}<small>${t.ids.filter(x=>S.owned[x]).length}/5</small></button>`).join('')}</div>
@@ -1437,9 +1424,8 @@ function renderTeam(){
   <div class="famrow" id="famrow"><button data-f="" aria-pressed="${!famFilter}">Toutes les familles</button>${ownedFams.map(f=>`<button data-f="${f}" aria-pressed="${famFilter===f}">${FAMS[f]}</button>`).join('')}</div>
   <div class="icons" id="icons">${shown.map(id=>iconHTML(id,{inteam:S.team.includes(id),teamCounts:counts,hl:famFilter})).join('')||'<p class="muted">Aucun héros avec ce filtre.</p>'}</div>
   <div class="elbar" role="group" aria-label="Filtrer par élément"><button class="all" data-e="" aria-pressed="${!elFilter}">Tous</button>${Object.keys(EL).map(e=>`<button class="el-${e}" data-e="${e}" aria-pressed="${elFilter===e}" title="${EL[e].n}" aria-label="${EL[e].n}">${ELG[e]}</button>`).join('')}</div>
-  <p class="muted" style="margin:12px 0 0;font-size:12.5px">Touche un portrait pour voir sa fiche. Le bouton + ou − l'ajoute ou le retire, et tu peux aussi le glisser sur un socle (appui long sur téléphone). Les familles en vert donnent déjà un bonus.</p>
+  <p class="muted" style="margin:12px 0 0;font-size:12.5px">Touche un portrait pour voir sa fiche. Le bouton + ou − l'ajoute ou le retire, et tu peux aussi le glisser sur un socle (appui long sur téléphone).</p>
  </div><aside style="display:grid;gap:12px;align-content:start">
-  <div class="panel"><h3 class="muted">Synergies de l'équipe</h3><div class="syn" id="syn">${synRows||'<span class="muted">Ajoute des héros pour voir les familles.</span>'}</div><p class="muted" style="margin:8px 0 0;font-size:12px">Touche une famille pour filtrer tes héros.</p></div>
   <div class="panel cycle"><h3 class="muted">Éléments</h3><span class="e el-coeur">${ELG.coeur} Cœur</span> bat <span class="e el-raison">${ELG.raison} Raison</span>, qui bat <span class="e el-delire">${ELG.delire} Délire</span>, qui bat <span class="e el-prudence">${ELG.prudence} Prudence</span>, qui bat <span class="e el-coeur">Cœur</span>.<br><span class="e el-ordre">${ELG.ordre} Ordre</span> et <span class="e el-chaos">${ELG.chaos} Chaos</span> se battent entre eux. Avantage : +25 % de dégâts.</div>
  </aside></div>`;
  root.querySelectorAll('[data-ti]').forEach(b=>b.onclick=()=>{const k=+b.dataset.ti;if(k===S.teamIdx)return;S.teamIdx=k;S.team=S.teams[k].ids.filter(x=>S.owned[x]);teamMsg='';renderTeam();teamSaving.then(()=>enqueue('team_select',{idx:k}));});
@@ -1447,7 +1433,7 @@ function renderTeam(){
  $('#t-name-ok').onclick=async()=>{const n=$('#t-name').value.trim();if(!n)return;try{await api('team_meta',{idx:S.teamIdx,name:n});toast('Équipe renommée.','good');renderTeam();}catch(e){toast(errMsg(e),'bad');}};
  root.querySelectorAll('[data-act="toggle"]').forEach(b=>b.onclick=e=>{e.stopPropagation();toggleTeam(b.dataset.id);});
  root.querySelectorAll('[data-drag]').forEach(b=>b.onclick=()=>{if(dragSuppress){dragSuppress=false;return;}openSheet(b.dataset.id);});
- root.querySelectorAll('#famrow button,#syn button').forEach(b=>b.onclick=()=>{const f=b.dataset.f||null;famFilter=famFilter===f?null:f;renderTeam();});
+ root.querySelectorAll('#famrow button').forEach(b=>b.onclick=()=>{const f=b.dataset.f||null;famFilter=famFilter===f?null:f;renderTeam();});
  root.querySelectorAll('.elbar button').forEach(b=>b.onclick=()=>{const e=b.dataset.e||null;elFilter=elFilter===e?null:e;renderTeam();});
 }
 
@@ -1502,19 +1488,22 @@ function tierOf(res){return res.reduce((b,p)=>{if(p.place)return Math.max(b,1);c
 function summonShow(res){
  const t=tierOf(res),steps=[0];if(t>=1)steps.push(1);if(t===2)steps.push(2);if(t>=3)steps.push(3);if(t===4)steps.push(4);
  const root=$('#stage-root');
- root.innerHTML=`<div class="stage sum-stage" id="stg"><div class="sum t0" id="sum" style="--glow:${TIERS[0].c}"><div class="sum-rays"></div><div class="sum-ring"></div><div class="sum-ring r2"></div><div class="sum-dl"></div><div class="sum-core"></div><div class="sum-wave"></div><div class="sum-parts">${Array.from({length:14},(_,k)=>`<i style="--a:${k*360/14}deg;--d:${120+((k*37)%60)}px"></i>`).join('')}</div></div>
-  <div class="msg" id="smsg">${TIERS[0].n}</div>
-  <div class="deal" id="deal" hidden>${res.map((p,i)=>`<div class="flip r-${resR(p)}" style="animation-delay:${i*60}ms"><div class="in"><div class="back">?</div><div class="front">${resHTML(p,{badge:p.badge,reveal:true,noLv:true})}</div></div></div>`).join('')}</div><button class="btn gold" id="sbtn">Passer</button></div>`;
- const stg=$('#stg'),sum=$('#sum'),flips=[...root.querySelectorAll('.flip')];let done=false,dealt=false;const timers=[];
+ root.innerHTML=`<div class="stage sum-stage" id="stg"><button class="sum t0 idle" id="sum" style="--glow:${TIERS[0].c}" aria-label="Ouvrir l'invocation"><div class="sum-rays"></div><div class="sum-ring"></div><div class="sum-ring r2"></div><div class="sum-dl"></div><div class="sum-core"></div><div class="sum-wave"></div><div class="sum-parts">${Array.from({length:14},(_,k)=>`<i style="--a:${k*360/14}deg;--d:${120+((k*37)%60)}px"></i>`).join('')}</div></button>
+  <div class="msg" id="smsg">Touche le portail pour invoquer</div>
+  <div class="deal" id="deal" hidden>${res.map((p,i)=>`<div class="flip tapflip r-${resR(p)}" data-k="${i}" role="button" tabindex="0" style="animation-delay:${i*60}ms" aria-label="Retourner la carte ${i+1}"><div class="in"><div class="back">?</div><div class="front">${resHTML(p,{badge:p.badge,reveal:true,noLv:true})}</div></div></div>`).join('')}</div>
+  <button class="btn gold" id="sbtn">Passer</button></div>`;
+ const stg=$('#stg'),sum=$('#sum'),flips=[...root.querySelectorAll('.flip')];let opened=false,dealt=false;const timers=[];
  const setStage=k=>{const T=TIERS[k];sum.className='sum t'+k;sum.style.setProperty('--glow',T.c);$('#smsg').textContent=T.n;$('#smsg').className='msg m'+k;
   if(k>0){sum.classList.remove('pulse');void sum.offsetWidth;sum.classList.add('pulse');stg.classList.remove('shake','flash');void stg.offsetWidth;stg.classList.add('shake');if(k>=3)stg.classList.add('flash');if(navigator.vibrate)try{navigator.vibrate(k>=3?[40,40,80]:30);}catch(_){}}};
- const finishAll=()=>{timers.forEach(clearTimeout);flips.forEach(f=>f.classList.add('open'));done=true;$('#sbtn').textContent='Continuer';};
- const startDeal=()=>{if(dealt)return;dealt=true;timers.forEach(clearTimeout);sum.classList.add('gone');$('#deal').hidden=false;$('#sbtn').textContent='Tout révéler';let d=450;
-  flips.forEach((f,k)=>{d+=resR(res[k])==='L'?520:resR(res[k])==='E'?300:170;timers.push(setTimeout(()=>{f.classList.add('open');if(k===flips.length-1)timers.push(setTimeout(finishAll,450));},d));});};
- if(reduce){setStage(steps[steps.length-1]);startDeal();finishAll();}
- else{let d=150;steps.forEach((k,n)=>{timers.push(setTimeout(()=>setStage(k),d));d+=n===0?1000:k>=3?1500:1100;});timers.push(setTimeout(startDeal,d+(t>=3?300:0)));}
- $('#sbtn').onclick=()=>{if(!dealt){setStage(steps[steps.length-1]);startDeal();finishAll();}else if(!done)finishAll();else{root.innerHTML='';renderInvoc();}};
- stg.addEventListener('click',e=>{if(e.target.id==='sbtn')return;if(dealt&&!done)finishAll();});
+ const allOpen=()=>flips.every(f=>f.classList.contains('open'));
+ const sync=()=>{$('#sbtn').textContent=allOpen()?'Continuer':'Tout révéler';if(allOpen())$('#smsg').textContent=TIERS[t].n;};
+ const deal=()=>{if(dealt)return;dealt=true;timers.forEach(clearTimeout);sum.classList.add('gone');$('#deal').hidden=false;$('#smsg').textContent='Touche les cartes pour les retourner';sync();};
+ const open=()=>{if(opened)return;opened=true;sum.classList.remove('idle');
+  if(reduce){setStage(steps[steps.length-1]);deal();return;}
+  let d=0;steps.forEach((k,n)=>{timers.push(setTimeout(()=>setStage(k),d));d+=n===0?900:k>=3?1500:1100;});timers.push(setTimeout(deal,d+(t>=3?300:0)));};
+ sum.onclick=open;
+ flips.forEach(f=>{f.onclick=e=>{e.preventDefault();if(!dealt)return;f.classList.add('open');sync();};f.onkeydown=e=>{if(e.key==='Enter'||e.key===' ')f.onclick(e);};});
+ $('#sbtn').onclick=()=>{if(!opened){opened=true;sum.classList.remove('idle');setStage(steps[steps.length-1]);}if(!dealt)deal();if(!allOpen()){flips.forEach((f,k)=>setTimeout(()=>{f.classList.add('open');if(k===flips.length-1)sync();},reduce?0:k*110));return;}root.innerHTML='';renderInvoc();};
 }
 function renderInvoc(){
  const root=$('#tab-invoc');
@@ -1524,6 +1513,7 @@ function renderInvoc(){
   <div class="rates">${['L','E','R','C'].map(r=>`<div><span class="r-${r}" style="color:var(--rar);font-weight:800">${RAR[r].n}</span><span class="mono">${RAR[r].w} %</span></div>`).join('')}</div>
   <p class="muted" style="margin:0;font-size:13px">Légendaire garantie au 60ᵉ tirage sans légendaire (<span class="mono">${S.pity}/60</span>). Un tirage ×10 contient au moins une Rare.</p>
   <p class="muted" style="margin:0;font-size:13px"><b style="color:var(--ink)">Doublons</b> : chaque doublon donne une étoile, soit +20 % de stats, jusqu'à cinq. Au-delà, 300 or.</p>
+  <p class="muted" style="margin:0;font-size:13px"><b style="color:var(--ink)">Ordre et Chaos</b> : ces héros sortent environ 3 fois moins souvent que les autres de leur rareté, mais ont +15 % à toutes leurs stats.</p>
   <p class="muted" style="margin:0;font-size:13px"><b style="color:var(--ink)">Lieux</b> : 6 % de chance par tirage d'obtenir un lieu à la place d'un héros. Un lieu en double gagne une étoile.</p>
   <p class="muted" style="margin:0;font-size:13px">Tickets : 1 par nouvel étage de la tour, 5 de plus tous les 5 étages, 15 % de chance par victoire en farm de la tour, et 1 chance sur 3 toutes les 10 min en farm continu de donjon.</p>
  </div><div class="parch">${lastPull?`<div class="ribbon">Dernier tirage</div><div class="banners">${lastPull.map(p=>resHTML(p,{badge:p.badge,reveal:true})).join('')}</div>`:'<div class="empty"><p class="muted">Tes tirages apparaîtront ici. Les nouveaux héros rejoignent ton équipe tant qu\'elle a de la place.</p></div>'}</div></div>`;
