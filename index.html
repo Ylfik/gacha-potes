@@ -501,21 +501,21 @@ button.sum{all:unset;position:relative;width:210px;height:210px;cursor:pointer;d
 
 const EL={coeur:{n:'Cœur',b:'raison'},raison:{n:'Raison',b:'delire'},delire:{n:'Délire',b:'prudence'},prudence:{n:'Prudence',b:'coeur'},ordre:{n:'Ordre',b:'chaos'},chaos:{n:'Chaos',b:'ordre'}};
 const RAR={C:{n:'Commune',w:60},R:{n:'Rare',w:28},E:{n:'Épique',w:9},L:{n:'Légendaire',w:3}};
-const FAM={soirees:'Les Soirées jeu',lol:'League of Legends',dbd:'Dead by Daylight',isaac:'The Binding of Isaac',destiny:'Destiny 2',krosmoz:'Le Krosmoz',potes:'Les Potes',foyer:'Le Foyer',chezk:'Chez Kylian',jl:'Jenlain & Lila',lignee:'Lignée de Yuumi',bruyants:'Les Bruyants',lents:'Les Lents',paperasse:'La Paperasse',argent:"L'Argent",sante:'La Santé',poste:'La Poste',boulot:'Le Boulot',matin:'Le Matin',numerique:'Le Numérique',relous:'Les Relous',nuisibles:'Les Nuisibles',corvee:'La Corvée',quotidien:'Le Quotidien'};
+const FAM={animes:'Les Animés',series:'Les Séries',onepiece:'One Piece',naruto:'Naruto',bleach:'Bleach',fma:'Fullmetal Alchemist',snk:"L'Attaque des Titans",kuroko:"Kuroko's Basket",hxh:'Hunter x Hunter',fireforce:'Fire Force',sao:'Sword Art Online',deathnote:'Death Note',jjk:'Jujutsu Kaisen',demonslayer:'Demon Slayer',wakfu:'Wakfu',arcane:'Arcane',stranger:'Stranger Things',lucifer:'Lucifer',breakingbad:'Breaking Bad',peaky:'Peaky Blinders',prisonbreak:'Prison Break',soirees:'Les Soirées jeu',lol:'League of Legends',dbd:'Dead by Daylight',isaac:'The Binding of Isaac',destiny:'Destiny 2',krosmoz:'Le Krosmoz',potes:'Les Potes',foyer:'Le Foyer',chezk:'Chez Kylian',jl:'Jenlain & Lila',lignee:'Lignée de Yuumi',bruyants:'Les Bruyants',lents:'Les Lents',paperasse:'La Paperasse',argent:"L'Argent",sante:'La Santé',poste:'La Poste',boulot:'Le Boulot',matin:'Le Matin',numerique:'Le Numérique',relous:'Les Relous',nuisibles:'Les Nuisibles',corvee:'La Corvée',quotidien:'Le Quotidien'};
 const SYN={soirees:[[3,'+15 % VIT']],lol:[[2,'+10 % ATK'],[3,'+10 % ATK et Bouclier au début']],dbd:[[2,'Angoisse sur un ennemi au début'],[3,'Angoisse sur tous les ennemis au début']],isaac:[[2,'+10 % ATK'],[3,'+15 % ATK et +15 % PV']],destiny:[[2,'Bouclier au début']],krosmoz:[[2,'+15 % VIT'],[3,'+15 % VIT et +15 % PV']],potes:[[3,'+10 % ATK'],[5,'+25 % ATK']],foyer:[[2,'Quand un membre tombe, les autres gagnent 2 Colère']],chezk:[[2,"+15 % d'or"],[3,"+30 % d'or"]],jl:[[2,'Entrée fracassante +50 %']],lignee:[[2,"Câlin sur toute l'équipe au début"]],bruyants:[[2,'Malaise plus long']],lents:[[2,'+20 % PV'],[3,'+40 % PV']],paperasse:[[2,'États négatifs plus longs']],argent:[[2,"+15 % d'or"]],sante:[[2,'Soins +30 %']],poste:[[2,'+20 % VIT']],boulot:[[2,'Stress plus douloureux']],matin:[[2,'Flemme sur les ennemis au début']],numerique:[[2,'En attente plus long']],relous:[[2,'Stress sur un ennemi au début']],nuisibles:[[2,'+10 % esquive']],corvee:[[2,'+15 % PV'],[4,'+30 % PV']],quotidien:[[3,'+10 % ATK'],[5,'+20 % ATK']]};
 
 const CARDS=[
 {id:'jenlain',name:'Jenlain',r:'L',el:'delire',fam:['potes','jl'],hp:110,atk:120,spd:70,kit:[['Attaque','Punchline','Frappe une cible à 100 % de son ATK.'],['Passif','Retardataire','Arrive après 3 actions alliées et frappe à 120 % de son ATK en arrivant.'],['Compétence','Freestyle','Frappe tous les ennemis à 60 % de son ATK, +10 % à chaque nouvelle utilisation.'],['Ulti','Concert','Frappe tous les ennemis à 100 % de son ATK et donne Hype (2 s) à toute l\'équipe.']]},
 {id:'yoann',name:'Yoann',r:'L',el:'raison',fam:['potes','foyer'],hp:160,atk:80,spd:70,kit:[['Attaque','Coup sec','Frappe une cible à 100 % de son ATK.'],['Passif','Caillou','Immunisé à l\'Angoisse, au Malaise et au Stress.'],['Compétence','Regard vide','Provocation pendant 1,6 s, puis frappe à 80 % de son ATK.'],['Ulti','Inébranlable','Une fois par combat : au lieu de tomber, il reste à 1 PV et gagne un Bouclier de 30 % de ses PV max.']]},
 {id:'lea',name:'Léa',r:'L',el:'coeur',fam:['potes','foyer'],hp:100,atk:110,spd:90,kit:[['Attaque','Remise en place','Frappe une cible à 100 % de son ATK.'],['Passif','Faut pas me chercher','+1 Colère à chaque coup reçu (10 max).'],['Compétence','Tu lui as fait quoi ?!','Frappe l\'ennemi qui vient de blesser un allié à 100 % de son ATK, +20 % par point de Colère.'],['Ulti','Explosion','Consomme sa Colère pour frapper tous les ennemis à 60 % de son ATK, +25 % par point de Colère.']]},
-{id:'kylian',name:'Kylian',r:'L',el:'prudence',fam:['potes','chezk'],hp:90,atk:90,spd:100,kit:[['Attaque','Investissement','Frappe une cible à 100 % de son ATK.'],['Passif','Économe','30 % de ses dégâts remplissent une cagnotte.'],['Compétence',"C'est à moi",'Vole à un ennemi son Zen, sa Hype, son Câlin, sa Colère ou son Bouclier. S\'il n\'y a rien à voler, frappe à 100 %.'],['Ulti','Rentabiliser','Bouclier pour toute l\'équipe égal à 40 % de la cagnotte (20 minimum), puis la cagnotte repart à zéro.']]},
+{id:'kylian',name:'Kylian',r:'L',el:'prudence',fam:['potes','chezk'],hp:90,atk:100,spd:100,kit:[['Attaque','Investissement','Frappe une cible à 100 % de son ATK.'],['Passif','Économe','30 % de ses dégâts remplissent une cagnotte.'],['Compétence',"C'est à moi",'Vole à un ennemi son Zen, sa Hype, son Câlin, sa Colère ou son Bouclier. S\'il n\'y a rien à voler, frappe à 100 %.'],['Ulti','Rentabiliser','Bouclier pour toute l\'équipe égal à 40 % de la cagnotte (20 minimum), puis la cagnotte repart à zéro.']]},
 {id:'geoffrey',name:'Geoffrey',r:'L',el:'delire',fam:['potes','bruyants'],hp:120,atk:70,spd:110,kit:[['Attaque','Blague nulle','Frappe une cible à 100 % de son ATK.'],['Passif','Aucune honte','Immunisé au Malaise et à l\'Angoisse. Hype (0,8 s) quand un ennemi tombe en Malaise (ne se cumule pas).'],['Compétence','Rire strident','Malaise (0,5 s) sur tous les ennemis, et 1 chance sur 3 sur chaque allié (Yoann est immunisé).'],['Ulti','La blague de trop','Malaise (0,9 s) sur tout le monde sauf lui, et il frappe ×2 pendant 0,9 s ; son Ulti ne se recharge pas pendant ce temps.']]},
-{id:'lila',name:'Lila',r:'L',el:'coeur',fam:['potes','jl'],hp:100,atk:100,spd:70,kit:[['Attaque','Petite frappe','Frappe une cible à 100 % de son ATK.'],['Passif','Arrive en douce','Arrive après 3 actions alliées (frappe à 120 % en arrivant) ; Discrète, donc impossible à cibler, tant qu\'un allié est debout.'],['Compétence','Faut pas pousser','+2 Colère, puis frappe à 140 % de son ATK.'],['Ulti','Plus du tout timide','Une fois : quand un allié tombe, elle perd sa Discrétion et gagne +60 % d\'ATK.']]},
-{id:'ryuk',name:'Ryuk',r:'E',el:'chaos',fam:['foyer','lignee'],hp:80,atk:110,spd:150,kit:[['Attaque','Griffe','Frappe une cible au hasard à 100 % de son ATK.'],['Passif','Zoomies','35 % de chance de rejouer tout de suite (2 fois d\'affilée max).'],['Compétence','Connerie','40 % : Malaise (1 s) sur un ennemi. 40 % : frappe tous les ennemis à 70 %. 20 % : il se coince (Malaise 0,8 s sur lui).']]},
-{id:'yuumi',name:'Yuumi',r:'E',el:'coeur',fam:['foyer','lignee'],hp:90,atk:40,spd:80,kit:[['Attaque','Coup de patte','Frappe une cible à 60 % de son ATK.'],['Passif','Froussarde','Quand elle est touchée, elle se cache 0,8 s (impossible à cibler).'],['Compétence','Papouilles','Câlin (2 s) sur l\'allié le plus blessé.']]},
-{id:'traffy',name:'Traffy',r:'E',el:'prudence',fam:['chezk','lents'],hp:200,atk:60,spd:20,kit:[['Attaque','Gros dodo sur toi','Frappe une cible à 100 % de son ATK.'],['Passif','Pas pressé','+10 % d\'ATK et de VIT à chacune de ses actions (+150 % max).'],['Compétence','Sieste','Zen (2 s) et Bouclier de 20 % de ses PV max.']]},
-{id:'echo',name:'Echo',r:'E',el:'coeur',fam:['chezk','lignee'],hp:90,atk:80,spd:100,kit:[['Attaque','Coup de patte','Frappe une cible à 100 % de son ATK.'],['Passif','Miaou de protestation','Renvoie à l\'envoyeur les états négatifs qu\'un ennemi lui applique.'],['Compétence','Câlin','Câlin (2 s) sur l\'allié le plus blessé.']]},
-{id:'zoya',name:'Zoya',r:'E',el:'prudence',fam:['foyer','lents'],hp:180,atk:70,spd:10,kit:[['Attaque','Morsure','Frappe une cible à 100 % de son ATK, 300 % contre les Nuisibles.'],['Passif','Bronzette','Bouclier de 15 % de ses PV max toutes les 2 actions.'],['Compétence','Croque-souris','Morsure à 200 % sur l\'ennemi le plus faible (600 % contre les Nuisibles) ; si elle l\'achève, récupère 25 % de ses PV max.']]},
+{id:'lila',name:'Lila',r:'L',el:'coeur',fam:['potes','jl'],hp:100,atk:110,spd:70,kit:[['Attaque','Petite frappe','Frappe une cible à 100 % de son ATK.'],['Passif','Arrive en douce','Arrive après 3 actions alliées (frappe à 120 % en arrivant) ; Discrète, donc impossible à cibler, tant qu\'un allié est debout.'],['Compétence','Faut pas pousser','+2 Colère, puis frappe à 140 % de son ATK.'],['Ulti','Plus du tout timide','Une fois : quand un allié tombe, elle perd sa Discrétion et gagne +60 % d\'ATK.']]},
+{id:'ryuk',name:'Ryuk',r:'L',el:'chaos',fam:['foyer','lignee'],hp:80,atk:110,spd:150,kit:[['Attaque','Griffe','Frappe une cible au hasard à 100 % de son ATK.'],['Passif','Zoomies','35 % de chance de rejouer tout de suite (2 fois d\'affilée max).'],['Compétence','Connerie','40 % : Malaise (1 s) sur un ennemi. 40 % : frappe tous les ennemis à 70 %. 20 % : il se coince (Malaise 0,8 s sur lui).']]},
+{id:'yuumi',name:'Yuumi',r:'L',el:'coeur',fam:['foyer','lignee'],hp:110,atk:60,spd:95,kit:[['Attaque','Coup de patte','Frappe une cible à 60 % de son ATK.'],['Passif','Froussarde','Quand elle est touchée, elle se cache 0,8 s (impossible à cibler).'],['Compétence','Papouilles','Câlin (2 s) sur l\'allié le plus blessé.']]},
+{id:'traffy',name:'Traffy',r:'L',el:'prudence',fam:['chezk','lents'],hp:200,atk:72,spd:35,kit:[['Attaque','Gros dodo sur toi','Frappe une cible à 100 % de son ATK.'],['Passif','Pas pressé','+10 % d\'ATK et de VIT à chacune de ses actions (+150 % max).'],['Compétence','Sieste','Zen (2 s) et Bouclier de 20 % de ses PV max.']]},
+{id:'echo',name:'Echo',r:'L',el:'coeur',fam:['chezk','lignee'],hp:90,atk:95,spd:100,kit:[['Attaque','Coup de patte','Frappe une cible à 100 % de son ATK.'],['Passif','Miaou de protestation','Renvoie à l\'envoyeur les états négatifs qu\'un ennemi lui applique.'],['Compétence','Câlin','Câlin (2 s) sur l\'allié le plus blessé.']]},
+{id:'zoya',name:'Zoya',r:'L',el:'prudence',fam:['foyer','lents'],hp:180,atk:82,spd:30,kit:[['Attaque','Morsure','Frappe une cible à 100 % de son ATK, 300 % contre les Nuisibles.'],['Passif','Bronzette','Bouclier de 15 % de ses PV max toutes les 2 actions.'],['Compétence','Croque-souris','Morsure à 200 % sur l\'ennemi le plus faible (600 % contre les Nuisibles) ; si elle l\'achève, récupère 25 % de ses PV max.']]},
 {id:'impots',name:'Les Impôts',r:'R',el:'ordre',fam:['paperasse','argent'],hp:140,atk:80,spd:60,kit:[['Attaque','Ponction','Frappe une cible à 100 % de son ATK, +50 % contre Kylian.'],['Passif','Prélèvement à la source','Soigne l\'allié le plus blessé de 30 % des dégâts qu\'il inflige.']]},
 {id:'assurance',name:"L'Assurance maladie",r:'R',el:'ordre',fam:['paperasse','sante'],hp:120,atk:70,spd:60,kit:[['Attaque','Pièce manquante','Frappe à 100 % de son ATK ; le prochain soin de la cible est annulé.'],['Passif','Dossier en cours','Les soins reçus par son équipe arrivent 0,8 s plus tard, mais doublés.']]},
 {id:'proprio',name:'Le Proprio',r:'R',el:'ordre',fam:['paperasse','argent'],hp:140,atk:90,spd:60,kit:[['Attaque','Relance','Frappe une cible à 100 % de son ATK.'],['Passif','Loyer','Toutes les 3 actions, frappe tous les ennemis à 50 % (sauf Kylian).']]},
@@ -551,22 +551,228 @@ const CARDS=[
 {id:'chasseur',name:'Le Chasseur',r:'E',el:'delire',fam:['soirees','destiny'],hp:100,atk:108,spd:110,kit:[['Attaque','Canon à main','Frappe une cible à 100 % de son ATK.'],['Passif','Esquive du chasseur','15 % d\'esquive.'],['Compétence',"Pistolet d'or",'Trois tirs à 80 % de son ATK sur l\'ennemi le plus faible.']]},
 {id:'arcaniste',name:"L'Arcaniste",r:'E',el:'coeur',fam:['soirees','destiny'],hp:110,atk:85,spd:90,kit:[['Attaque','Nova','Frappe une cible à 100 % de son ATK.'],['Passif','Puits de lumière','Hype (1,2 s) sur toute l\'équipe au début du combat.'],['Compétence','Faille de soin','Soigne toute l\'équipe de 8 % de leurs PV max et donne Câlin (1,6 s).']]},
 {id:'steamer',name:'Le Steamer',r:'E',el:'prudence',fam:['soirees','krosmoz'],hp:130,atk:85,spd:70,kit:[['Attaque','Coup de clé','Frappe une cible à 100 % de son ATK.'],['Passif','Harponneuse','Après chacune de ses actions, sa tourelle frappe un ennemi au hasard à 40 %.'],['Compétence','Gardienne','Bouclier de 12 % de leurs PV max sur toute l\'équipe.']]},
-{id:'yugo',name:'Yugo',r:'E',el:'raison',fam:['soirees','krosmoz'],hp:110,atk:105,spd:100,kit:[['Attaque','Portail','Frappe un ennemi au hasard à 100 % de son ATK, en passant à travers Provocation et Discrétion.'],['Passif','Téléportation','La première fois que ses PV passent sous 30 %, il se cache 1,6 s.'],['Compétence','Wakmeha','Frappe tous les ennemis à 70 % de son ATK et gagne Hype (1,2 s).']]},
+{id:'yugo',name:'Yugo',r:'E',el:'raison',fam:['animes','wakfu'],hp:110,atk:105,spd:100,kit:[['Attaque','Portail','Frappe un ennemi au hasard à 100 % de son ATK, en passant à travers Provocation et Discrétion.'],['Passif','Téléportation','La première fois que ses PV passent sous 30 %, il se cache 1,6 s.'],['Compétence','Wakmeha','Frappe tous les ennemis à 70 % de son ATK et gagne Hype (1,2 s).']]},
 {id:'bouftou',name:'Le Bouftou Royal',r:'E',el:'delire',fam:['soirees','krosmoz'],hp:220,atk:75,spd:50,kit:[['Attaque','Coup de corne','Frappe une cible à 100 % de son ATK.'],['Passif','Majesté laineuse','Provocation pendant 2,4 s au début du combat : les ennemis le visent en priorité.'],['Compétence','Charge royale','Frappe à 120 % de son ATK, met la cible en Malaise (0,8 s) et gagne un Bouclier de 12 % de ses PV max.']]},
 {id:'colis',name:'Le Colis introuvable',r:'C',el:'delire',fam:['quotidien','poste'],hp:80,atk:100,spd:80,kit:[['Attaque','Livré chez le voisin','Frappe une cible au hasard à 160 % de son ATK.']]}
 ];
+
+/* ===== Cartes générées : animés et séries =====
+ a : attaque { n, m, twice, splash, rnd, pierce, st, d, ch }
+ p : passif  { n, k, v, f, st, d, every }
+ s : compétence (Épiques seulement) { n, k, m, n2, st, d, v, pierce, cd }
+ Les descriptions sont écrites automatiquement à partir de ces valeurs. */
+const GEN={};
+const GEN_LIST=[
+ // One Piece
+ {id:'luffy',name:'Luffy',r:'E',el:'delire',fam:['animes','onepiece'],hp:150,atk:118,spd:95,look:['human',{},{H:'#1a1a1a',T:'#c8262c',P:'#2f5fa8'}],
+  a:{n:'Gomu Gomu no Pistol',m:1},p:{n:'Volonté du roi',k:'famAtk',f:'onepiece',v:0.10},s:{n:'Gear Second',k:'multi',n2:4,m:0.5}},
+ {id:'law',name:'Trafalgar Law',r:'E',el:'raison',fam:['animes','onepiece'],hp:120,atk:112,spd:100,look:['human',{},{H:'#1a1a1a',T:'#e8d23a',P:'#1f2a44'}],
+  a:{n:'Room',m:1},p:{n:'Chirurgien de la mort',k:'lifesteal',v:0.2},s:{n:'Injection Shot',k:'lowest',m:1.6,pierce:1}},
+ {id:'katakuri',name:'Katakuri',r:'E',el:'prudence',fam:['animes','onepiece'],hp:170,atk:95,spd:75,look:['human',{},{H:'#8a2a5a',T:'#2b1c2c',P:'#3a2a3a'}],
+  a:{n:'Mochi',m:1,st:'flemme',d:30},p:{n:"Haki de l'observation",k:'dodge',v:0.2},s:{n:'Mochi Tsuki',k:'aoe',m:0.6,st:'attente',d:6}},
+ // Naruto
+ {id:'pain',name:'Pain',r:'E',el:'chaos',fam:['animes','naruto'],hp:130,atk:105,spd:80,look:['human',{},{H:'#d8742a',T:'#1c1c2a',P:'#1c1c2a'}],
+  a:{n:'Tiges de chakra',m:1},p:{n:'Six Chemins',k:'regen',v:0.04},s:{n:'Shinra Tensei',k:'aoe',m:0.8,st:'malaise',d:6}},
+ {id:'shikamaru',name:'Shikamaru',r:'R',el:'raison',fam:['animes','naruto'],hp:100,atk:80,spd:85,look:['human',{},{H:'#2a2018',T:'#4f5a3a',P:'#2f3a4a'}],
+  a:{n:'Manipulation des ombres',m:0.8,st:'attente',d:20,ch:0.4},p:{n:'Stratège',k:'startFoes',st:'flemme',d:30}},
+ {id:'kurama',name:'Kurama',r:'E',el:'delire',fam:['animes','naruto'],hp:180,atk:110,spd:70,look:['cat',{big:true},{F:'#e2752a',D:'#a8441a',E:'#c8262c'}],
+  a:{n:'Griffes du renard',m:1.1},p:{n:'Rancune',k:'angry'},s:{n:'Bijudama',k:'single',m:2.2}},
+ // Bleach
+ {id:'ichigo',name:'Ichigo',r:'E',el:'delire',fam:['animes','bleach'],hp:120,atk:115,spd:100,look:['human',{},{H:'#e8762a',T:'#1a1a1a',P:'#1a1a1a'}],
+  a:{n:'Zangetsu',m:1},p:{n:'Hollow intérieur',k:'lastStand',v:0.3},s:{n:'Getsuga Tenshō',k:'aoe',m:0.8}},
+ {id:'hitsugaya',name:'Hitsugaya',r:'R',el:'prudence',fam:['animes','bleach'],hp:110,atk:85,spd:90,look:['human',{},{H:'#e6eef2',T:'#f2f2f2',P:'#1a1a1a'}],
+  a:{n:'Hyōrinmaru',m:0.9,st:'flemme',d:40},p:{n:'Armure de glace',k:'shieldEvery',every:3,v:0.10}},
+ {id:'aizen',name:'Aizen',r:'E',el:'chaos',fam:['animes','bleach'],hp:130,atk:110,spd:95,look:['human',{glasses:true},{H:'#5a3a24',T:'#f2f2f2',P:'#f2f2f2'}],
+  a:{n:'Kyōka Suigetsu',m:1},p:{n:'Hypnose totale',k:'dodge',v:0.25},s:{n:'Hadō 90 : Kurohitsugi',k:'single',m:1.8,st:'angoisse',d:50}},
+ // Fullmetal Alchemist
+ {id:'edward',name:'Edward',r:'R',el:'raison',fam:['animes','fma'],hp:110,atk:90,spd:95,look:['human',{long:true},{H:'#e8c24a',T:'#b8282c',P:'#1a1a1a'}],
+  a:{n:'Transmutation',m:1},p:{n:"Bras d'acier",k:'thorns',v:0.15}},
+ {id:'mustang',name:'Roy Mustang',r:'E',el:'delire',fam:['animes','fma'],hp:100,atk:115,spd:95,look:['human',{},{H:'#1a1a1a',T:'#2f4f8a',P:'#2f4f8a'}],
+  a:{n:'Claquement de doigts',m:1},p:{n:"L'Alchimiste de flamme",k:'crit',v:0.25},s:{n:'Brasier',k:'aoe',m:0.85,st:'stress',d:40}},
+ {id:'wrath',name:'Wrath',r:'E',el:'ordre',fam:['animes','fma'],hp:120,atk:115,spd:105,look:['human',{},{H:'#2a2a2a',T:'#2f4f8a',P:'#2f4f8a'}],
+  a:{n:'Cinq sabres',m:1},p:{n:'Œil ultime',k:'dodge',v:0.2},s:{n:'Lame éclair',k:'multi',n2:3,m:0.7,pierce:1}},
+ // L'Attaque des Titans
+ {id:'eren',name:'Eren',r:'E',el:'chaos',fam:['animes','snk'],hp:150,atk:110,spd:85,look:['human',{},{H:'#3a2618',T:'#8a6a48',P:'#e8e0cc'}],
+  a:{n:'Lames tranchantes',m:1},p:{n:'Rage du titan',k:'angry'},s:{n:'Titan Assaillant',k:'single',m:1.6,st:'malaise',d:20}},
+ {id:'livai',name:'Livai',r:'E',el:'raison',fam:['animes','snk'],hp:100,atk:120,spd:120,look:['human',{},{H:'#1a1a1a',T:'#8a6a48',P:'#e8e0cc'}],
+  a:{n:'Lames',m:1},p:{n:"L'homme le plus fort de l'humanité",k:'dodge',v:0.15},s:{n:'Rotation',k:'multi',n2:4,m:0.55}},
+ {id:'pieck',name:'Pieck',r:'R',el:'prudence',fam:['animes','snk'],hp:140,atk:70,spd:70,look:['human',{long:true},{H:'#1a1a1a',T:'#5a6a3a',P:'#3a3a2a'}],
+  a:{n:'Mâchoires',m:0.9},p:{n:'Titan Charrette',k:'startShieldTeam',v:0.08}},
+ // Kuroko's Basket
+ {id:'kagami',name:'Kagami',r:'R',el:'delire',fam:['animes','kuroko'],hp:120,atk:100,spd:90,look:['human',{},{H:'#b8282c',T:'#f2f2f2',P:'#1a1a1a'}],
+  a:{n:'Dunk',m:1.2},p:{n:'La Zone',k:'crit',v:0.2}},
+ {id:'kuroko',name:'Kuroko',r:'R',el:'coeur',fam:['animes','kuroko'],hp:95,atk:82,spd:110,look:['human',{},{H:'#8ab8e8',T:'#f2f2f2',P:'#1a1a1a'}],
+  a:{n:'Passe invisible',m:0.8},p:{n:'Le sixième homme fantôme',k:'discreet'}},
+ {id:'akashi',name:'Akashi',r:'E',el:'ordre',fam:['animes','kuroko'],hp:110,atk:100,spd:110,look:['human',{},{H:'#b8282c',T:'#f2f2f2',P:'#3a3a6a'}],
+  a:{n:'Tir parfait',m:1},p:{n:"Œil de l'empereur",k:'dodge',v:0.2},s:{n:'Ankle Break',k:'aoe',m:0.5,st:'malaise',d:6}},
+ // Hunter x Hunter
+ {id:'kuroro',name:'Kuroro Lucifer',r:'E',el:'chaos',fam:['animes','hxh'],hp:110,atk:110,spd:95,look:['human',{},{H:'#1a1a1a',T:'#1a1a1a',P:'#1a1a1a'}],
+  a:{n:'Couteau de Benz',m:1},p:{n:'Skill Hunter',k:'lifesteal',v:0.2},s:{n:'Indoor Fish',k:'drain',m:1.5}},
+ {id:'gon',name:'Gon',r:'E',el:'coeur',fam:['animes','hxh'],hp:130,atk:110,spd:90,look:['human',{},{H:'#1a2a1a',T:'#2f8a3a',P:'#2f8a3a'}],
+  a:{n:'Jajanken Pierre',m:1.1},p:{n:'Colère de Gon',k:'angry'},s:{n:'Jajanken',k:'single',m:2.0}},
+ {id:'kirua',name:'Kirua',r:'E',el:'raison',fam:['animes','hxh'],hp:100,atk:100,spd:130,look:['human',{},{H:'#e8eef2',T:'#3a4a8a',P:'#f2f2f2'}],
+  a:{n:'Électricité',m:0.9,st:'attente',d:10,ch:0.3},p:{n:'Assassin Zoldik',k:'dodge',v:0.15},s:{n:'Godspeed',k:'multi',n2:3,m:0.6}},
+ // Fire Force
+ {id:'burns',name:'Burns',r:'E',el:'prudence',fam:['animes','fireforce'],hp:170,atk:95,spd:65,look:['human',{},{H:'#c8c8c8',T:'#1a1a1a',P:'#1a1a1a'}],
+  a:{n:'Poing enflammé',m:1},p:{n:'Corps de feu',k:'thorns',v:0.2},s:{n:'Cornea',k:'aoe',m:0.8}},
+ {id:'charon',name:'Charon',r:'R',el:'prudence',fam:['animes','fireforce'],hp:170,atk:70,spd:55,look:['human',{},{H:'#2a2a2a',T:'#e8e0cc',P:'#3a3a3a'}],
+  a:{n:'Contre-coup',m:0.9},p:{n:'Absorption cinétique',k:'thorns',v:0.3}},
+ {id:'benimaru',name:'Benimaru',r:'E',el:'delire',fam:['animes','fireforce'],hp:120,atk:115,spd:95,look:['human',{},{H:'#1a1a1a',T:'#b8282c',P:'#1a1a1a'}],
+  a:{n:'Flammes de Shinmon',m:1},p:{n:'Le plus fort d\'Asakusa',k:'crit',v:0.2},s:{n:'Hinata Ichimonji',k:'aoe',m:0.9,st:'stress',d:30}},
+ // Sword Art Online
+ {id:'kirito',name:'Kirito',r:'E',el:'raison',fam:['animes','sao'],hp:115,atk:110,spd:105,look:['human',{},{H:'#1a1a1a',T:'#1a1a1a',P:'#1a1a1a'}],
+  a:{n:'Double lame',m:0.6,twice:0.6},p:{n:'Beater',k:'lifesteal',v:0.1},s:{n:'Starburst Stream',k:'multi',n2:6,m:0.4}},
+ {id:'asuna',name:'Asuna',r:'R',el:'coeur',fam:['animes','sao'],hp:100,atk:95,spd:110,look:['human',{long:true},{H:'#d8742a',T:'#f2f2f2',P:'#c8262c'}],
+  a:{n:'Linear',m:1},p:{n:"L'Éclair",k:'dodge',v:0.15}},
+ {id:'alice',name:'Alice',r:'E',el:'ordre',fam:['animes','sao'],hp:130,atk:100,spd:90,look:['human',{long:true},{H:'#e8c24a',T:'#3a5aa8',P:'#e8e0cc'}],
+  a:{n:'Épée Osmanthe',m:1},p:{n:"Chevalière de l'Intégrité",k:'shieldEvery',every:3,v:0.08},s:{n:'Libération du souvenir',k:'aoe',m:0.8,st:'malaise',d:10}},
+ // Death Note
+ {id:'misa',name:'Misa Amane',r:'R',el:'coeur',fam:['animes','deathnote'],hp:90,atk:75,spd:100,look:['human',{long:true},{H:'#e8c24a',T:'#1a1a1a',P:'#1a1a1a'}],
+  a:{n:'Second Kira',m:0.9},p:{n:'Yeux de shinigami',k:'execute',v:0.5}},
+ {id:'light',name:'Light Yagami',r:'E',el:'ordre',fam:['animes','deathnote'],hp:100,atk:100,spd:95,look:['human',{},{H:'#8a5a2a',T:'#8a6a48',P:'#3a3a3a'}],
+  a:{n:'Plan parfait',m:1},p:{n:'Kira',k:'execute',v:0.4},s:{n:'Death Note',k:'lowest',m:2.4,pierce:1}},
+ {id:'ryukdn',name:'Ryuk, Shinigami',r:'E',el:'chaos',fam:['animes','deathnote'],hp:140,atk:100,spd:90,look:['human',{},{H:'#1a1a1a',S:'#cfd6e0',T:'#1a1a1a',P:'#1a1a1a'}],
+  a:{n:'Croque-pomme',m:1},p:{n:'Spectateur amusé',k:'dodge',v:0.15},s:{n:'Le monde des humains est intéressant',k:'aoe',m:0.5,st:'angoisse',d:40}},
+ // Jujutsu Kaisen
+ {id:'yuji',name:'Yuji',r:'R',el:'delire',fam:['animes','jjk'],hp:130,atk:100,spd:95,look:['human',{},{H:'#e8a0a8',T:'#1a1a2a',P:'#1a1a2a'}],
+  a:{n:'Divergent Fist',m:0.7,twice:0.5},p:{n:'Réceptacle de Sukuna',k:'lastStand',v:0.25}},
+ {id:'yuta',name:'Yuta',r:'E',el:'coeur',fam:['animes','jjk'],hp:120,atk:110,spd:95,look:['human',{},{H:'#1a1a1a',T:'#f2f2f2',P:'#f2f2f2'}],
+  a:{n:'Katana maudit',m:1},p:{n:'Rika',k:'thorns',v:0.25},s:{n:'Copie',k:'aoe',m:0.8}},
+ {id:'gojo',name:'Gojo',r:'E',el:'ordre',fam:['animes','jjk'],hp:120,atk:105,spd:105,look:['human',{glasses:true},{H:'#eef2f6',T:'#1a1a2a',P:'#1a1a2a'}],
+  a:{n:'Bleu',m:1},p:{n:'Infini',k:'dodge',v:0.2},s:{n:"Extension du territoire : Sphère de l'espace infini",k:'aoe',m:0.6,st:'malaise',d:10}},
+ // Demon Slayer
+ {id:'mitsuri',name:'Mitsuri',r:'R',el:'coeur',fam:['animes','demonslayer'],hp:110,atk:90,spd:110,look:['human',{long:true},{H:'#e87aa8',T:'#1a1a1a',P:'#e8e0cc'}],
+  a:{n:"Souffle de l'amour",m:0.8,splash:0.5},p:{n:'Pilier de l\'amour',k:'startTeam',st:'calin',d:40}},
+ {id:'tanjiro',name:'Tanjiro',r:'E',el:'coeur',fam:['animes','demonslayer'],hp:120,atk:100,spd:100,look:['human',{},{H:'#5a1a1a',T:'#2f6a4a',P:'#1a1a1a'}],
+  a:{n:"Souffle de l'eau",m:1},p:{n:'Odorat',k:'famAtk',f:'demonslayer',v:0.12},s:{n:'Danse du dieu du feu',k:'multi',n2:3,m:0.7}},
+ {id:'zenitsu',name:'Zenitsu',r:'E',el:'raison',fam:['animes','demonslayer'],hp:90,atk:120,spd:120,look:['human',{},{H:'#e8c24a',T:'#e8a02a',P:'#1a1a1a'}],
+  a:{n:'Lame tremblante',m:0.9},p:{n:'Endormi',k:'dodge',v:0.2},s:{n:'Foudre : Premier mouvement',k:'lowest',m:2.0,pierce:1}},
+ // Arcane
+ {id:'jinx',name:'Jinx',r:'E',el:'chaos',fam:['series','arcane'],hp:95,atk:115,spd:105,look:['human',{long:true},{H:'#3a6ad8',T:'#3a2a4a',P:'#e87aa8'}],
+  a:{n:'Minigun',m:0.5,twice:0.5},p:{n:'Imprévisible',k:'crit',v:0.2},s:{n:'Super Méga Roquette de la Mort',k:'aoe',m:1.0}},
+ {id:'vi',name:'Vi',r:'E',el:'delire',fam:['series','arcane'],hp:150,atk:105,spd:85,look:['human',{},{H:'#e87aa8',T:'#8a2a2a',P:'#2a2a3a'}],
+  a:{n:'Gantelets',m:1.1},p:{n:'Fille de Zaun',k:'angry'},s:{n:'Assaut',k:'single',m:1.6,st:'malaise',d:20}},
+ {id:'mel',name:'Mel',r:'R',el:'raison',fam:['series','arcane'],hp:110,atk:80,spd:90,look:['human',{},{H:'#1a1a1a',S:'#8a5a3c',T:'#e8c24a',P:'#f2f2f2'}],
+  a:{n:'Parole tranchante',m:0.9},p:{n:'Conseillère de Piltover',k:'startTeam',st:'hype',d:30}},
+ // Stranger Things
+ {id:'onze',name:'Onze',r:'E',el:'raison',fam:['series','stranger'],hp:100,atk:110,spd:95,look:['human',{},{H:'#3a2a1a',T:'#e87aa8',P:'#3a5aa8'}],
+  a:{n:'Télékinésie',m:1,st:'malaise',d:15,ch:0.25},p:{n:'Gaufres Eggo',k:'regen',v:0.03},s:{n:'Fermeture du portail',k:'aoe',m:0.8,st:'attente',d:6}},
+ {id:'hopper',name:'Hopper',r:'R',el:'prudence',fam:['series','stranger'],hp:150,atk:90,spd:70,look:['human',{},{H:'#5a3a24',T:'#8a7a5a',P:'#3a3a2a'}],
+  a:{n:'Coup de shérif',m:1},p:{n:'Protecteur',k:'shieldEvery',every:2,v:0.08}},
+ {id:'max',name:'Max',r:'R',el:'delire',fam:['series','stranger'],hp:100,atk:90,spd:110,look:['human',{long:true},{H:'#d8442a',T:'#3a5aa8',P:'#3a3a5a'}],
+  a:{n:'Skate',m:1},p:{n:'Running Up That Hill',k:'dodge',v:0.2}},
+ // Lucifer
+ {id:'lucifer',name:'Lucifer',r:'E',el:'chaos',fam:['series','lucifer'],hp:130,atk:110,spd:95,look:['human',{},{H:'#1a1a1a',T:'#1a1a1a',P:'#1a1a1a'}],
+  a:{n:'Force divine',m:1},p:{n:'Que désires-tu vraiment ?',k:'startFoe1',st:'attente',d:25},s:{n:'Visage du diable',k:'aoe',m:0.5,st:'angoisse',d:30}},
+ {id:'chloe',name:'Chloe',r:'R',el:'ordre',fam:['series','lucifer'],hp:110,atk:90,spd:95,look:['human',{long:true},{H:'#e8c24a',T:'#3a3a5a',P:'#1a1a1a'}],
+  a:{n:'Tir de la police',m:1,pierce:1},p:{n:'Inspectrice',k:'execute',v:0.3}},
+ {id:'maze',name:'Maze',r:'E',el:'chaos',fam:['series','lucifer'],hp:120,atk:115,spd:110,look:['human',{long:true},{H:'#1a1a1a',S:'#8a5a3c',T:'#1a1a1a',P:'#1a1a1a'}],
+  a:{n:'Lames démoniaques',m:0.6,twice:0.6},p:{n:'Démone',k:'crit',v:0.12},s:{n:'Chasseuse de primes',k:'lowest',m:2.0}},
+ // Breaking Bad
+ {id:'walter',name:'Walter White',r:'E',el:'raison',fam:['series','breakingbad'],hp:110,atk:105,spd:85,look:['human',{glasses:true,bald:true},{H:'#1a1a1a',T:'#4a7a3a',P:'#8a7a5a'}],
+  a:{n:'Chimie',m:0.9,st:'stress',d:30},p:{n:'Say my name',k:'startFoes',st:'angoisse',d:30},s:{n:'Fulminate de mercure',k:'aoe',m:1.0}},
+ {id:'saul',name:'Saul Goodman',r:'R',el:'coeur',fam:['series','breakingbad'],hp:100,atk:70,spd:100,look:['human',{tie:true},{H:'#5a3a24',T:'#e8c24a',P:'#5a6a8a',Z:'#c8262c'}],
+  a:{n:'Better Call Saul',m:0.8},p:{n:'Vice de procédure',k:'startShieldTeam',v:0.08}},
+ {id:'gus',name:'Gus Fring',r:'E',el:'prudence',fam:['series','breakingbad'],hp:130,atk:100,spd:80,look:['human',{glasses:true,bald:true,tie:true},{H:'#1a1a1a',S:'#6a4a2c',T:'#e8e0cc',P:'#3a3a3a'}],
+  a:{n:'Los Pollos Hermanos',m:1},p:{n:'Patience',k:'shieldEvery',every:3,v:0.12},s:{n:'Cutter',k:'single',m:1.8,pierce:1}},
+ // Peaky Blinders
+ {id:'tommy',name:'Tommy Shelby',r:'E',el:'raison',fam:['series','peaky'],hp:120,atk:110,spd:95,look:['human',{},{H:'#1a1a1a',T:'#3a3a3a',P:'#3a3a3a'}],
+  a:{n:'Coup de casquette',m:1},p:{n:'By order of the Peaky Blinders',k:'famAtk',f:'peaky',v:0.15},s:{n:'Lames de casquette',k:'multi',n2:3,m:0.7}},
+ {id:'alfie',name:'Alfie Solomons',r:'R',el:'delire',fam:['series','peaky'],hp:140,atk:95,spd:75,look:['human',{},{H:'#3a2a1a',T:'#2a2a2a',P:'#2a2a2a'}],
+  a:{n:'Rhum de Camden',m:1},p:{n:'Imprévisible',k:'angry'}},
+ {id:'campbell',name:'Campbell',r:'R',el:'ordre',fam:['series','peaky'],hp:120,atk:90,spd:80,look:['human',{},{H:'#c8c8c8',T:'#1a1a1a',P:'#1a1a1a'}],
+  a:{n:'Matraque',m:1},p:{n:'Inspecteur',k:'startFoe1',st:'attente',d:40}},
+ // Prison Break
+ {id:'scofield',name:'Michael Scofield',r:'E',el:'raison',fam:['series','prisonbreak'],hp:100,atk:95,spd:105,look:['human',{bald:true},{H:'#3a2a1a',T:'#3a5aa8',P:'#3a5aa8'}],
+  a:{n:'Plan tatoué',m:1},p:{n:'Le plan',k:'dodge',v:0.2},s:{n:'Évasion',k:'shieldTeam',v:0.12,st:'hype',d:40}},
+ {id:'tbag',name:'T-Bag',r:'R',el:'chaos',fam:['series','prisonbreak'],hp:110,atk:95,spd:100,look:['human',{},{H:'#3a2a1a',T:'#e8e0cc',P:'#3a5aa8'}],
+  a:{n:'Coup bas',m:1,st:'angoisse',d:30,ch:0.5},p:{n:'Sans scrupules',k:'lifesteal',v:0.15}},
+ {id:'lincoln',name:'Lincoln Burrows',r:'R',el:'prudence',fam:['series','prisonbreak'],hp:160,atk:90,spd:70,look:['human',{bald:true},{H:'#3a2a1a',T:'#3a5aa8',P:'#3a5aa8'}],
+  a:{n:'Grand frère',m:1},p:{n:'Frère protecteur',k:'startSelf',st:'provoc',d:50}},
+];
+const STN={angoisse:'Angoisse',malaise:'Malaise',flemme:'Flemme',stress:'Stress',deprime:'Déprime',attente:'En attente',hype:'Hype',zen:'Zen',calin:'Câlin',provoc:'Provocation'};
+const pctT=m=>Math.round(m*100)+' %';
+const secT=d=>String(Math.round(d/25*10)/10).replace('.',',')+' s';
+function genKitText(g){
+ const a=g.a,p=g.p,s=g.s,k=[];
+ let at=`Frappe ${a.rnd?'un ennemi au hasard':'une cible'} à ${pctT(a.m)} de son ATK`;
+ if(a.twice)at+=`, puis une deuxième fois à ${pctT(a.twice)}`;
+ if(a.splash)at+=`, et un deuxième ennemi à ${pctT(a.splash)}`;
+ if(a.pierce)at+=', en ignorant Bouclier, esquive et Discrétion';
+ if(a.st)at+=a.ch?` ; ${pctT(a.ch)} de chance d'appliquer ${STN[a.st]} (${secT(a.d)})`:` et applique ${STN[a.st]} (${secT(a.d)})`;
+ k.push(['Attaque',a.n,at+'.']);
+ const fam=f=>FAM[f]||f;
+ const P={
+  dodge:()=>`${pctT(p.v)} d'esquive.`,
+  regen:()=>`Récupère ${pctT(p.v)} de ses PV max à chacune de ses actions.`,
+  lifesteal:()=>`Se soigne de ${pctT(p.v)} des dégâts qu'il inflige.`,
+  crit:()=>`${pctT(p.v)} de chance de coup critique (dégâts ×2).`,
+  execute:()=>`+${pctT(p.v)} de dégâts contre les ennemis sous 30 % de PV.`,
+  thorns:()=>`Renvoie ${pctT(p.v)} des dégâts reçus à l'attaquant.`,
+  angry:()=>`+1 Colère à chaque coup reçu (10 max).`,
+  lastStand:()=>`La première fois que ses PV passent sous 30 %, gagne un Bouclier de ${pctT(p.v)} de ses PV max et Hype (1,2 s).`,
+  shieldEvery:()=>`Bouclier de ${pctT(p.v)} de ses PV max toutes les ${p.every} actions.`,
+  famAtk:()=>`+${pctT(p.v)} d'ATK pour lui et ses alliés de la famille ${fam(p.f)}.`,
+  startFoes:()=>`Au début du combat, ${STN[p.st]} (${secT(p.d)}) sur toute l'équipe ennemie.`,
+  startFoe1:()=>`Au début du combat, ${STN[p.st]} (${secT(p.d)}) sur un ennemi au hasard.`,
+  startTeam:()=>`Au début du combat, ${STN[p.st]} (${secT(p.d)}) sur toute son équipe.`,
+  startSelf:()=>`Au début du combat, ${STN[p.st]} sur lui-même (${secT(p.d)}).`,
+  startShieldTeam:()=>`Au début du combat, Bouclier de ${pctT(p.v)} de leurs PV max sur toute son équipe.`,
+  discreet:()=>`Discret : impossible à cibler tant qu'un allié est debout.`
+ };
+ k.push(['Passif',p.n,P[p.k]()]);
+ if(s){
+  const st=s.st?` et applique ${STN[s.st]} (${secT(s.d)})`:'',pr=s.pierce?' en ignorant Bouclier, esquive et Discrétion':'';
+  const S={
+   single:()=>`Frappe une cible à ${pctT(s.m)} de son ATK${pr}${st}.`,
+   lowest:()=>`Frappe l'ennemi le plus faible à ${pctT(s.m)} de son ATK${pr}${st}.`,
+   aoe:()=>`Frappe tous les ennemis à ${pctT(s.m)} de son ATK${st}.`,
+   multi:()=>`${s.n2} coups à ${pctT(s.m)} de son ATK sur des ennemis au hasard${pr}.`,
+   drain:()=>`Frappe une cible à ${pctT(s.m)} de son ATK et récupère la moitié des dégâts infligés.`,
+   shieldTeam:()=>`Bouclier de ${pctT(s.v)} de leurs PV max sur toute l'équipe${s.st?`, et ${STN[s.st]} (${secT(s.d)})`:''}.`
+  };
+  k.push(['Compétence',s.n,S[s.k]()]);
+ }
+ return k;
+}
+GEN_LIST.forEach(g=>{GEN[g.id]=g;CARDS.push({id:g.id,name:g.name,r:g.r,el:g.el,fam:g.fam,hp:g.hp,atk:g.atk,spd:g.spd,kit:genKitText(g)});});
+function genAtk(b,u,a){
+ let t;if(a.rnd&&!u.confused){const f=b.foes(u);t=f.length?f[b.rnd(f.length)]:null;}else t=b.pick(u,{pierce:!!a.pierce});
+ if(!t)return;
+ b.hit(u,t,a.m,{pierce:!!a.pierce});
+ if(a.twice&&t.alive)b.hit(u,t,a.twice,{pierce:!!a.pierce});
+ if(a.splash){const o=b.foes(u).filter(x=>x!==t);if(o.length)b.hit(u,o[b.rnd(o.length)],a.splash);}
+ if(a.st&&t.alive&&(!a.ch||b.rand()<a.ch))b.apply(u,t,a.st,a.d);
+}
+function genSkill(b,u,s){
+ b.say(`${b.nm(u)} : ${s.n}.`);const pr={pierce:!!s.pierce};
+ if(s.k==='single'){const t=b.pick(u,pr);if(!t)return;b.hit(u,t,s.m,pr);if(s.st&&t.alive)b.apply(u,t,s.st,s.d);}
+ else if(s.k==='lowest'){const f=s.pierce?b.foes(u):b.visible(u);if(!f.length)return;const t=f.reduce((x,c)=>x.hp<c.hp?x:c);b.hit(u,t,s.m,pr);if(s.st&&t.alive)b.apply(u,t,s.st,s.d);}
+ else if(s.k==='aoe'){b.foes(u).forEach(t=>{b.hit(u,t,s.m);if(s.st&&t.alive)b.apply(u,t,s.st,s.d);});}
+ else if(s.k==='multi'){for(let i=0;i<s.n2;i++){const f=b.foes(u);if(!f.length)break;b.hit(u,f[b.rnd(f.length)],s.m,pr);}}
+ else if(s.k==='drain'){const t=b.pick(u);if(!t)return;const d=b.hit(u,t,s.m);if(d>0)b.heal(u,d*0.5);}
+ else if(s.k==='shieldTeam'){b.allies(u).forEach(x=>{const v=Math.round(x.maxhp*s.v);x.shield+=v;b.ev(x,'+'+v+' bouclier','pos');if(s.st)b.apply(u,x,s.st,s.d);});}
+}
+function genAfter(b,u,p){
+ if(p.k==='regen')b.heal(u,u.maxhp*p.v,{silent:true});
+ else if(p.k==='shieldEvery'&&u.acts%p.every===0){const v=Math.round(u.maxhp*p.v);u.shield+=v;b.ev(u,'+'+v+' bouclier','pos');}
+}
+
 const CARD={}; CARDS.forEach((c,i)=>{c.no=i+1;CARD[c.id]=c;});
 const BYR={C:[],R:[],E:[],L:[]}; CARDS.forEach(c=>BYR[c.r].push(c));
 const RETARD=new Set(['jenlain','lila']);
 const ANIMALS=new Set(['ryuk','yuumi','traffy','echo','zoya']);
 const CHARGE=new Set(['jenlain','lea','kylian','geoffrey']);
 const SKILL_CD={udyr:3,ekko:3,thresh:3,chasseuse:3,harpie:3,legion:3,lost:3,azazel:3,magdalene:3,chasseur:3,arcaniste:3,steamer:3,yugo:3,bouftou:3,jenlain:3,yoann:3,lea:3,kylian:3,geoffrey:4,lila:3,ryuk:3,yuumi:2,traffy:4,echo:3,zoya:3};
+GEN_LIST.forEach(g=>{if(g.s)SKILL_CD[g.id]=g.s.cd||3;});
 const NEG=new Set(['angoisse','malaise','flemme','stress','deprime','attente','piece']);
 const ST_LABEL={angoisse:'Angoisse',malaise:'Malaise',flemme:'Flemme',stress:'Stress',deprime:'Déprime',attente:'En attente',piece:'Pièce manq.',hype:'Hype',zen:'Zen',calin:'Câlin',provoc:'Provoc.',cachee:'Cachée',double:'×2'};
 const rnd=n=>Math.floor(Math.random()*n);
 const statMult=(lvl,stars)=>(1+0.12*(lvl-1))*(1+0.2*stars);
 // Ordre et Chaos : plus rares en invocation, et plus puissants
-const RARE_EL=new Set(['ordre','chaos']),ELB=c=>RARE_EL.has(c.el)?1.15:1,EL_PULL_W=0.35;
+// Les légendaires (potes et animaux) restent au-dessus de tout le monde
+const RMULT={C:1,R:1,E:1,L:1.45};
+const RARE_EL=new Set(['ordre','chaos']),ELB=c=>(RARE_EL.has(c.el)?1.15:1)*RMULT[c.r],EL_PULL_W=0.35;
 function pickCard(r,rnd){const list=BYR[r],w=list.map(c=>RARE_EL.has(c.el)?EL_PULL_W:1),tot=w.reduce((a,b)=>a+b,0);let x=rnd()*tot;for(let i=0;i<list.length;i++){x-=w[i];if(x<0)return list[i];}return list[list.length-1];}
 const elemMult=(a,d)=>EL[a].b===d?1.25:1;
 function famCounts(ids){const c={};[...new Set(ids)].forEach(id=>CARD[id].fam.forEach(f=>c[f]=(c[f]||0)+1));return c;}
@@ -677,6 +883,7 @@ const KIT={
  yugo:{atk(b,u){if(u.confused){B1(1)(b,u);return;}const f=b.foes(u);if(f.length)b.hit(u,f[b.rnd(f.length)],1);},skill(b,u){b.say(`${b.nm(u)} lance un Wakmeha.`);b.foes(u).forEach(t=>b.hit(u,t,0.7));b.apply(u,u,'hype',30);}},
  bouftou:{atk:B1(1),skill(b,u){const t=b.pick(u);if(!t)return;b.say(`${b.nm(u)} charge, couronne en avant.`);b.hit(u,t,1.2);b.apply(u,t,'malaise',20);const v=Math.round(u.maxhp*0.12);u.shield+=v;b.ev(u,'+'+v+' bouclier','pos');}}
 };
+GEN_LIST.forEach(g=>{KIT[g.id]=g.s?{atk:(b,u)=>genAtk(b,u,g.a),skill:(b,u)=>genSkill(b,u,g.s)}:{atk:(b,u)=>genAtk(b,u,g.a)};});
 const AFTER={
  traffy(b,u){u.stacks=Math.min(15,u.stacks+1);},
  zoya(b,u){if(u.acts%2===0){u.shield+=Math.round(u.maxhp*0.15);b.ev(u,'Bronzette','pos');}},
@@ -709,6 +916,7 @@ class Battle{
     u.atkMul*=a;u.maxhp=Math.round(u.maxhp*h);u.hp=u.maxhp;u.spdMul*=v;u.dodge+=dodge;u.alone=u.id==='chaussette'&&us.filter(x=>x.d.fam.includes('quotidien')).length===1;
    });
   });
+  this.units.forEach(u=>{const G=GEN[u.id];if(G&&G.p.k==='famAtk')this.units.filter(x=>x.side===u.side&&x.d.fam.includes(G.p.f)).forEach(x=>{x.atkMul*=1+G.p.v;});});
   [0,1].forEach(s=>{
    const y=this.sides[s].syn,us=this.units.filter(u=>u.side===s),foes=this.units.filter(u=>u.side!==s&&u.present);
    us.forEach(u=>{
@@ -721,6 +929,12 @@ class Battle{
     if(P&&P.start&&placeFor(P,u.id))this.apply(u,u,P.start,P.start==='calin'?50:30);
     if(u.id==='chasseuse'&&foes.length){const t=foes[this.rnd(foes.length)];this.say(`${this.nm(u)} fredonne sa berceuse.`);this.apply(u,t,'angoisse',50);}
     if(u.id==='bouftou'&&u.present)this.apply(u,u,'provoc',60);
+    const G=GEN[u.id];if(G){const p=G.p;
+     if(p.k==='startFoes')foes.forEach(t=>this.apply(u,t,p.st,p.d));
+     else if(p.k==='startFoe1'&&foes.length)this.apply(u,foes[this.rnd(foes.length)],p.st,p.d);
+     else if(p.k==='startTeam')us.filter(a=>a.present).forEach(a=>this.apply(u,a,p.st,p.d));
+     else if(p.k==='startSelf')this.apply(u,u,p.st,p.d);
+     else if(p.k==='startShieldTeam')us.forEach(a=>{a.shield+=Math.round(a.maxhp*p.v);});}
     if(u.id==='harpie'){u.st.cachee={t:40};this.ev(u,'Cachée','pos');}
     if(u.id==='arcaniste'&&u.present)us.filter(a=>a.present).forEach(a=>this.apply(u,a,'hype',30));
    });
@@ -728,7 +942,8 @@ class Battle{
  }
  add(c,side){
   const d=CARD[c.id],m=statMult(c.lvl||1,c.stars||0)*ELB(CARD[c.id]);
-  const u={uid:this.units.length,id:c.id,d,side,lvl:c.lvl||1,stars:c.stars||0,maxhp:Math.round(d.hp*8*m),atk0:d.atk*m,spd0:d.spd,hp:0,gauge:RETARD.has(c.id)?0:100+this.rand()*450,alive:true,present:!RETARD.has(c.id),st:{},colere:0,shield:0,cd:2,charge:0,uses:0,acts:0,atkMul:1,spdMul:1,dodge:c.id==='souris'?0.25:c.id==='lost'?0.2:(c.id==='azazel'||c.id==='chasseur')?0.15:0,mantle:c.id==='lost',gear:(c.gear||[]).filter(g=>ITEM[g.id]&&IRAR[g.r]).slice(0,4),arriveAt:3,immune:new Set(c.id==='yoann'?['angoisse','malaise','stress']:c.id==='geoffrey'?['malaise','angoisse']:[]),once:false,discreet:c.id==='lila',cagnotte:0,stacks:0,confused:false,colle:null,alone:false};
+  const u={uid:this.units.length,id:c.id,d,side,lvl:c.lvl||1,stars:c.stars||0,maxhp:Math.round(d.hp*8*m),atk0:d.atk*m,spd0:d.spd,hp:0,gauge:RETARD.has(c.id)?0:100+this.rand()*450,alive:true,present:!RETARD.has(c.id),st:{},colere:0,shield:0,cd:2,charge:0,uses:0,acts:0,atkMul:1,spdMul:1,dodge:c.id==='souris'?0.25:c.id==='lost'?0.2:(c.id==='azazel'||c.id==='chasseur')?0.15:0,mantle:c.id==='lost',gear:(c.gear||[]).filter(g=>ITEM[g.id]&&IRAR[g.r]).slice(0,4),arriveAt:3,immune:new Set(c.id==='yoann'?['angoisse','malaise','stress']:c.id==='geoffrey'?['malaise','angoisse']:[]),once:false,discreet:c.id==='lila'||(GEN[c.id]&&GEN[c.id].p.k==='discreet'),cagnotte:0,stacks:0,confused:false,colle:null,alone:false};
+  const G=GEN[c.id];if(G&&G.p.k==='dodge')u.dodge+=G.p.v;
   u.hp=u.maxhp;this.units.push(u);
  }
  nm(u){return u?`<b class="s${u.side}">${u.d.name}</b>`:'?';}
@@ -756,6 +971,9 @@ class Battle{
   let dmg=this.atk(s)*mult*elemMult(s.d.el,t.d.el);
   if(t.st.angoisse)dmg*=1.25;
   if(s.id==='impots'&&t.id==='kylian')dmg*=1.5;
+  const GS=GEN[s.id],GT=GEN[t.id];
+  if(GS&&GS.p.k==='execute'&&t.hp<t.maxhp*0.3)dmg*=1+GS.p.v;
+  if(GS&&GS.p.k==='crit'&&this.rand()<GS.p.v){dmg*=2;this.ev(t,'Critique !','info');}
   dmg=Math.max(1,Math.round(dmg*(0.9+this.rand()*0.2)));
   if(t.shield>0&&!o.pierce){const a=Math.min(t.shield,dmg);t.shield-=a;dmg-=a;if(a>0&&dmg===0){this.ev(t,'Bloqué','info');}}
   if(dmg>0)this.damage(t,dmg,s);
@@ -763,10 +981,14 @@ class Battle{
   if(s.side!==t.side)this.sides[t.side].lastAttacker=s;
   if(s.id==='impots'&&dmg>0){const a=this.mostHurt(s);if(a)this.heal(a,dmg*0.3,{silent:true});}
   if(s.id==='kylian')s.cagnotte+=dmg*0.3;
+  if(GS&&GS.p.k==='lifesteal'&&dmg>0&&s.alive)this.heal(s,dmg*GS.p.v,{silent:true});
+  if(GT&&t.alive&&GT.p.k==='angry'&&s.side!==t.side)t.colere=Math.min(10,t.colere+1);
+  if(GT&&GT.p.k==='thorns'&&dmg>0&&s.side!==t.side&&s.alive&&!o.reflect){const r=Math.max(1,Math.round(dmg*GT.p.v));this.damage(s,r,t);}
   return dmg;
  }
  damage(t,dmg,src){
   t.hp-=dmg;this.ev(t,'-'+dmg,'dmg');
+  {const G=GEN[t.id];if(G&&G.p.k==='lastStand'&&!t.ls&&t.hp>0&&t.hp<t.maxhp*0.3){t.ls=true;const v=Math.round(t.maxhp*G.p.v);t.shield+=v;t.st.hype={t:30};this.ev(t,'+'+v+' bouclier','pos');this.say(`${this.nm(t)} : ${G.p.n} !`);}}
   if(t.id==='yugo'&&!t.once&&t.hp>0&&t.hp<t.maxhp*0.3){t.once=true;t.st.cachee={t:40};this.say(`${this.nm(t)} disparaît dans un portail.`);}
   if(t.hp<=0){if(t.id==='yoann'&&!t.once){t.once=true;t.hp=1;t.shield+=Math.round(t.maxhp*0.3);this.say(`${this.nm(t)} est Inébranlable. Il tient à 1 PV.`,'ult');}else this.kill(t);}
  }
@@ -820,6 +1042,7 @@ class Battle{
   if(CHARGE.has(u.id)&&kind!=='ult'&&!(u.id==='geoffrey'&&u.st.double))u.charge=Math.min(100,u.charge+20);
   if(u.alive&&u.st.stress){const d=Math.max(1,Math.round(u.maxhp*0.04*(u.st.stress.mul||1)));this.ev(u,'-'+d+' stress','neg');this.damage(u,d,null);}
   if(u.alive&&AFTER[u.id])AFTER[u.id](this,u);
+  if(u.alive&&GEN[u.id])genAfter(this,u,GEN[u.id].p);
   this.arrivals();this.checkEnd();
   if(u.id==='ryuk'&&u.alive&&depth<2&&!this.over&&this.rand()<0.35){this.ev(u,'Zoomies','pos');this.act(u,depth+1);}
  }
@@ -916,6 +1139,7 @@ const LOOK={
  souris:['mouse'],moustique:['mosquito'],reveil:['clock'],embouteillages:['car'],wifi:['phone'],messagevu:['phone'],
  linge:['box'],vaisselle:['box'],aspirateur:['box'],chaussette:['box'],colis:['box']
 };
+GEN_LIST.forEach(g=>{if(g.look&&!LOOK[g.id])LOOK[g.id]=g.look;});
 const SPR_CACHE={},SPR_H={};
 function spr(id){
  if(SPR_CACHE[id])return SPR_CACHE[id];
@@ -935,6 +1159,7 @@ const pxSrc=id=>ART[id]&&ART[id].px?ART[id].px:spr(id);
 // Taille relative de certains persos (Yuumi est plus petite et plus fine que Ryuk)
 // Les humains sont plus grands que les animaux
 const SIZE={jenlain:1.35,yoann:1.35,lea:1.35,kylian:1.35,geoffrey:1.35,lila:1.35,ryuk:0.6,yuumi:0.54,echo:0.55,traffy:0.68,zoya:0.5,lost:0.75,azazel:0.8,magdalene:0.75,souris:0.5,moustique:0.5,chaussette:0.7,reveil:0.85,wifi:0.9,messagevu:0.9,facture:0.9,colis:0.85,linge:0.85,vaisselle:0.85,aspirateur:0.9};
+GEN_LIST.forEach(g=>{if(SIZE[g.id]==null)SIZE[g.id]=g.look&&g.look[0]==='cat'?1.1:1.25;});
 const pxScale=(id,target)=>{const h=ART[id]&&ART[id].px?ART[id].pxh:(spr(id),SPR_H[id]);const t=target*(SIZE[id]||1);return h>=30?Math.round(t):Math.max(1,Math.round(t/h))*h;};
 const faceImg=id=>ART[id]&&ART[id].icon?`<img class="full" src="${ART[id].icon}" alt="">`:`<img class="px" src="${pxSrc(id)}" alt="">`;
 const bannerImg=id=>ART[id]&&ART[id].banner?`<img class="full" src="${ART[id].banner}" alt="">`:`<img class="px" src="${pxSrc(id)}" alt="">`;
@@ -1019,7 +1244,7 @@ let tab='combat',sel=null,B=null,RUN=null,timer=null,speed=1,mode='manuel',lastR
 const $=s=>document.querySelector(s);
 const fmt=n=>Math.floor(n).toLocaleString('fr-FR');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const FAMS={soirees:'Soirées jeu',lol:'LoL',dbd:'DbD',isaac:'Isaac',destiny:'Destiny 2',krosmoz:'Krosmoz',potes:'Potes',foyer:'Foyer',chezk:'Chez Kylian',jl:'J & L',lignee:'Lignée',bruyants:'Bruyants',lents:'Lents',paperasse:'Paperasse',argent:'Argent',sante:'Santé',poste:'Poste',boulot:'Boulot',matin:'Matin',numerique:'Numérique',relous:'Relous',nuisibles:'Nuisibles',corvee:'Corvée',quotidien:'Quotidien'};
+const FAMS={animes:'Animés',series:'Séries',onepiece:'One Piece',naruto:'Naruto',bleach:'Bleach',fma:'FMA',snk:'SNK',kuroko:'Kuroko',hxh:'HxH',fireforce:'Fire Force',sao:'SAO',deathnote:'Death Note',jjk:'JJK',demonslayer:'Demon Slayer',wakfu:'Wakfu',arcane:'Arcane',stranger:'Stranger Things',lucifer:'Lucifer',breakingbad:'Breaking Bad',peaky:'Peaky Blinders',prisonbreak:'Prison Break',soirees:'Soirées jeu',lol:'LoL',dbd:'DbD',isaac:'Isaac',destiny:'Destiny 2',krosmoz:'Krosmoz',potes:'Potes',foyer:'Foyer',chezk:'Chez Kylian',jl:'J & L',lignee:'Lignée',bruyants:'Bruyants',lents:'Lents',paperasse:'Paperasse',argent:'Argent',sante:'Santé',poste:'Poste',boulot:'Boulot',matin:'Matin',numerique:'Numérique',relous:'Relous',nuisibles:'Nuisibles',corvee:'Corvée',quotidien:'Quotidien'};
 const RORD={C:0,R:1,E:2,L:3};
 const levelCost=l=>Math.round(40*Math.pow(l,1.6));
 const lvlCostN=(l,n)=>{let t=0;for(let i=0;i<n;i++)t+=levelCost(l+i);return t;};
@@ -1632,7 +1857,7 @@ let pendingPseudo='',pickLegend=null;
 function showCreate(){
  document.body.classList.add('logged-out');
  $('#auth-root').innerHTML=`<div class="auth"><div class="parch auth-card wide"><div class="ribbon">Choisis ta légendaire</div><p class="muted" style="text-align:center;margin:-4px 0 12px">Celle qui te correspond. Elle sera ton premier héros et ton avatar.</p>
-  <div class="banners pick">${BYR.L.map(c=>bannerHTML(c.id,{reveal:true,noLv:true})).join('')}</div>
+  <div class="banners pick">${BYR.L.filter(c=>c.fam.includes('potes')).map(c=>bannerHTML(c.id,{reveal:true,noLv:true})).join('')}</div>
   <form id="c-form" class="auth-form" style="max-width:340px;margin:16px auto 0"><label for="c-pseudo">Pseudo affiché</label><input id="c-pseudo" required minlength="2" maxlength="20" value="${esc(pendingPseudo)}"><button class="btn primary" id="c-go" type="submit" disabled>Commencer l'aventure</button><p class="auth-msg" id="c-msg"></p><button class="btn small" type="button" id="c-out">Se déconnecter</button></form></div></div>`;
  const pick=$('#auth-root .pick');
  pick.querySelectorAll('.banner').forEach(b=>b.onclick=()=>{pickLegend=b.dataset.id;pick.querySelectorAll('.banner').forEach(x=>x.classList.toggle('chosen',x===b));$('#c-go').disabled=false;});
